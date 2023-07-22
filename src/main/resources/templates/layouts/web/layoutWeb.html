@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+
+  <!-- css_layout -->
+  <th:block th:replace="fragments/web/head :: head"></th:block>
+  <!-- / css_layout -->
+
+  <th:block layout:fragment="css_head">
+  </th:block>
+
+
+</head>
+
+<body>
+
+<!-- Header -->
+<th:block th:replace="fragments/web/header :: header"></th:block>
+<!-- / Header -->
+
+<!-- Content -->
+<th:block layout:fragment="content">
+</th:block>
+<!-- / Content -->
+
+<!-- Footer -->
+<th:block th:replace="fragments/web/footer :: footer"></th:block>
+<!-- / Footer -->
+
+<div id="scrollTop"><i class="fa fa-long-arrow-alt-up"></i></div>
+
+<!-- script_layout -->
+<th:block th:replace="fragments/web/script :: script"></th:block>
+<!-- / script_layout -->
+
+<!-- Page JS -->
+
+<th:block layout:fragment="js_foot">
+</th:block>
+</body>
+
+</html>
+
+<!-- beautify ignore:end -->
+

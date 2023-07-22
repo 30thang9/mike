@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="script">
+  <!-- JavaScript files-->
+  <script>
+      // ------------------------------------------------------- //
+      //   Inject SVG Sprite -
+      //   see more here
+      //   https://css-tricks.com/ajaxing-svg-sprite/
+      // ------------------------------------------------------ //
+      function injectSvgSprite(path) {
+
+          var ajax = new XMLHttpRequest();
+          ajax.open("GET", path, true);
+          ajax.send();
+          ajax.onload = function(e) {
+          var div = document.createElement("div");
+          div.className = 'd-none';
+          div.innerHTML = ajax.responseText;
+          document.body.insertBefore(div, document.body.childNodes[0]);
+          }
+      }
+      // this is set to Bootstrapious website as you cannot
+      // inject local SVG sprite (using only 'icons/orion-svg-sprite.a4dea202.svg' path)
+      // while using file:// protocol
+      // pls don't forget to change to your domain :)
+      injectSvgSprite('https://demo.bootstrapious.com/sell/1-2-0/icons/orion-svg-sprite.svg');
+
+    </script>
+  <!-- jQuery-->
+  <script th:src="@{/web/assets/vendor/jquery/jquery.min.js}"></script>
+  <!-- Bootstrap JavaScript Bundle (Popper.js included)-->
+  <script th:src="@{/web/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <!-- Owl Carousel-->
+  <script th:src="@{/web/assets/vendor/owl.carousel/owl.carousel.js}"></script>
+  <script th:src="@{/web/assets/vendor/owl.carousel2.thumbs/owl.carousel2.thumbs.min.js}"></script>
+  <!-- NoUI Slider (price slider)-->
+  <script th:src="@{/web/assets/vendor/nouislider/nouislider.min.js}"></script>
+  <!-- Smooth scrolling-->
+  <script th:src="@{/web/assets/vendor/smooth-scroll/smooth-scroll.polyfills.min.js}"></script>
+  <!-- Lightbox gallery-->
+  <script th:src="@{/web/assets/vendor/glightbox/js/glightbox.min.js}"> </script>
+  <!-- Object Fit Images - Fallback for browsers that don't support object-fit-->
+  <script th:src="@{/web/assets/vendor/object-fit-images/ofi.min.js}"></script>
+  <script>var basePath = ''</script>
+  <script th:src="@{/web/assets/js/theme.30e7c8f9.js}"></script>
+  <script th:src="@{/web/assets/vendor/jquery.cookie/jquery.cookie.js}"> </script>
+  <script th:src="@{/web/assets/js/demo.9833433a.js}"></script>
+</th:block>

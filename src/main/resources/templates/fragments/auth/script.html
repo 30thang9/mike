@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="script">
+  <!-- Core JS -->
+  <!-- build:js assets/vendor/js/core.js -->
+  <script th:src="@{/admin/assets/vendor/libs/jquery/jquery.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/popper/popper.js}"></script>
+  <script th:src="@{/admin/assets/vendor/js/bootstrap.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js}"></script>
+
+  <script th:src="@{/admin/assets/vendor/libs/hammer/hammer.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/i18n/i18n.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/typeahead-js/typeahead.js}"></script>
+
+  <script th:src="@{/admin/assets/vendor/js/menu.js}"></script>
+
+  <script th:src="@{/admin/assets/vendor/js/token-request.js}"></script>
+  <!-- endbuild -->
+
+  <!-- Main JS -->
+  <script th:src="@{/admin/assets/js/main.js}"></script>
+</th:block>

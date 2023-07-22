@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/admin/layoutAdmin"
+      layout:decorator="layouts/admin/layoutAdmin :: content, layouts/admin/layoutAdmin :: css_head, layouts/admin/layoutAdmin :: js_foot">
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> Product - Detail | Mike </title>
+        <!-- Vendors CSS -->
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/typeahead-js/typeahead.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/flatpickr/flatpickr.css}" />
+        <!--/ Vendors CSS -->
+
+        <!-- Page CSS -->
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/css/pages/app-invoice.css}" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+        integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="row invoice-preview">
+            <!-- Invoice -->
+            <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4">
+                <div class="card invoice-preview-card">
+                    <div class="card-body">
+                        <div
+                                class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0">
+                            <div class="mb-xl-0 mb-4">
+                                <div class="d-flex svg-illustration mb-3 gap-2">
+                                    <span class="app-brand-logo demo">
+                                        <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                             xmlns:xlink="http://www.w3.org/1999/xlink">
+                                          <defs>
+                                            <path
+                                                    d="M13.7918663,0.358365126 L3.39788168,7.44174259 C0.566865006,9.69408886 -0.379795268,12.4788597 0.557900856,15.7960551 C0.68998853,16.2305145 1.09562888,17.7872135 3.12357076,19.2293357 C3.8146334,19.7207684 5.32369333,20.3834223 7.65075054,21.2172976 L7.59773219,21.2525164 L2.63468769,24.5493413 C0.445452254,26.3002124 0.0884951797,28.5083815 1.56381646,31.1738486 C2.83770406,32.8170431 5.20850219,33.2640127 7.09180128,32.5391577 C8.347334,32.0559211 11.4559176,30.0011079 16.4175519,26.3747182 C18.0338572,24.4997857 18.6973423,22.4544883 18.4080071,20.2388261 C17.963753,17.5346866 16.1776345,15.5799961 13.0496516,14.3747546 L10.9194936,13.4715819 L18.6192054,7.984237 L13.7918663,0.358365126 Z"
+                                                    id="path-1"></path>
+                                            <path
+                                                    d="M5.47320593,6.00457225 C4.05321814,8.216144 4.36334763,10.0722806 6.40359441,11.5729822 C8.61520715,12.571656 10.0999176,13.2171421 10.8577257,13.5094407 L15.5088241,14.433041 L18.6192054,7.984237 C15.5364148,3.11535317 13.9273018,0.573395879 13.7918663,0.358365126 C13.5790555,0.511491653 10.8061687,2.3935607 5.47320593,6.00457225 Z"
+                                                    id="path-3"></path>
+                                            <path
+                                                    d="M7.50063644,21.2294429 L12.3234468,23.3159332 C14.1688022,24.7579751 14.397098,26.4880487 13.008334,28.506154 C11.6195701,30.5242593 10.3099883,31.790241 9.07958868,32.3040991 C5.78142938,33.4346997 4.13234973,34 4.13234973,34 C4.13234973,34 2.75489982,33.0538207 2.37032616e-14,31.1614621 C-0.55822714,27.8186216 -0.55822714,26.0572515 -4.05231404e-15,25.8773518 C0.83734071,25.6075023 2.77988457,22.8248993 3.3049379,22.52991 C3.65497346,22.3332504 5.05353963,21.8997614 7.50063644,21.2294429 Z"
+                                                    id="path-4"></path>
+                                            <path
+                                                    d="M20.6,7.13333333 L25.6,13.8 C26.2627417,14.6836556 26.0836556,15.9372583 25.2,16.6 C24.8538077,16.8596443 24.4327404,17 24,17 L14,17 C12.8954305,17 12,16.1045695 12,15 C12,14.5672596 12.1403557,14.1461923 12.4,13.8 L17.4,7.13333333 C18.0627417,6.24967773 19.3163444,6.07059163 20.2,6.73333333 C20.3516113,6.84704183 20.4862915,6.981722 20.6,7.13333333 Z"
+                                                    id="path-5"></path>
+                                          </defs>
+                                          <g id="g-app-brand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <g id="Brand-Logo" transform="translate(-27.000000, -15.000000)">
+                                              <g id="Icon" transform="translate(27.000000, 15.000000)">
+                                                <g id="Mask" transform="translate(0.000000, 8.000000)">
+                                                  <mask id="mask-2" fill="white">
+                                                    <use xlink:href="#path-1"></use>
+                                                  </mask>
+                                                  <use fill="#696cff" xlink:href="#path-1"></use>
+                                                  <g id="Path-3" mask="url(#mask-2)">
+                                                    <use fill="#696cff" xlink:href="#path-3"></use>
+                                                    <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-3"></use>
+                                                  </g>
+                                                  <g id="Path-4" mask="url(#mask-2)">
+                                                    <use fill="#696cff" xlink:href="#path-4"></use>
+                                                    <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-4"></use>
+                                                  </g>
+                                                </g>
+                                                <g id="Triangle"
+                                                   transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) ">
+                                                  <use fill="#696cff" xlink:href="#path-5"></use>
+                                                  <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use>
+                                                </g>
+                                              </g>
+                                            </g>
+                                          </g>
+                                        </svg>
+
+                                      </span>
+                                    <span class="app-brand-text demo text-body fw-bolder">Mike</span>
+                                </div>
+                                <p class="mb-1">Office 149, 450 South Brand Brooklyn</p>
+                                <p class="mb-1">San Diego County, CA 91905, USA</p>
+                                <p class="mb-0">+1 (123) 456 7891, +44 (876) 543 2198</p>
+                            </div>
+                            <div>
+                                <h4>Product #<span th:text="${products.id}"></span></h4>
+                                <div class="mb-2">
+                                    <span class="me-1">Date Issues:</span>
+                                    <span class="fw-semibold">25/08/2020</span>
+                                </div>
+                                <div>
+                                    <span class="me-1">Date Due:</span>
+                                    <span class="fw-semibold">29/08/2020</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <div class="row p-sm-3 p-0">
+                            <div class="col-xl-6 col-md-12 col-sm-5 col-12 mb-xl-0 mb-md-4 mb-sm-0 mb-4">
+                                <h6 class="pb-2">Picture</h6>
+                                <div class="mb-3 w-70" style="max-width:300px">
+                                    <div class="owl-carousel owl-theme">
+                                        <div class="item">
+                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                        </div>
+                                        <div class="item">
+                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                        </div>
+                                        <div class="item">
+                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                        </div>
+                                        <div class="item">
+                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-md-12 col-sm-7 col-12 mb-xl-0 mb-md-4 mb-sm-0 mb-4">
+                                <h6 class="pb-2">Information:</h6>
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td class="pe-3">Name:</td>
+                                        <td><span th:text="${products.name}"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Of Category:</td>
+                                        <td><span th:text="${products.productCategory.name}"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Of Object:</td>
+                                        <td><span th:text="${products.objectCategory.name}"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Product status:</td>
+                                        <td th:switch="${products.productStatus.name}">
+                                            <span th:case="'AVAILABLE'" th:class="bg-label-success">AVAILABLE</span>
+                                            <span th:case="'OUT_OF_STOCK'" th:class="bg-label-warning">OUT_OF_STOCK</span>
+                                            <span th:case="'DISCONTINUED'" th:class="bg-label-danger">DISCONTINUED</span>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Discount status:</td>
+                                        <td th:switch="${products.discountStatus.name}">
+                                            <span th:case="'ACTIVE'" th:class="bg-label-success">ACTIVE</span>
+                                            <span th:case="'INACTIVE'" th:class="bg-label-danger">INACTIVE</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Discount percent:</td>
+                                        <td><span th:text="${products.discountPercent}"></span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12">
+                                <h6 class="pb-2 pt-sm-3">Description</h6>
+                                <div class="text-justify" th:utext="${products.descriptions}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table border-top m-0">
+                            <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Size</th>
+                                <th>Material</th>
+                                <th>Import Price</th>
+                                <th>Export Price</th>
+                                <th>Quantity</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="text-nowrap">Red</td>
+                                <td class="text-nowrap">XL</td>
+                                <td class="text-nowrap">Cotton</td>
+                                <td>$25.00</td>
+                                <td>$32.00</td>
+                                <td>90</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="fw-semibold">Note:</span>
+                                <span>It was a pleasure working with you and your team. We hope you will keep us in mind for
+                          future freelance
+                          projects. Thank You!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Invoice -->
+
+            <!-- Invoice Actions -->
+            <div class="col-xl-3 col-md-4 col-12 invoice-actions">
+                <div class="card">
+                    <div class="card-body">
+                        <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas"
+                                data-bs-target="#sendInvoiceOffcanvas">
+                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
+                              class="bx bx-paper-plane bx-xs me-1"></i>Send Invoice</span>
+                        </button>
+                        <button class="btn btn-label-secondary d-grid w-100 mb-3">
+                            Download
+                        </button>
+                        <a class="btn btn-label-secondary d-grid w-100 mb-3" target="_blank"
+                           href="./app-invoice-print.html">
+                            Print
+                        </a>
+                        <a th:href="@{/mike/admin/product/edit/{productId}(productId=${products.id})}"
+                           class="btn btn-label-secondary d-grid w-100 mb-3">
+                            Edit Product
+                        </a>
+                        <button class="btn btn-primary d-grid w-100" data-bs-toggle="offcanvas"
+                                data-bs-target="#addPaymentOffcanvas">
+                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
+                              class="bx bx-dollar bx-xs me-1"></i>Add Payment</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- /Invoice Actions -->
+        </div>
+
+        <!-- Offcanvas -->
+        <!-- Send Invoice Sidebar -->
+        <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
+            <div class="offcanvas-header mb-3">
+                <h5 class="offcanvas-title">Send Invoice</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body flex-grow-1">
+                <form>
+                    <div class="mb-3">
+                        <label for="invoice-from" class="form-label">From</label>
+                        <input type="text" class="form-control" id="invoice-from" value="shelbyComapny@email.com"
+                               placeholder="company@email.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoice-to" class="form-label">To</label>
+                        <input type="text" class="form-control" id="invoice-to" value="qConsolidated@email.com"
+                               placeholder="company@email.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoice-subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="invoice-subject"
+                               value="Invoice of purchased Admin Templates" placeholder="Invoice regarding goods" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoice-message" class="form-label">Message</label>
+                        <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">Dear Queen Consolidated,
+          Thank you for your business, always a pleasure to work with you!
+          We have generated a new invoice in the amount of $95.59
+          We would appreciate payment of this invoice by 05/11/2021</textarea>
+                    </div>
+                    <div class="mb-4">
+                    <span class="badge bg-label-primary">
+                      <i class="bx bx-link bx-xs"></i>
+                      <span class="align-middle">Invoice Attached</span>
+                    </span>
+                    </div>
+                    <div class="mb-3 d-flex flex-wrap">
+                        <button type="button" class="btn btn-primary me-3" data-bs-dismiss="offcanvas">Send</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /Send Invoice Sidebar -->
+
+        <!-- Add Payment Sidebar -->
+        <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
+            <div class="offcanvas-header mb-3">
+                <h5 class="offcanvas-title">Add Payment</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body flex-grow-1">
+                <div class="d-flex justify-content-between bg-lighter p-2 mb-3">
+                    <p class="mb-0">Invoice Balance:</p>
+                    <p class="fw-bold mb-0">$5000.00</p>
+                </div>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label" for="invoiceAmount">Payment Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" id="invoiceAmount" name="invoiceAmount" class="form-control invoice-amount"
+                                   placeholder="100" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="payment-date">Payment Date</label>
+                        <input id="payment-date" class="form-control invoice-date" type="text" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="payment-method">Payment Method</label>
+                        <select class="form-select" id="payment-method">
+                            <option value="" selected disabled>Select payment method</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Paypal">Paypal</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="payment-note">Internal Payment Note</label>
+                        <textarea class="form-control" id="payment-note" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3 d-flex flex-wrap">
+                        <button type="button" class="btn btn-primary me-3" data-bs-dismiss="offcanvas">Send</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /Add Payment Sidebar -->
+
+        <!-- /Offcanvas -->
+    </div>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+    <!-- Vendors JS -->
+    <script th:src="@{/admin/assets/vendor/libs/moment/moment.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave-phone.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/flatpickr/flatpickr.js}"></script>
+
+    <!-- Page JS -->
+    <script th:src="@{/admin/assets/js/offcanvas-add-payment.js}"></script>
+    <script th:src="@{/admin/assets/js/offcanvas-send-invoice.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 0,
+                nav: false,
+                dots: true,
+                smartSpeed:450,
+                responsive: {
+                    0: {
+                        items: 1
+                    }
+                }
+            });
+            $('.owl-carousel').css('position', 'relative');
+            $('.owl-dots').css('position', 'absolute');
+            $('.owl-dots').css('bottom', '0px');
+            $('.owl-dots').css('left', '50%');
+            $('.owl-dots').css('transform', 'translate(-50%, -50%)');
+        });
+    </script>
+</th:block>
+</body>
+</html>
+
