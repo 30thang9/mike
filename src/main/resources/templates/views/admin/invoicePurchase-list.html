@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/admin/layoutAdmin"
+      layout:decorator="layouts/admin/layoutAdmin :: content, layouts/admin/layoutAdmin :: css_head, layouts/admin/layoutAdmin :: js_foot">
+<head>
+  <meta charset="UTF-8">
+  <!-- Link CSS ở đây -->
+  <th:block layout:fragment="css_head">
+    <title> Purchase - List | Mike </title>
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/typeahead-js/typeahead.css}" />
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css}">
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css}">
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css}">
+    <!--/ Vendors CSS -->
+
+    <!-- Page CSS -->
+  </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+      <span class="text-muted fw-light">Purchase /</span> List Purchase
+    </h4>
+    <!-- Invoice List Table -->
+    <div class="card">
+      <div class="card-datatable table-responsive">
+        <table class="purchase-list-table table border-top">
+          <thead>
+          <tr>
+              <th></th>
+              <th>ID</th>
+              <th>Supplier</th>
+              <th>Employee</th>
+              <th>Payment Method</th>
+              <th>Purchase Date</th>
+              <th>Total Amount</th>
+              <th>Action</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- / Content -->
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+
+  <!-- Vendors JS -->
+  <script th:src="@{/admin/assets/vendor/libs/moment/moment.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js}"></script>
+  <!-- Page JS -->
+  <script th:src="@{/admin/assets/js/app-invoice-list.js}"></script>
+<!--  <script th:src="@{/test/testb.js}"></script>-->
+
+  <script>
+      $(document).ready(function() {
+          $('body').on('click', '.btn-delete', function() {
+            var productId = $(this).data('product-id');
+            console.log(productId);
+            var modalContent = $("<div class='modal fade' id='deleteModal' tabindex='-1' role='dialog' aria-labelledby='deleteModalLabel' aria-hidden='true'></div>");
+            var modalDialog = $("<div class='modal-dialog' role='document'></div>").appendTo(modalContent);
+            var modalContentInner = $("<div class='modal-content'></div>").appendTo(modalDialog);
+            var modalHeader = $("<div class='modal-header'></div>").appendTo(modalContentInner).append("<h5 class='modal-title' id='deleteModalLabel'>Delete Product</h5>");
+            var modalBody = $("<div class='modal-body'></div>").appendTo(modalContentInner).append("<p>Are you sure you want to delete this product?</p>");
+            var modalFooter = $("<div class='modal-footer'></div>").appendTo(modalContentInner);
+            var cancelButton = $("<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>").appendTo(modalFooter);
+            var deleteButton = $("<button type='button' class='btn btn-danger btn-confirm-del' data-product-id='"+productId+"'>Delete</button>").appendTo(modalFooter);
+
+            $("body").find(".modal").modal("hide").on("hidden.bs.modal", function() {
+              $(this).remove();
+            });
+            $("body").append(modalContent);
+
+            $("#deleteModal").modal('show');
+
+          });
+
+          $('body').on('click', '.btn-confirm-del', function() {
+             var productId = $(this).data('product-id');
+             var url = "/mike/api/product/delete/" + productId;
+             $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function(response) {
+                  showModal("Delete success!", true);
+                },
+                error: function(xhr, status, error) {
+                  var errorMessage = "Delete error: " + error;
+                  showModal(errorMessage, false);
+                }
+             });
+          });
+
+          function showModal(message, isSuccess) {
+            var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+            var modalBody = $("<div class='modal-body'></div>").text(message);
+            var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+            var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+            var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+            var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+            var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+            modal.on("hidden.bs.modal", function() {
+              if(isSuccess){
+                location.reload();
+              }
+              modal.remove();
+            });
+
+            closeButton.on("click", function() {
+              if(isSuccess){
+                location.reload();
+              }
+              modal.modal("hide");
+            });
+
+            $("body").find(".modal").modal("hide").on("hidden.bs.modal", function() {
+                $(this).remove();
+            });
+
+            $("body").append(modal);
+            modal.modal("show");
+          }
+      });
+
+  </script>
+</th:block>
+</body>
+</html>
+

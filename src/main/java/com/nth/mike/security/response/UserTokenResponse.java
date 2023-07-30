@@ -2,7 +2,7 @@ package com.nth.mike.security.response;
 
 import com.nth.mike.entity.AccountStatus;
 import com.nth.mike.entity.Role;
-import com.nth.mike.model.dto.UserDTO;
+import com.nth.mike.model.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

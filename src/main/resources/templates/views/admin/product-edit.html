@@ -46,7 +46,8 @@
                     <div class="card-body">
                         <form id="myForm" class="needs-validation" novalidate enctype="multipart/form-data"
                               th:action="@{/mike/api/product/edit/} + ${products.id}" th:object="${product}" method="put">
-                            <div class="mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
                                 <label class="form-label" for="bs-validation-name">Name</label>
                                 <input type="text" class="form-control" id="bs-validation-name"
                                        placeholder="John Doe" name="name" th:value="${products.name}" required />
@@ -54,7 +55,7 @@
                                 <div class="invalid-feedback"> Please enter your name. </div>
                             </div>
 
-                            <div class="mb-3 wrapper-select-valid-custom">
+                            <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                                 <label for="bs-validation-ocate" class="form-label">Object Category</label>
                                 <select id="bs-validation-ocate" class="select2 form-select form-select-lg" data-allow-clear="true" name="objectCategory" required>
                                     <option value="">Select value</option>
@@ -66,7 +67,7 @@
 
                             <!--bat buoc co:wrapper-select-valid-custom,select2,select-validation-custom,valid-feedback-custom,invalid-feedback-custom-->
 
-                            <div class="mb-3 wrapper-select-valid-custom">
+                            <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                                 <label for="bs-validation-pcate" class="form-label">Product Category</label>
                                 <select id="bs-validation-pcate" class="select2 form-select form-select-lg"
                                         data-allow-clear="true" name="productCategory" required>
@@ -77,7 +78,7 @@
                                 <div class="invalid-feedback"> Please select your product category. </div>
                             </div>
 
-                            <div class="mb-3 wrapper-select-valid-custom">
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
                                 <label for="bs-validation-pstatus" class="form-label">Product Status</label>
                                 <select id="bs-validation-pstatus" class="select2 form-select form-select-lg" data-allow-clear="true" name="productStatus" required>
                                     <option value="">Select value</option>
@@ -87,7 +88,27 @@
                                 <div class="invalid-feedback">Please select your product status. </div>
                             </div>
 
-                            <div class="mb-3 wrapper-select-valid-custom">
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
+                                <label for="bs-validation-hot-status" class="form-label">Hot Status</label>
+                                <select id="bs-validation-hot-status" class="select2 form-select form-select-lg" data-allow-clear="true" name="hotStatus" required>
+                                    <option value="">Select value</option>
+                                    <option th:each="item : ${hotStatus}" th:value="${item}" th:text="${item}" th:selected="${item == products.hotStatus}"></option>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select your hot status. </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
+                                <label for="bs-validation-bl-status" class="form-label">Best Seller Status</label>
+                                <select id="bs-validation-bl-status" class="select2 form-select form-select-lg" data-allow-clear="true" name="bestSellerStatus" required>
+                                    <option value="">Select value</option>
+                                    <option th:each="item : ${bestSellerStatus}" th:value="${item}" th:text="${item}" th:selected="${item == products.bestSellerStatus}"></option>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select your best seller status. </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                                 <label for="bs-validation-dstatus" class="form-label">Discount Status</label>
                                 <select id="bs-validation-dstatus" class="select2 form-select form-select-lg" data-allow-clear="true" name="discountStatus" required>
                                     <option value="">Select value</option>
@@ -97,7 +118,7 @@
                                 <div class="invalid-feedback">Please select your discount status. </div>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="col-12 col-sm-6 col-md-6 mb-3">
                                 <label class="form-label" for="bs-validation-dpercent">Discount Percent</label>
                                 <input type="number" class="form-control" id="bs-validation-dpercent"
                                        placeholder="0.0" name="discountPercent" th:value="${products.discountPercent}" min="0.0" step="0.1"
@@ -107,7 +128,7 @@
                             </div>
 
 
-                            <div class="mb-3">
+                            <div class="col-12 col-md-12 mb-3">
                                 <label class="form-label" for="bs-validation-descriptions">Descriptions</label>
                                 <textarea class="form-control" id="bs-validation-descriptions" rows="3"
                                           name="descriptions" th:text="${products.descriptions}" required></textarea>
@@ -118,7 +139,7 @@
                             <div class="row">
                                 <div class="col-12 col-lg-6 mb-3 wrapper-dropzone-valid-custom">
                                     <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
-                                    <div class="dropzone needsclick dropzone-single" th:data-dropzone-urlAvatar="${products.urlAvatar}">
+                                    <div class="dropzone needsclick dropzone-single dropzone-edit-img" th:data-dropzone-urlAvatar="@{'/images/product/' + ${products.urlAvatar}}">
                                         <div class="dz-message needsclick">
                                             Drop files here or click to upload
                                             <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
@@ -135,17 +156,16 @@
                                 <div class="col-12 col-lg-6 mb-3">
                                     <label class="form-label">Preview Image</label>
                                     <div class="col-12" style="height:200px;">
-                                        <img class="h-100" id="preview-image" style="object-fit:cover;" th:src="@{${products.urlAvatar}}">
+                                        <img class="h-100" id="preview-image" style="object-fit:cover;" th:src="@{'/images/product/' + ${products.urlAvatar}}">
                                     </div>
                                 </div>
                             </div>
-
-
-                            <div class="mb-3 mt-3">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                            <div class="col-12 col-md-12 mb-3 mt-3">
+                                <div class="d-grid d-md-flex">
+                                    <button type="submit" class="btn btn-primary">Edit</button>
                                 </div>
                             </div>
+                        </div>
                         </form>
                     </div>
                 </div>
@@ -153,10 +173,14 @@
             <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                 <div class="card">
                     <div class="card-body">
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
+                            data-bs-toggle="modal" data-bs-target="#addListImages">Add List Images
+                        </button>
                         <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas"
                                 data-bs-target="#sendInvoiceOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                              class="bx bx-paper-plane bx-xs me-1"></i>Send Invoice</span>
+                            <span class="d-flex align-items-center justify-content-center text-nowrap">
+                                <i class="bx bx-paper-plane bx-xs me-1"></i>Send Invoice
+                            </span>
                         </button>
                         <button class="btn btn-label-secondary d-grid w-100 mb-3">
                             Download
@@ -180,6 +204,44 @@
             <!-- /Bootstrap Validation -->
         </div>
         <!-- /FormValidation -->
+
+        <div class="modal fade" id="addListImages" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Add List Images</h3>
+                            <p class="address-subtitle">Add new potential list Images</p>
+                        </div>
+                        <form id="addListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
+                              th:action="@{/mike/api/product/image/add}" method="post">
+                            <div class="col-12 wrapper-dropzone-valid-custom">
+                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                                <div class="dropzone needsclick dropzone-multiple dropzone-list_product-img" th:data-product-id = "${products.id}">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-list-productImage" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload avatar.</div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Add</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                                        aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- / Content -->
 </th:block>
@@ -213,7 +275,7 @@
 
     <script>
         $(document).ready(function() {
-            $('.dropzone').each(function() {
+            $('.dropzone.dropzone-edit-img').each(function() {
                 var dropzone = $(this);
                 var form = dropzone.closest('form');
                 var preview = form.find('#preview-image');
@@ -223,7 +285,6 @@
 
                 // Xác định lại sự kiện "addedfile" cho myDropzone
                 myDropzone.on("addedfile", function(file) {
-<!--                    var fileUrl = dropzone.attr("data-dropzone-urlAvatar");-->
                     var fileUrl = URL.createObjectURL(file);
                     preview.attr('src', fileUrl);
                     var div = preview.closest('div');
@@ -250,7 +311,8 @@
 
     <script>
         $(document).ready(function() {
-          var dropzoneElement = $(".dropzone");
+          var dropzoneElement = $(".dropzone.dropzone-edit-img");
+          console.log(dropzoneElement.length);
           var dropzone = Dropzone.forElement(dropzoneElement[0]);
 
           // Get the URL of the file from data-dropzone-urlAvatar attribute
@@ -272,8 +334,6 @@
               console.log('Error fetching file:', error);
             });
         });
-
-
     </script>
 
     <script>
@@ -336,9 +396,78 @@
             modal.modal("show");
           }
         });
-
-
     </script>
+    
+    <script>
+        $(document).ready(function() {
+            var myForm = document.getElementById('addListImagesForm');
+
+            myForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var dropzoneElement = myForm.querySelector('.dropzone.dropzone-multiple.dropzone-list_product-img');
+                var files = dropzoneElement.dropzone.files;
+                console.log(files.length);
+                var productId = $(dropzoneElement).data('product-id');
+                console.log(productId);
+                if (files && files.length > 0 && myForm.checkValidity()) {
+                    var formData = new FormData();
+                    formData.append('productId', productId);
+
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        formData.append('listImages', file, file.name);
+                    }            
+                    
+                    console.log(formData);
+                    var url = myForm.getAttribute('action');
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                          showModal("Edit success!", true);
+                        },
+                        error: function(xhr, status, error) {
+                          var errorMessage = "Edit error: " + error;
+                          showModal(errorMessage, false);
+                        }
+                      });
+                }
+            });
+
+            function showModal(message, isSuccess) {
+                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+                var modalBody = $("<div class='modal-body'></div>").text(message);
+                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+                var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+                closeButton.on("click", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.modal("hide");
+                });
+
+                modal.on("hidden.bs.modal", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.remove();
+                });
+
+                $("body").append(modal);
+                modal.modal("show");
+            }
+        });
+    </script>
+
 
 </th:block>
 </body>

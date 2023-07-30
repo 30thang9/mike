@@ -13,8 +13,12 @@ import lombok.NoArgsConstructor;
 public class ProductImage {
 
     @Id
-    @Column(name = "imageUrl", nullable = false)
-    private String imageUrl;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "urlImage", nullable = false, unique = true)
+    private String urlImage;
 
     @ManyToOne
     @JoinColumn(name = "productId", referencedColumnName = "id")

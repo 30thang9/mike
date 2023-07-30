@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
@@ -18,11 +17,12 @@ import java.util.UUID;
 public class UploadUtils {
     private final ResourceLoader resourceLoader;
 
+    private static final String UPLOAD_URL = "/images/product/";
+
     @Autowired
     public UploadUtils(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
-
 
     public String saveImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
@@ -43,17 +43,14 @@ public class UploadUtils {
             throw new IOException("Failed to save image: " + e.getMessage());
         }
 
-        return getRelativeImagePath(fileName);
+        // return getRelativeImagePath(fileName);
+        return fileName;
     }
 
     public String getOriginalFileName(MultipartFile file) {
         return file.getOriginalFilename();
     }
 
-    public String getFileNameByPath(String path) {
-        Path filePath = Paths.get(path);
-        return filePath.getFileName().toString();
-    }
     public boolean isImageExists(String fileName) {
         String uploadDir = getUploadDirectory();
         Path filePath = Path.of(uploadDir + fileName);
@@ -72,18 +69,11 @@ public class UploadUtils {
         return uniqueFileName + "." + extension;
     }
 
-//    private String getUploadDirectory() {
-//        Resource resource = resourceLoader.getResource("classpath:/static/images/product/");
-//        try {
-//            return resource.getFile().getAbsolutePath() + "/";
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to get upload directory: " + e.getMessage());
-//        }
-//    }
-
     private String getUploadDirectory() {
-        Resource resource = resourceLoader.getResource("file:src/main/resources/static/images/product/");
-//        Resource resource = resourceLoader.getResource("classpath:/static/images/product/");
+        String resourceUrl = "file:src/main/resources/static" + UPLOAD_URL;
+        Resource resource = resourceLoader.getResource(resourceUrl);
+        // Resource resource =
+        // resourceLoader.getResource("classpath:/static/images/product/");
         try {
             return resource.getFile().getAbsolutePath() + "/";
         } catch (IOException e) {
@@ -91,9 +81,7 @@ public class UploadUtils {
         }
     }
 
-
-
-    public String getRelativeImagePath(String fileName) {
-        return "/images/product/" + fileName;
+    private String getRelativeImagePath(String fileName) {
+        return UPLOAD_URL + fileName;
     }
 }

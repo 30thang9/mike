@@ -3,7 +3,7 @@ package com.nth.mike.service;
 import com.nth.mike.entity.Account;
 import com.nth.mike.entity.AccountRole;
 import com.nth.mike.entity.Role;
-import com.nth.mike.model.dto.UserDTO;
+import com.nth.mike.model.dto.user.UserDTO;
 
 import java.util.List;
 

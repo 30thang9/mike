@@ -1,8 +1,8 @@
 package com.nth.mike.service.impl;
 
 import com.nth.mike.entity.*;
-import com.nth.mike.model.dto.UserDTO;
-import com.nth.mike.model.mapper.UserMapper;
+import com.nth.mike.model.dto.user.UserDTO;
+import com.nth.mike.model.mapper.user.UserMapper;
 import com.nth.mike.repository.AccountRepo;
 import com.nth.mike.repository.AccountRoleRepo;
 import com.nth.mike.repository.RoleRepo;
@@ -28,16 +28,18 @@ import java.util.*;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final AccountRepo accountRepo;
     private final RoleRepo roleRepo;
-    private  final AccountRoleRepo accountRoleRepo;
-    private  final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AccountRoleRepo accountRoleRepo;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${spring.forgotPass.timeResetCode}")
     private int timeResetCode;
     @Value("${spring.forgotPass.timeAcceptPass}")
     private int timeAcceptPass;
+
     @Override
     public Account saveAccount(Account account) {
         return accountRepo.save(account);
     }
+
     @Override
     public Account saveAccountHashPass(Account account) {
         account.setPassword(encodePassword(account.getPassword()));
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new RuntimeException("Role not found");
         }
         AccountRole accountRole = new AccountRole();
-        AccountRoleId id =new AccountRoleId();
+        AccountRoleId id = new AccountRoleId();
         id.setAccountId(account.getId());
         id.setRoleId(role.getId());
         accountRole.setId(id);
@@ -98,9 +100,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<UserDTO> findAllUsers() {
         List<UserDTO> users = new ArrayList<>();
         List<Account> accounts = accountRepo.findAll();
-        for (Account account : accounts){
-            List<Role> roles=accountRoleRepo.findRoleByAccount(account);
-            users.add(UserMapper.toUserDTO(account,roles));
+        for (Account account : accounts) {
+            List<Role> roles = accountRoleRepo.findRoleByAccount(account);
+            users.add(UserMapper.toUserDTO(account, roles));
         }
         return users;
     }
@@ -108,16 +110,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO findUserByAccount(Account account) {
         UserDTO user = new UserDTO();
-        List<Role> roles=accountRoleRepo.findRoleByAccount(account);
-        user= UserMapper.toUserDTO(account,roles);
+        List<Role> roles = accountRoleRepo.findRoleByAccount(account);
+        user = UserMapper.toUserDTO(account, roles);
         return user;
     }
 
     @Override
-    public void activeAccount(Account account){
+    public void activeAccount(Account account) {
         account.setAccountStatus(AccountStatus.ACTIVE);
         accountRepo.save(account);
     }
+
     //
     @Override
     public void storeResetCode(String email, String resetCode) {
@@ -134,16 +137,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         account.setResetCodeExpiryTime(calculateExpiryTime(timeAcceptPass));
         accountRepo.save(account);
     }
+
     @Override
     public boolean isValidResetCode(String resetCode) {
         Account account = accountRepo.findByResetCode(resetCode);
         return account != null && resetCode.equals(account.getResetCode());
     }
+
     @Override
     public boolean isResetCodeExpired(String resetCode) {
         Account account = accountRepo.findByResetCode(resetCode);
-        return account != null && resetCode.equals(account.getResetCode()) && isExpired(account.getResetCodeExpiryTime());
+        return account != null && resetCode.equals(account.getResetCode())
+                && isExpired(account.getResetCodeExpiryTime());
     }
+
     @Override
     public void changePassword(String email, String newPassword) {
         Account account = accountRepo.findByUsername(email);
@@ -179,11 +186,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-
     private boolean isExpired(Date expiryTime) {
         Date currentTime = new Date();
         return currentTime.after(expiryTime);
     }
+
     private String encodePassword(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
@@ -202,7 +209,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        List<Role> roles=accountRoleRepo.findRoleByAccount(account);
+        List<Role> roles = accountRoleRepo.findRoleByAccount(account);
         roles.forEach(role -> {
             System.out.println(role.getName());
             authorities.add(new SimpleGrantedAuthority(role.getName().name()));

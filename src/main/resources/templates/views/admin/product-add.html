@@ -46,7 +46,8 @@
           <div class="card-body">
             <form id="myForm" class="needs-validation" novalidate enctype="multipart/form-data"
                   th:action="@{/mike/api/product/add}" th:object="${product}" method="post">
-              <div class="mb-3">
+            <div class="row">
+              <div class="col-12 col-md-12 mb-3">
                 <label class="form-label" for="bs-validation-name">Name</label>
                 <input type="text" class="form-control" id="bs-validation-name"
                        placeholder="John Doe" name="name" required />
@@ -54,7 +55,7 @@
                 <div class="invalid-feedback"> Please enter your name. </div>
               </div>
 
-              <div class="mb-3 wrapper-select-valid-custom">
+              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                 <label for="bs-validation-ocate" class="form-label">Object Category</label>
                 <select id="bs-validation-ocate" class="select2 form-select form-select-lg"
                         data-allow-clear="true" name="objectCategory" required>
@@ -66,7 +67,7 @@
               </div>
               <!--bat buoc co:wrapper-select-valid-custom,select2,select-validation-custom,valid-feedback-custom,invalid-feedback-custom-->
 
-              <div class="mb-3 wrapper-select-valid-custom">
+              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                 <label for="bs-validation-pcate" class="form-label">Product Category</label>
                 <select id="bs-validation-pcate" class="select2 form-select form-select-lg"
                         data-allow-clear="true" name="productCategory" required>
@@ -77,7 +78,60 @@
                 <div class="invalid-feedback"> Please select your product category</div>
               </div>
 
-              <div class="mb-3">
+              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
+                <label for="bs-validation-pstatus" class="form-label">Product Status</label>
+                <select id="bs-validation-pstatus" class="select2 form-select form-select-lg"
+                        data-allow-clear="true" name="productStatus" required>
+                  <option value="">Select value</option>
+                  <option th:each="item : ${productStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'AVAILABLE'}"></option>
+                </select>
+                <div class="valid-feedback"> Looks good! </div>
+                <div class="invalid-feedback"> Please select your product status.</div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
+                <label for="bs-validation-hot-status" class="form-label">Hot Status</label>
+                <select id="bs-validation-hot-status" class="select2 form-select form-select-lg"
+                        data-allow-clear="true" name="hotStatus" required>
+                  <option value="">Select value</option>
+                  <option th:each="item : ${hotStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
+                </select>
+                <div class="valid-feedback"> Looks good! </div>
+                <div class="invalid-feedback"> Please select your hot status.</div>
+              </div>
+              
+              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
+                <label for="bs-validation-bl-status" class="form-label">Best Seller Status</label>
+                <select id="bs-validation-bl-status" class="select2 form-select form-select-lg"
+                        data-allow-clear="true" name="bestSellerStatus" required>
+                  <option value="">Select value</option>
+                  <option th:each="item : ${bestSellerStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
+                </select>
+                <div class="valid-feedback"> Looks good! </div>
+                <div class="invalid-feedback"> Please select your best seller status.</div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
+                <label for="bs-validation-dstatus" class="form-label">Discount Status</label>
+                <select id="bs-validation-dstatus" class="select2 form-select form-select-lg" data-allow-clear="true" 
+                      name="discountStatus" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${discountStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please select your discount status. </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-6 mb-3">
+                  <label class="form-label" for="bs-validation-dpercent">Discount Percent</label>
+                  <input type="number" class="form-control" id="bs-validation-dpercent"
+                        placeholder="0.0" name="discountPercent" th:value="0.0" min="0.0" max="100.0" step="0.1"
+                        pattern="^\d+(\.\d+)?$" required />
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please enter a valid discount percent(0.0-100.0). </div>
+              </div>
+
+              <div class="col-12 col-md-12 mb-3">
                 <label class="form-label" for="bs-validation-descriptions">Descriptions</label>
                 <textarea class="form-control" id="bs-validation-descriptions" rows="3"
                           name="descriptions" required></textarea>
@@ -85,7 +139,7 @@
                 <div class="invalid-feedback"> Please enter your descriptions. </div>
               </div>
 
-              <div class="mb-3 wrapper-dropzone-valid-custom">
+              <div class="col-12 col-md-12 mb-3 wrapper-dropzone-valid-custom">
                 <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
                 <div class="dropzone needsclick dropzone-single">
                   <div class="dz-message needsclick">
@@ -101,11 +155,12 @@
                 <div class="invalid-feedback">Please select a file to upload avatar.</div>
               </div>
 
-              <div class="row">
-                <div class="col-12">
+              <div class="col-12 col-md-12 mb-3 mt-3">
+                <div class="d-grid d-md-flex">
                   <button type="submit" class="btn btn-primary">Add</button>
                 </div>
               </div>
+            </div>
             </form>
           </div>
         </div>

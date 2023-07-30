@@ -12,6 +12,9 @@
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/typeahead-js/typeahead.css}" />
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/flatpickr/flatpickr.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css}" />
+
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/dropzone/dropzone.css}" />
         <!--/ Vendors CSS -->
 
         <!-- Page CSS -->
@@ -31,7 +34,9 @@
 <!-- Gọi layout cha -->
 <th:block layout:fragment="content">
     <div class="container-xxl flex-grow-1 container-p-y">
-
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light">Product /</span> Product Detail
+        </h4>
         <div class="row invoice-preview">
             <!-- Invoice -->
             <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4">
@@ -113,16 +118,10 @@
                                 <div class="mb-3 w-70" style="max-width:300px">
                                     <div class="owl-carousel owl-theme">
                                         <div class="item">
-                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                            <img class="img-fluid" th:src="@{'/images/product/' + ${products.urlAvatar}}" alt="avatar">
                                         </div>
-                                        <div class="item">
-                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
-                                        </div>
-                                        <div class="item">
-                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
-                                        </div>
-                                        <div class="item">
-                                            <img class="img-fluid" th:src="@{${products.urlAvatar}}" alt="avatar">
+                                        <div class="item" th:each="productImage : ${productImages}">
+                                            <img class="img-fluid" th:src="@{'/images/product/' + ${productImage.urlImage}}" alt="image">
                                         </div>
                                     </div>
                                 </div>
@@ -153,6 +152,20 @@
 
                                     </tr>
                                     <tr>
+                                        <td class="pe-3">Hot status:</td>
+                                        <td th:switch="${products.hotStatus.name}">
+                                            <span th:case="'ACTIVE'" th:class="bg-label-success">ACTIVE</span>
+                                            <span th:case="'INACTIVE'" th:class="bg-label-danger">INACTIVE</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pe-3">Best seller status:</td>
+                                        <td th:switch="${products.bestSellerStatus.name}">
+                                            <span th:case="'ACTIVE'" th:class="bg-label-success">ACTIVE</span>
+                                            <span th:case="'INACTIVE'" th:class="bg-label-danger">INACTIVE</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="pe-3">Discount status:</td>
                                         <td th:switch="${products.discountStatus.name}">
                                             <span th:case="'ACTIVE'" th:class="bg-label-success">ACTIVE</span>
@@ -177,22 +190,22 @@
                         <table class="table border-top m-0">
                             <thead>
                             <tr>
-                                <th>Color</th>
-                                <th>Size</th>
-                                <th>Material</th>
-                                <th>Import Price</th>
-                                <th>Export Price</th>
-                                <th>Quantity</th>
+                                <th class="text-nowrap">Color</th>
+                                <th class="text-nowrap">Size</th>
+                                <th class="text-nowrap">Material</th>
+                                <th class="text-nowrap">Import Price</th>
+                                <th class="text-nowrap">Export Price</th>
+                                <th class="text-nowrap">Quantity</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td class="text-nowrap">Red</td>
-                                <td class="text-nowrap">XL</td>
-                                <td class="text-nowrap">Cotton</td>
-                                <td>$25.00</td>
-                                <td>$32.00</td>
-                                <td>90</td>
+                            <tr th:each = "productDetail : ${productDetails}">
+                                <td class="text-nowrap" th:text = "${productDetail.color.name}"></td>
+                                <td class="text-nowrap" th:text = "${productDetail.size.name}"></td>
+                                <td class="text-nowrap" th:text = "${productDetail.material.name}"></td>
+                                <td th:text = "${productDetail.importPrice}"></td>
+                                <td th:text = "${productDetail.exportPrice}"></td>
+                                <td th:text = "${productDetail.quantity}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -216,130 +229,101 @@
             <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                 <div class="card">
                     <div class="card-body">
-                        <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas"
-                                data-bs-target="#sendInvoiceOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                              class="bx bx-paper-plane bx-xs me-1"></i>Send Invoice</span>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
+                            data-bs-toggle="modal" data-bs-target="#addListImages">Add List Images
+                        </button>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
+                            data-bs-toggle="modal" data-bs-target="#editListImages">Edit List Images
                         </button>
                         <button class="btn btn-label-secondary d-grid w-100 mb-3">
                             Download
                         </button>
-                        <a class="btn btn-label-secondary d-grid w-100 mb-3" target="_blank"
-                           href="./app-invoice-print.html">
-                            Print
-                        </a>
                         <a th:href="@{/mike/admin/product/edit/{productId}(productId=${products.id})}"
                            class="btn btn-label-secondary d-grid w-100 mb-3">
                             Edit Product
                         </a>
-                        <button class="btn btn-primary d-grid w-100" data-bs-toggle="offcanvas"
-                                data-bs-target="#addPaymentOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                              class="bx bx-dollar bx-xs me-1"></i>Add Payment</span>
-                        </button>
                     </div>
                 </div>
             </div>
             <!-- /Invoice Actions -->
         </div>
 
-        <!-- Offcanvas -->
-        <!-- Send Invoice Sidebar -->
-        <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
-            <div class="offcanvas-header mb-3">
-                <h5 class="offcanvas-title">Send Invoice</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body flex-grow-1">
-                <form>
-                    <div class="mb-3">
-                        <label for="invoice-from" class="form-label">From</label>
-                        <input type="text" class="form-control" id="invoice-from" value="shelbyComapny@email.com"
-                               placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="invoice-to" class="form-label">To</label>
-                        <input type="text" class="form-control" id="invoice-to" value="qConsolidated@email.com"
-                               placeholder="company@email.com" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="invoice-subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="invoice-subject"
-                               value="Invoice of purchased Admin Templates" placeholder="Invoice regarding goods" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="invoice-message" class="form-label">Message</label>
-                        <textarea class="form-control" name="invoice-message" id="invoice-message" cols="3" rows="8">Dear Queen Consolidated,
-          Thank you for your business, always a pleasure to work with you!
-          We have generated a new invoice in the amount of $95.59
-          We would appreciate payment of this invoice by 05/11/2021</textarea>
-                    </div>
-                    <div class="mb-4">
-                    <span class="badge bg-label-primary">
-                      <i class="bx bx-link bx-xs"></i>
-                      <span class="align-middle">Invoice Attached</span>
-                    </span>
-                    </div>
-                    <div class="mb-3 d-flex flex-wrap">
-                        <button type="button" class="btn btn-primary me-3" data-bs-dismiss="offcanvas">Send</button>
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- /Send Invoice Sidebar -->
-
-        <!-- Add Payment Sidebar -->
-        <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
-            <div class="offcanvas-header mb-3">
-                <h5 class="offcanvas-title">Add Payment</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body flex-grow-1">
-                <div class="d-flex justify-content-between bg-lighter p-2 mb-3">
-                    <p class="mb-0">Invoice Balance:</p>
-                    <p class="fw-bold mb-0">$5000.00</p>
-                </div>
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label" for="invoiceAmount">Payment Amount</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text" id="invoiceAmount" name="invoiceAmount" class="form-control invoice-amount"
-                                   placeholder="100" />
+        <div class="modal fade" id="addListImages" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Add List Images</h3>
+                            <p class="address-subtitle">Add new potential list Images</p>
                         </div>
+                        <form id="addListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
+                              th:action="@{/mike/api/product/product-image/add}" method="post">
+                            <div class="col-12 wrapper-dropzone-valid-custom">
+                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                                <div class="dropzone needsclick dropzone-multiple dropzone-add-list_product_image" th:data-product-id = "${products.id}">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-list-productImage" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload avatar.</div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3">Add</button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="payment-date">Payment Date</label>
-                        <input id="payment-date" class="form-control invoice-date" type="text" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="payment-method">Payment Method</label>
-                        <select class="form-select" id="payment-method">
-                            <option value="" selected disabled>Select payment method</option>
-                            <option value="Cash">Cash</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Debit Card">Debit Card</option>
-                            <option value="Credit Card">Credit Card</option>
-                            <option value="Paypal">Paypal</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label" for="payment-note">Internal Payment Note</label>
-                        <textarea class="form-control" id="payment-note" rows="2"></textarea>
-                    </div>
-                    <div class="mb-3 d-flex flex-wrap">
-                        <button type="button" class="btn btn-primary me-3" data-bs-dismiss="offcanvas">Send</button>
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-        <!-- /Add Payment Sidebar -->
 
-        <!-- /Offcanvas -->
+        <div class="modal fade" id="editListImages" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Edit List Images</h3>
+                            <p class="address-subtitle">Edit new potential list Images</p>
+                        </div>
+                        <form id="editListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
+                              th:action="@{/mike/api/product/product-image/edit/} + ${products.id}" method="put">
+                            <div class="col-12 wrapper-dropzone-valid-custom">
+                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                                <div class="dropzone needsclick dropzone-multiple dropzone-edit-list_product_image" th:data-product-id = "${products.id}">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-list-productImage" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload avatar.</div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="button" id="reset-edit-image" class="btn btn-label-secondary me-sm-3 me-1 mb-3">Reset Image</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Edit </button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </th:block>
 
@@ -350,10 +334,17 @@
     <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave.js}"></script>
     <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave-phone.js}"></script>
     <script th:src="@{/admin/assets/vendor/libs/flatpickr/flatpickr.js}"></script>
-
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/dropzone/dropzone.js}"></script>
     <!-- Page JS -->
     <script th:src="@{/admin/assets/js/offcanvas-add-payment.js}"></script>
     <script th:src="@{/admin/assets/js/offcanvas-send-invoice.js}"></script>
+
+    <script th:src="@{/admin/assets/js/form-validation.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-file-upload.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-validation-file-upload-custom.js}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
         integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
@@ -381,6 +372,206 @@
             $('.owl-dots').css('left', '50%');
             $('.owl-dots').css('transform', 'translate(-50%, -50%)');
         });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var myForm = document.getElementById('addListImagesForm');
+
+            myForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var dropzoneElement = myForm.querySelector('.dropzone.dropzone-multiple.dropzone-add-list_product_image');
+                var files = dropzoneElement.dropzone.files;
+                console.log(files.length);
+                var productId = $(dropzoneElement).data('product-id');
+                console.log(productId);
+                if (files && files.length > 0 && myForm.checkValidity()) {
+                    var formData = new FormData();
+                    formData.append('productId', productId);
+
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        formData.append('listImages', file, file.name);
+                    }            
+                    
+                    console.log(formData);
+                    var url = myForm.getAttribute('action');
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                          showModal("Edit success!", true);
+                        },
+                        error: function(xhr, status, error) {
+                          var errorMessage = "Edit error: " + error;
+                          showModal(errorMessage, false);
+                        }
+                      });
+                }
+            });
+
+            function showModal(message, isSuccess) {
+                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+                var modalBody = $("<div class='modal-body'></div>").text(message);
+                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+                var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+                closeButton.on("click", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.modal("hide");
+                });
+
+                modal.on("hidden.bs.modal", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.remove();
+                });
+
+                $("body").append(modal);
+                modal.modal("show");
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var myForm = document.getElementById('editListImagesForm');
+
+            myForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var dropzoneElement = myForm.querySelector('.dropzone.dropzone-multiple.dropzone-edit-list_product_image');
+                var files = dropzoneElement.dropzone.files;
+                console.log(files.length);
+                if (files && files.length > 0 && myForm.checkValidity()) {
+                    var formData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        if (file.status === 'success') {
+                            formData.append('listImages', file, file.name);
+                        }
+                    }            
+                    var url = myForm.getAttribute('action');
+
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                          showModal("Edit success!", true);
+                        },
+                        error: function(xhr, status, error) {
+                          var errorMessage = "Edit error: " + error;
+                          showModal(errorMessage, false);
+                        }
+                    });
+                }
+            });
+
+            function showModal(message, isSuccess) {
+                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+                var modalBody = $("<div class='modal-body'></div>").text(message);
+                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+                var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+                closeButton.on("click", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.modal("hide");
+                });
+
+                modal.on("hidden.bs.modal", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.remove();
+                });
+
+                $("body").append(modal);
+                modal.modal("show");
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var dropzoneElement = $(".dropzone.dropzone-edit-list_product_image");
+            var dropzone = Dropzone.forElement(dropzoneElement[0]);
+            var productId = $(dropzoneElement).data('product-id');
+            var url = "/mike/api/product/product-single/" + productId;
+          
+            // Hàm để thêm file vào Dropzone từ một đường dẫn hình ảnh
+            function addFileToDropzone(fileName) {
+              var fileUrl = "/images/product/" + fileName;
+              fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                  // Tạo một đối tượng file mới với blob nhận được và đặt tên file
+                  var file = new File([blob], fileName, { type: blob.type });
+                  // Thêm file vào Dropzone
+                  dropzone.addFile(file);
+                })
+                .catch(error => {
+                  // Xử lý bất kỳ lỗi nào xảy ra trong quá trình fetch
+                  console.log('Error fetching file:', error);
+                });
+            }
+          
+            // Hàm để tải lại danh sách hình ảnh và cập nhật Dropzone
+            function reloadAndRefreshDropzone() {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                    console.log(response);
+                    var productImage = response.productImage;
+                    console.log(productImage);
+            
+                    // Xóa toàn bộ file hiện tại khỏi Dropzone
+                    dropzone.removeAllFiles();
+            
+                    // Thêm lại các file mới từ danh sách hình ảnh
+                    for (var i = 0; i < productImage.length; i++) {
+                        var fileName = productImage[i].urlImage;
+                        addFileToDropzone(fileName);
+                    }
+            
+                    // Cập nhật số lượng tối đa của file trong Dropzone
+                    dropzone.options.maxFiles = productImage.length;
+                    },
+                    error: function(xhr, status, error) {
+                    console.log(error);
+                    }
+                });
+            }
+          
+            // Gọi AJAX lần đầu để cập nhật Dropzone ban đầu
+            reloadAndRefreshDropzone();
+          
+            // Sự kiện click để tải lại danh sách hình ảnh và cập nhật Dropzone
+            $('#reset-edit-image').on('click', function(){
+              reloadAndRefreshDropzone();
+            });
+          });
+
     </script>
 </th:block>
 </body>

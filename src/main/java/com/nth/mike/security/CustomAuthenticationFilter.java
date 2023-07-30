@@ -3,7 +3,7 @@ package com.nth.mike.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nth.mike.model.dto.UserDTO;
+import com.nth.mike.model.dto.user.UserDTO;
 import com.nth.mike.security.response.UserTokenResponse;
 import com.nth.mike.service.UserService;
 import lombok.RequiredArgsConstructor;

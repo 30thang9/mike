@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/admin/layoutAdmin"
+      layout:decorator="layouts/admin/layoutAdmin :: content, layouts/admin/layoutAdmin :: css_head, layouts/admin/layoutAdmin :: js_foot">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> Invoice - Purchase - Edit | Mike </title>
+        <!-- Vendors CSS -->
+        <!-- Vendors CSS -->
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/typeahead-js/typeahead.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/select2/select2.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/bs-stepper/bs-stepper.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/rateyo/rateyo.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css}" />
+
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/flatpickr/flatpickr.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/bootstrap-select/bootstrap-select.css}" />
+        <!--/ Vendors CSS -->
+
+        <!-- Page CSS -->
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/css/pages/wizard-ex-checkout.css}" />
+
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/css/pages/app-invoice.css}" />
+
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/dropzone/dropzone.css}" />
+
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/quill/typography.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/quill/katex.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/quill/editor.css}" />
+    </th:block>
+</head>
+
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light"> Invoice / 
+                <span class="text-muted fw-light"> Purchase /</span>
+            </span> Purchase Edit
+        </h4>
+        <!-- Checkout Wizard -->
+        <div id="wizard-checkout" class="bs-stepper wizard-icons wizard-icons-example mt-2">
+            <div class="bs-stepper-header m-auto border-0">
+                <div class="step" data-target="#add-purchase">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-icon">
+                            <svg style="font-size:42px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                 fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
+                                <path
+                                        d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                                <path
+                                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                                <path
+                                        d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                            </svg>
+                        </span>
+                        <span class="bs-stepper-label">Purchase</span>
+                    </button>
+                </div>
+                <div class="line">
+                    <i class="bx bx-chevron-right"></i>
+                </div>
+                <div class="step" data-target="#add-purchase-details">
+                    <button type="button" class="step-trigger">
+                        <span class="bs-stepper-icon">
+                            <svg style="font-size:42px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                 fill="currentColor" class="bi bi-receipt" viewBox="0 0 16 16">
+                                <path
+                                        d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
+                                <path
+                                        d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                        </span>
+                        <span class="bs-stepper-label">Purchase Details</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bs-stepper-content border-top">
+                <form id="wizard-checkout-form" class="needs-validation" novalidate>
+
+                    <!-- Address -->
+                    <div id="add-purchase" class="content">
+                        <div class="row">
+                            <!-- Address left -->
+                            <div class="col-lg-9 col-12 mb-lg-0 mb-4">
+                                <div class="card pl-2">
+                                    <div class="card-body">
+                                        <p class="mt-2 mb-4 text-uppercase form-label">Add New Purchase</p>
+                                        <div class="row">
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="mb-3 wrapper-select-valid-custom">
+                                                    <label for="bs-validation-supplier" class="form-label"> Supplier </label>
+                                                    <select id="bs-validation-supplier" class="select2 form-select form-select-lg"
+                                                            data-allow-clear="true" name="supplier" required>
+                                                        <option value="">Select value</option>
+                                                        <option th:each="item : ${suppliers}" th:value="${item.id}" 
+                                                            th:text="${item.name}" th:selected="${purchases.supplier.id == item.id}">
+                                                        </option>
+                                                    </select>
+                                                    <div class="valid-feedback"> Looks good! </div>
+                                                    <div class="invalid-feedback"> Please select your supplier</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="mb-3 wrapper-select-valid-custom">
+                                                    <label for="bs-validation-employee" class="form-label"> Employee</label>
+                                                    <select id="bs-validation-employee" class="select2 form-select form-select-lg"
+                                                            data-allow-clear="true" name="employee" required>
+                                                        <option value="">Select value</option>
+                                                        <option th:each="item : ${employees}" th:value="${item.id}" 
+                                                            th:text="${item.name}" th:selected="${purchases.employee.id == item.id}">
+                                                        </option>
+                                                    </select>
+                                                    <div class="valid-feedback"> Looks good! </div>
+                                                    <div class="invalid-feedback"> Please select your employee</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-2 mb-2 text-uppercase form-label" style="font-size:12px;">Choose payment method</p>
+                                        <div class="row">
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="form-check custom-option custom-option-icon position-relative checked">
+                                                    <label class="form-check-label custom-option-content" for="customRadioDelivery1">
+                                                        <span class="custom-option-body">
+                                                            <i class="bi bi-cash"></i>
+                                                            <span class="custom-option-title">Cash</span>
+                                                            <span class="badge bg-label-secondary btn-pinned">-0%</span>
+                                                            <small>Payment by Cash.</small>
+                                                        </span>
+                                                        <input name="paymentMethod" class="form-check-input"
+                                                               type="radio" value="CASH" id="customRadioDelivery1"
+                                                               checked="">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="form-check custom-option custom-option-icon position-relative">
+                                                    <label class="form-check-label custom-option-content" for="customRadioDelivery2">
+                                                        <span class="custom-option-body">
+                                                            <i class="bi bi-credit-card-2-front"></i>
+                                                            <span class="custom-option-title">Credit Card</span>
+                                                            <span class="badge bg-label-success btn-pinned">-3%</span>
+                                                            <small>Payment by Credit Card.</small>
+                                                        </span>
+                                                        <input name="paymentMethod" class="form-check-input"
+                                                               type="radio" value="CREDIT_CARD" id="customRadioDelivery2"
+                                                               th:checked="${purchases.paymentMethod.name == 'CREDIT_CARD'}">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="form-check custom-option custom-option-icon position-relative">
+                                                    <label class="form-check-label custom-option-content" for="customRadioDelivery3">
+                                                        <span class="custom-option-body">
+                                                            <i class="bi bi-paypal"></i>
+                                                            <span class="custom-option-title">Paypal</span>
+                                                            <span class="badge bg-label-success btn-pinned">-3%</span>
+                                                            <small>Payment by Paypal.</small>
+                                                        </span>
+                                                        <input name="paymentMethod" class="form-check-input"
+                                                               type="radio" value="PAYPAL" id="customRadioDelivery3"
+                                                               th:checked="${purchases.paymentMethod.name == 'PAYPAL'}">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="form-check custom-option custom-option-icon position-relative">
+                                                    <label class="form-check-label custom-option-content" for="customRadioDelivery4">
+                                                        <span class="custom-option-body">
+                                                            <i class="bi bi-clipboard"></i>
+                                                            <span class="custom-option-title">Other</span>
+                                                            <span class="badge bg-label-secondary btn-pinned">-0%</span>
+                                                            <small>Payment by Other.</small>
+                                                        </span>
+                                                        <input name="paymentMethod" class="form-check-input"
+                                                               type="radio" value="OTHER" id="customRadioDelivery4"
+                                                               th:checked="${purchases.paymentMethod.name == 'OTHER'}">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-4 mb-2 text-uppercase form-label" style="font-size:12px;">Purchase Date</p>
+                                        <div class="row">
+                                            <div class="col-md mb-md-0 mb-2">
+                                                <div class="w-100 wrapper-picker-valid-custom">
+                                                    <input type="text" class="form-control date-picker picker-valid"
+                                                           id="bs-validation-date"
+                                                           name="purchaseDate"
+                                                           placeholder="YYYY-MM-DD" required 
+                                                           th:value="${purchases.purchaseDate}" />
+                                                    <div class="valid-feedback"> Looks good! </div>
+                                                    <div class="invalid-feedback"> Please enter your date. </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md mb-md-0 mb-2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address right -->
+                            <div class="col-lg-3 col-12">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <!-- Estimated Delivery -->
+<!--                                    <h6>Estimated Delivery Date</h6>-->
+                                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-4" data-bs-toggle="modal" data-bs-target="#addNewSupplier">Add new
+                                            supplier</button>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-next" type="button">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart -->
+                    <div id="add-purchase-details" class="content">
+                        <div class="row invoice-add">
+                            <!-- Invoice Add-->
+                            <div class="col-lg-9 col-12 mb-lg-0 mb-4">
+                                <div class="card invoice-preview-card">
+                                    <div class="card-body">
+<!--                                        <div class="row px-sm-3 p-0">-->
+<!--                                            &lt;!&ndash; Address left &ndash;&gt;-->
+<!--                                            <div class="col-12">-->
+<!--                                                &lt;!&ndash; Add new product &ndash;&gt;-->
+<!--                                                <p>If you don't have a product?</p>-->
+<!--                                                <button type="button" class="btn btn-label-primary mb-4" data-bs-toggle="modal" data-bs-target="#addNewProduct">Add new-->
+<!--                                                    product</button>-->
+<!--                                            </div>-->
+
+<!--                                        </div>-->
+
+<!--                                        <hr class="my-4 mx-n4">-->
+
+                                        <div class="source-item py-sm-3">
+                                            <div class="mb-3" data-repeater-list="group-a">
+                                                <div class="repeater-wrapper pt-0 pt-md-4" style="display:none;" data-repeater-item>
+                                                    <div class="d-flex border rounded position-relative pe-0">
+                                                        <div class="row w-100 m-0 p-3 wrapper-item">
+                                                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom">
+                                                                <p class="mb-2 mt-2 ">Product</p>
+                                                                <select class="form-select item-details mb-2 select2 form-select-lg pd-product select-product"
+                                                                        data-allow-clear="true" required
+                                                                        name="product">
+                                                                    <option value="">Select value</option>
+                                                                    <option th:each="item : ${products}" th:value="${item.id}"
+                                                                            th:text="${item.name}"></option>
+                                                                </select>
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please select your product</div>
+                                                            </div>
+                                                            <!--size,color,material-->
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                                                            <i class="bx bx-x fs-4 text-muted cursor-pointer"
+                                                               data-repeater-delete></i>
+                                                            <div class="dropdown">
+                                                                <i class="bx bx-cog bx-xs text-muted cursor-pointer more-options-dropdown"
+                                                                   role="button" id="dropdownMenuButton"
+                                                                   data-bs-toggle="dropdown"
+                                                                   data-bs-auto-close="outside"
+                                                                   aria-expanded="false">
+                                                                </i>
+                                                                <div class="dropdown-menu dropdown-menu-end w-px-300 p-3"
+                                                                     aria-labelledby="dropdownMenuButton">
+
+                                                                    <div class="row g-3">
+                                                                        <div class="col-12">
+                                                                            <label for="discountInput"
+                                                                                   class="form-label">Discount(%)</label>
+                                                                            <input type="number"
+                                                                                   class="form-control"
+                                                                                   id="discountInput" min="0"
+                                                                                   max="100" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="dropdown-divider my-3"></div>
+                                                                    <button type="button"
+                                                                            class="btn btn-label-primary btn-apply-changes">Apply</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="repeater-wrapper repeater-purchaseDetail pt-0 pt-md-4" data-repeater-item th:each="purchaseDetail : ${purchaseDetails}">
+                                                    <div class="d-flex border rounded position-relative pe-0">
+                                                        <div class="row w-100 m-0 p-3 wrapper-item">
+                                                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom">
+                                                                <p class="mb-2 mt-2 ">Product</p>
+                                                                <select class="form-select item-details mb-2 select2 form-select-lg pd-product select-product"
+                                                                        data-allow-clear="true" required
+                                                                        name="product"
+                                                                        th:data-purchase-detail ="${purchaseDetail.id.productId + '-' + purchaseDetail.id.colorId + '-' + purchaseDetail.id.sizeId + '-' + purchaseDetail.id.materialId + '-' + purchaseDetail.quantity + '-' + purchaseDetail.paymentPrice}">
+                                                                    <option value="">Select value</option>
+                                                                    <option th:each="item : ${products}" th:value="${item.id}"
+                                                                            th:text="${item.name}" th:selected="${purchaseDetail.productDetail.product.id == item.id}">
+                                                                    </option>
+                                                                </select>
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please select your product</div>
+                                                            </div>
+                                                            <!--size,color,material-->
+
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                                                            <i class="bx bx-x fs-4 text-muted cursor-pointer"
+                                                               data-repeater-delete></i>
+                                                            <div class="dropdown">
+                                                                <i class="bx bx-cog bx-xs text-muted cursor-pointer more-options-dropdown"
+                                                                   role="button" id="dropdownMenuButton"
+                                                                   data-bs-toggle="dropdown"
+                                                                   data-bs-auto-close="outside"
+                                                                   aria-expanded="false">
+                                                                </i>
+                                                                <div class="dropdown-menu dropdown-menu-end w-px-300 p-3"
+                                                                     aria-labelledby="dropdownMenuButton">
+
+                                                                    <div class="row g-3">
+                                                                        <div class="col-12">
+                                                                            <label for="discountInput"
+                                                                                   class="form-label">Discount(%)</label>
+                                                                            <input type="number"
+                                                                                   class="form-control"
+                                                                                   id="discountInput" min="0"
+                                                                                   max="100" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="dropdown-divider my-3"></div>
+                                                                    <button type="button"
+                                                                            class="btn btn-label-primary btn-apply-changes">Apply</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex flex-wrap">
+                                                    <button type="button" id="btn-reset-purchaseDetail" class="btn btn-secondary mb-3 me-3">Reset Item</button>
+                                                    <button type="button" class="btn btn-primary mb-3"
+                                                            data-repeater-create>Add Item</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-4 mx-n4" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Invoice Add-->
+
+                            <!-- Invoice Actions -->
+                            <div class="col-lg-3 col-12 invoice-actions">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" data-bs-toggle="modal" data-bs-target="#addNewProduct">Add new
+                                            product</button>
+                                        <a th:href="@{/mike/admin/product/color/add}"
+                                           class="btn btn-label-primary d-grid w-100 mb-3">Add new color</a>
+                                        <a th:href="@{/mike/admin/product/size/add}"
+                                           class="btn btn-label-primary d-grid w-100 mb-3">Add new size</a>
+                                        <a th:href="@{/mike/admin/product/material/add}"
+                                           class="btn btn-label-primary d-grid w-100 mb-3">Add new material</a>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-secondary btn-prev mb-3" type="button">Previous</button>
+                                    <button class="btn btn-primary" >Edit purchase</button>
+                                </div>
+                            </div>
+                            <!-- /Invoice Actions -->
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <!--/ Checkout Wizard -->
+
+        <!-- Add New Supplier Modal -->
+        <div class="modal fade" id="addNewSupplier" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Add New Supplier</h3>
+                            <p class="address-subtitle">Add new potential suppliers</p>
+                        </div>
+                        <form id="addNewSupplierForm" class="row g-3" onsubmit="return false">
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="modalSupplierName"> Name </label>
+                                <input type="text" id="modalSupplierName" name="name"
+                                       class="form-control" placeholder="John" required/>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="modalSupplierPhone">Phone</label>
+                                <input type="tel" id="modalSupplierPhone" name="phone"
+                                       class="form-control" placeholder="+84123456789"
+                                       pattern="^\+?\d{1,4}-?\d{1,2}-?\d{1,4}-?\d{4,}$" required
+                                       oninput="this.value = this.value.replace(/[^0-9+\-]/g, '')" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="modalSupplierEmail"> Email </label>
+                                <input type="email" id="modalSupplierEmail" name="email"
+                                       class="form-control" placeholder="doe@gmail.com" required/>
+                            </div>
+
+                            <div class="col-12 ">
+                                <label class="form-label" for="modalSupplierAddress"> Address </label>
+                                <input type="text" id="modalSupplierAddress" name="address"
+                                       class="form-control" placeholder="12, Business Park" required />
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                                        aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Add New Supplier Modal -->
+
+        <!-- Add New Product Modal -->
+        <div class="modal fade" id="addNewProduct" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Add New Product</h3>
+                            <p class="address-subtitle">Add new potential Product</p>
+                        </div>
+                        <form id="addNewProductForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
+                              th:action="@{/mike/api/product/add}" th:object="${product}" method="post">
+
+                            <div class="col-12">
+                                <label class="form-label" for="bs-validation-name">Name</label>
+                                <input type="text" class="form-control" id="bs-validation-name"
+                                       placeholder="John Doe" name="name" required />
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please enter your name. </div>
+                            </div>
+
+                            <div class="col-12 wrapper-select-valid-custom">
+                                <label for="bs-validation-ocate" class="form-label">Object Category</label>
+                                <select id="bs-validation-ocate" class="select2 form-select form-select-lg"
+                                        data-allow-clear="true" name="objectCategory" required>
+                                    <option value="">Select value</option>
+                                    <option th:each="item : ${objectCates}" th:value="${item.id}" th:text="${item.name}"></option>
+                                </select>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please select your object category</div>
+                            </div>
+
+                            <div class="col-12 wrapper-select-valid-custom">
+                                <label for="bs-validation-pcate" class="form-label">Product Category</label>
+                                <select id="bs-validation-pcate" class="select2 form-select form-select-lg"
+                                        data-allow-clear="true" name="productCategory" required>
+                                    <option value="">Select value</option>
+                                    <option th:each="item : ${productCates}" th:value="${item.id}" th:text="${item.name}"></option>
+                                </select>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please select your product category</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="bs-validation-descriptions">Descriptions</label>
+                                <textarea class="form-control" id="bs-validation-descriptions" rows="3"
+                                          name="descriptions" required></textarea>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please enter your descriptions. </div>
+                            </div>
+
+                            <div class="col-12 wrapper-dropzone-valid-custom">
+                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                                <div class="dropzone needsclick dropzone-single">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-urlAvatar" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload avatar.</div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                                        aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Add New Product Modal -->
+
+    </div>
+    <!-- / Content -->
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+
+    <!-- Vendors JS -->
+    <script th:src="@{/admin/assets/vendor/libs/select2/select2.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/bs-stepper/bs-stepper.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/rateyo/rateyo.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/cleavejs/cleave-phone.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js}"></script>
+
+    <script th:src="@{/admin/assets/vendor/libs/flatpickr/flatpickr.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/jquery-repeater/jquery-repeater.js}"></script>
+
+    <script th:src="@{/admin/assets/vendor/libs/bootstrap-select/bootstrap-select.js}"></script>
+
+    <script th:src="@{/admin/assets/vendor/libs/dropzone/dropzone.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/bloodhound/bloodhound.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/quill/katex.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/quill/quill.js}"></script>
+
+    <!-- Page JS -->
+    <script th:src="@{/admin/assets/js/modal-add-new-address.js}"></script>
+    <script th:src="@{/admin/assets/js/wizard-ex-checkout.js}"></script>
+
+    <script th:src="@{/admin/assets/js/offcanvas-send-invoice.js}"></script>
+    <script th:src="@{/admin/assets/js/app-invoice-add.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-selects.js}"></script>
+
+    <script th:src="@{/admin/assets/js/form-validation.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-file-upload.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-editors.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-validation-select2-custom.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-validation-file-upload-custom.js}"></script>
+    <script th:src="@{/admin/assets/js/forms-validation-picker-custom.js}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#wizard-checkout-form').submit(function(event) {
+                event.preventDefault();
+
+                var supplier = $('[name="supplier"]', this).val();
+                var employee = $('[name="employee"]', this).val();
+                var paymentMethod = $('[name="paymentMethod"]:checked', this).val();
+                var purchaseDate = $('[name="purchaseDate"]', this).val();
+
+                if(!supplier || !employee || !paymentMethod || !purchaseDate ){
+                    var errorMessage = "Please enter or select all fields in invoice purchase";
+                    showModal(errorMessage, false);
+                    $('.btn-prev').eq(0).click();
+                    return;
+                }
+
+                var products = $('.pd-product', this).filter(':visible');
+                var sizes = $('.pd-size', this).filter(':visible');
+                var colors = $('.pd-color', this).filter(':visible');
+                var materials = $('.pd-material', this).filter(':visible');
+                var quantities = $('.pd-quantity', this).filter(':visible');
+                var paymentPrices = $('.pd-paymentPrice', this).filter(':visible');
+
+                // Check for duplicate combinations
+                var combinationSet = new Set();
+
+                for (var i = 0; i < products.length; i++) {
+                    var productName = $(products[i]).find('option:selected').text();
+                    var sizeName = $(sizes[i]).find('option:selected').text();
+                    var colorName = $(colors[i]).find('option:selected').text();
+                    var materialName = $(materials[i]).find('option:selected').text();
+                    
+                    var combinationList = $("<ul class='list-group'></ul>");
+                    combinationList.append("<li class='list-group-item'>Product: " + productName + "</li>");
+                    combinationList.append("<li class='list-group-item'>Size: " + sizeName + "</li>");
+                    combinationList.append("<li class='list-group-item'>Color: " + colorName + "</li>");
+                    combinationList.append("<li class='list-group-item'>Material: " + materialName + "</li>");
+                
+                    var combinationMessage = "Duplicate combination found: ";
+                    combinationMessage += combinationList.prop('outerHTML');
+                
+                    // Check for duplicate combinations
+                    if (combinationSet.has(combinationMessage)) {
+                    // Show the message for duplicate combination
+                    showModal(combinationMessage, false);
+                    return;
+                    }
+                    combinationSet.add(combinationMessage);
+                }
+
+
+                var formData = {
+                purchase: {
+                    supplierId: supplier,
+                    employeeId: employee,
+                    paymentMethod: paymentMethod,
+                    purchaseDate: purchaseDate
+                },
+                purchaseDetail: []
+                };
+
+                for (var i = 0; i < products.length; i++) {
+                    var product = $(products[i]).val();
+                    var size = $(sizes[i]).val();
+                    var color = $(colors[i]).val();
+                    var material = $(materials[i]).val();
+                    var quantity = $(quantities[i]).val();
+                    var paymentPrice = $(paymentPrices[i]).val();
+
+                    if (!product || !size || !color || !material || !quantity || !paymentPrice) {
+                        var errorMessage = "Please enter or select all fields in invoice purchase details";
+                        showModal(errorMessage, false);
+                        return;
+                    }
+
+                    var purchaseDetailItem = {
+                        productId: product,
+                        sizeId: size,
+                        colorId: color,
+                        materialId: material,
+                        quantity: quantity,
+                        paymentPrice: paymentPrice
+                    };
+
+                    formData.purchaseDetail.push(purchaseDetailItem);
+                }
+
+                var jsonData = JSON.stringify(formData);
+                console.log(jsonData);
+                // Gửi PUT request bằng jQuery AJAX  
+                var href = window.location.href;
+                var purchaseId = href.substring(href.lastIndexOf('/') + 1);
+                var url = '/mike/api/purchase/edit/'+ purchaseId;         
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: jsonData,
+                    success: function(response) {
+                        showModal("Edit success!", true);
+                    },
+                    error: function(error) {
+                        var errorMessage = formatErrorDetails(error.responseJSON);
+                        showModal(errorMessage, false);
+                        console.log(error);
+                    }
+                });
+            });
+
+            function formatErrorDetails(obj) {
+                var html = '';
+
+                if (typeof obj === "object" && obj !== null) {
+                    html += '<ul class="list-group">';
+
+                    Object.entries(obj).forEach(([key, value]) => {
+                    html += '<li class="list-group-item">';
+
+                    if (typeof value === "object" && value !== null) {
+                        html += '<strong>' + key + ':</strong>';
+                        html += formatErrorDetails(value);
+                    } else {
+                        html += '<strong>' + key + ':</strong> ' + value;
+                    }
+
+                    html += '</li>';
+                    });
+
+                    html += '</ul>';
+                } else {
+                    html += obj;
+                }
+
+                return html;
+            }
+
+            function showModal(message, isSuccess) {
+                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+                var modalBody = $("<div class='modal-body'></div>").append(message);
+                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+                var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+                modal.on("hidden.bs.modal", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.remove();
+                });
+
+                closeButton.on("click", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.modal("hide");
+                });
+
+                $("body").append(modal);
+                modal.modal("show");
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.source-item').on('change', '.select-product', function() {
+                var productValue = $(this).val();
+                if (productValue) {
+                    console.log(productValue);
+                    var wrapperItem = $(this).closest('.wrapper-item'); // Store the reference to the .select-product element
+                    var url = "/mike/api/product/product-single/" + productValue;
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                            var productDetail = response.productDetail;
+                            var unique = new Set();
+                            // Assuming the following code creates a new HTML element with the product details
+                            var newElement = $(`
+                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-size">
+                                    <p class="mb-2 mt-2">Size</p>
+                                    <select class="form-select item-details mb-2 select2 select-size form-select-lg pd-size" data-allow-clear="true" required name="size">
+                                        <option value="">Select value</option>
+                                        ${productDetail.map((detail, index) => {
+                                            if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
+                                              unique.add(detail.size.name); // Add the size to the Set
+                                              return `
+                                                <option value="${detail.size.id}">${detail.size.name}</option>
+                                              `;
+                                            }
+                                            return ''; // Return an empty string for duplicate sizes
+                                        }).join('')}
+                                    </select>
+                                    <div class="valid-feedback"> Looks good! </div>
+                                    <div class="invalid-feedback"> Please select your size</div>
+                                </div>
+                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-color">
+                                    <p class="mb-2 mt-2 ">Color</p>
+                                    <select class="form-select item-details mb-2 select2 select-color form-select-lg pd-color"
+                                            data-allow-clear="true"
+                                            name="color" required>
+                                        <option value="">Select value</option>
+                                        ${productDetail.map((detail, index) => {
+                                            if (!unique.has(detail.color.name)) { // Check if the size is not already in the Set
+                                              unique.add(detail.color.name); // Add the size to the Set
+                                              return `
+                                                <option value="${detail.color.id}">${detail.color.name}</option>
+                                              `;
+                                            }
+                                            return ''; // Return an empty string for duplicate sizes
+                                        }).join('')}
+                                    </select>
+                                    <div class="valid-feedback"> Looks good! </div>
+                                    <div class="invalid-feedback"> Please select your color</div>
+                                </div>
+                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-material">
+                                    <p class="mb-2 mt-2 ">Material</p>
+                                    <select class="form-select item-details mb-2 select2 select-material form-select-lg pd-material"
+                                            data-allow-clear="true"
+                                            name="material" required>
+                                        <option value="">Select value</option>
+                                        ${productDetail.map((detail, index) => {
+                                            if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
+                                              unique.add(detail.material.name); // Add the size to the Set
+                                              return `
+                                                <option value="${detail.material.id}">${detail.material.name}</option>
+                                              `;
+                                            }
+                                            return ''; // Return an empty string for duplicate sizes
+                                        }).join('')}
+                                    </select>
+                                    <div class="valid-feedback"> Looks good! </div>
+                                    <div class="invalid-feedback"> Please select your material</div>
+                                </div>
+                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-quantity">
+                                    <p class="mb-2 mt-2 ">Quantity</p>
+                                    <input type="number" class="form-control pd-quantity"
+                                           placeholder="Enter number" min="1"
+                                           oninput="this.value = this.value.replace(/[^0-9+\-]/g, '')"
+                                           name="quantity" required/>
+                                    <div class="valid-feedback"> Looks good! </div>
+                                    <div class="invalid-feedback"> Please enter your quantity.</div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-price">
+                                    <p class="mb-2 mt-2 ">Price</p>
+                                    <input type="number" class="form-control pd-paymentPrice"
+                                           placeholder="Enter number" min="0.00" step="0.01"
+                                           name="paymentPrice" required />
+                                    <div class="valid-feedback"> Looks good! </div>
+                                    <div class="invalid-feedback"> Please enter your price.</div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-discount">
+                                    <p class="mb-2 mt-2 ">Discount</p>
+                                    <div>
+                                        <span class="discount me-2">0%</span>
+                                    </div>
+                                </div>
+                            `);
+
+        
+                            // Append the newly created element to the appropriate wrapper
+                            wrapperItem.find('.wrapper-size').remove();
+                            wrapperItem.find('.wrapper-color').remove();
+                            wrapperItem.find('.wrapper-material').remove();
+                            wrapperItem.find('.wrapper-quantity').remove();
+                            wrapperItem.find('.wrapper-price').remove();
+                            wrapperItem.find('.wrapper-discount').remove();
+                            wrapperItem.append(newElement);
+                            wrapperItem.find('.select2.select-size').select2({
+                                placeholder: "Select value",
+                                allowClear: true
+                            });
+                            wrapperItem.find('.select2.select-color').select2({
+                                placeholder: "Select value",
+                                allowClear: true
+                            });
+                            wrapperItem.find('.select2.select-material').select2({
+                                placeholder: "Select value",
+                                allowClear: true
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                }else{
+                    var wrapperItem = $(this).closest('.wrapper-item');
+                    wrapperItem.find('.wrapper-size').remove();
+                    wrapperItem.find('.wrapper-color').remove();
+                    wrapperItem.find('.wrapper-material').remove();
+                    wrapperItem.find('.wrapper-quantity').remove();
+                    wrapperItem.find('.wrapper-price').remove();
+                    wrapperItem.find('.wrapper-discount').remove();
+                }
+            });
+        });
+        
+        
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var $product = $('.repeater-wrapper.repeater-purchaseDetail').find('.select-product');
+            $product.each(function() {
+                var purchaseDetailData = $(this).data('purchase-detail');
+                var purchaseDetailDataSplit = purchaseDetailData.replace(" ","").split('-');
+                if(purchaseDetailDataSplit.length == 6){
+                    var productId = purchaseDetailDataSplit[0];
+                    var colorId = purchaseDetailDataSplit[1];
+                    var sizeId = purchaseDetailDataSplit[2];
+                    var materialId = purchaseDetailDataSplit[3];
+                    var quantity = purchaseDetailDataSplit[4];
+                    var price = purchaseDetailDataSplit[5];
+                    var wrapperItem = $(this).closest('.wrapper-item');
+                    callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem);
+                }
+                console.log(purchaseDetailData);
+                console.log("1");
+            });
+            function callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem) {
+                var url = "/mike/api/product/product-single/" + productId;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response);
+                        var productDetail = response.productDetail;
+                        var unique = new Set();
+                        // Assuming the following code creates a new HTML element with the product details
+                        var newElement = $(`
+                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-size">
+                                <p class="mb-2 mt-2">Size</p>
+                                <select class="form-select item-details mb-2 select2 select-size form-select-lg pd-size" data-allow-clear="true" required name="size">
+                                    <option value="">Select value</option>
+                                    ${productDetail.map((detail, index) => {
+                                        if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
+                                          unique.add(detail.size.name); // Add the size to the Set
+                                          return `
+                                            <option ${detail.size.id == sizeId ? 'selected' :''} value="${detail.size.id}">${detail.size.name}</option>
+                                          `;
+                                        }
+                                        return ''; // Return an empty string for duplicate sizes
+                                    }).join('')}
+                                </select>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please select your size</div>
+                            </div>
+                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-color">
+                                <p class="mb-2 mt-2 ">Color</p>
+                                <select class="form-select item-details mb-2 select2 select-color form-select-lg pd-color"
+                                        data-allow-clear="true"
+                                        name="color" required>
+                                    <option value="">Select value</option>
+                                    ${productDetail.map((detail, index) => {
+                                        if (!unique.has(detail.color.name)) { // Check if the size is not already in the Set
+                                          unique.add(detail.color.name); // Add the size to the Set
+                                          return `
+                                            <option ${detail.color.id == colorId ? 'selected' :''} value="${detail.color.id}">${detail.color.name}</option>
+                                          `;
+                                        }
+                                        return ''; // Return an empty string for duplicate sizes
+                                    }).join('')}
+                                </select>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please select your color</div>
+                            </div>
+                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-material">
+                                <p class="mb-2 mt-2 ">Material</p>
+                                <select class="form-select item-details mb-2 select2 select-material form-select-lg pd-material"
+                                        data-allow-clear="true"
+                                        name="material" required>
+                                    <option value="">Select value</option>
+                                    ${productDetail.map((detail, index) => {
+                                        if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
+                                          unique.add(detail.material.name); // Add the size to the Set
+                                          return `
+                                            <option ${detail.material.id == materialId ? 'selected' :''} value="${detail.material.id}">${detail.material.name}</option>
+                                          `;
+                                        }
+                                        return ''; // Return an empty string for duplicate sizes
+                                    }).join('')}
+                                </select>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please select your material</div>
+                            </div>
+                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-quantity">
+                                <p class="mb-2 mt-2 ">Quantity</p>
+                                <input type="number" class="form-control pd-quantity"
+                                       placeholder="Enter number" min="1"
+                                       oninput="this.value = this.value.replace(/[^0-9+\-]/g, '')"
+                                       name="quantity" required value = "${quantity}"/>
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please enter your quantity.</div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-price">
+                                <p class="mb-2 mt-2 ">Price</p>
+                                <input type="number" class="form-control pd-paymentPrice"
+                                       placeholder="Enter number" min="0.00" step="0.01"
+                                       name="paymentPrice" required value = "${price}" />
+                                <div class="valid-feedback"> Looks good! </div>
+                                <div class="invalid-feedback"> Please enter your price.</div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-discount">
+                                <p class="mb-2 mt-2 ">Discount</p>
+                                <div>
+                                    <span class="discount me-2">0%</span>
+                                </div>
+                            </div>
+                        `);
+    
+    
+                        // Append the newly created element to the appropriate wrapper
+                        wrapperItem.find('.wrapper-size').remove();
+                        wrapperItem.find('.wrapper-color').remove();
+                        wrapperItem.find('.wrapper-material').remove();
+                        wrapperItem.find('.wrapper-quantity').remove();
+                        wrapperItem.find('.wrapper-price').remove();
+                        wrapperItem.find('.wrapper-discount').remove();
+                        wrapperItem.append(newElement);
+                        wrapperItem.find('.select2.select-size').select2({
+                            placeholder: "Select value",
+                            allowClear: true
+                        });
+                        wrapperItem.find('.select2.select-color').select2({
+                            placeholder: "Select value",
+                            allowClear: true
+                        });
+                        wrapperItem.find('.select2.select-material').select2({
+                            placeholder: "Select value",
+                            allowClear: true
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+            $('#btn-reset-purchaseDetail').on('click', function(){
+                $('.source-item').find('.repeater-wrapper').not('.repeater-purchaseDetail').slice(1).remove();
+                var $product = $('.repeater-wrapper.repeater-purchaseDetail').find('.select-product');
+                $product.each(function() {
+                    if ($(this).closest('.repeater-wrapper.repeater-purchaseDetail').css('display') === 'none') {
+                        $(this).closest('.repeater-wrapper.repeater-purchaseDetail').css('display', '');
+                    }
+                    var purchaseDetailData = $(this).data('purchase-detail');
+                    var purchaseDetailDataSplit = purchaseDetailData.replace(" ","").split('-');
+                    if(purchaseDetailDataSplit.length == 6){
+                        var productId = purchaseDetailDataSplit[0];
+                        var colorId = purchaseDetailDataSplit[1];
+                        var sizeId = purchaseDetailDataSplit[2];
+                        var materialId = purchaseDetailDataSplit[3];
+                        var quantity = purchaseDetailDataSplit[4];
+                        var price = purchaseDetailDataSplit[5];
+                        var wrapperItem = $(this).closest('.wrapper-item');
+                        callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem);
+                    }
+                    console.log(purchaseDetailData);
+                    console.log("1");
+                });
+            });
+        });
+        
+        
+    </script>
+
+</th:block>
+</body>
+
+</html>

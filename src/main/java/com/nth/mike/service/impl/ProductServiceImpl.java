@@ -4,12 +4,15 @@ import com.nth.mike.constant.SortConstant;
 import com.nth.mike.entity.Color;
 import com.nth.mike.entity.Product;
 import com.nth.mike.entity.ProductDetail;
+import com.nth.mike.entity.ProductImage;
+import com.nth.mike.entity.ProductStatus;
 import com.nth.mike.entity.Size;
-import com.nth.mike.model.dto.ProductFilterDTO;
-import com.nth.mike.model.dto.ProductFullDetailDTO;
-import com.nth.mike.model.mapper.ProductFullDetailMapper;
-import com.nth.mike.model.pagination.ProductFilterPaging;
+import com.nth.mike.model.dto.product.ProductFilterDTO;
+import com.nth.mike.model.dto.product.ProductFullDetailDTO;
+import com.nth.mike.model.mapper.product.ProductFullDetailMapper;
+import com.nth.mike.model.request.product.ProductFilterRequest;
 import com.nth.mike.repository.ProductDetailRepo;
+import com.nth.mike.repository.ProductImageRepo;
 import com.nth.mike.repository.ProductRepo;
 import com.nth.mike.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +30,17 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepo productRepo;
     @Autowired
     private ProductDetailRepo productDetailRepo;
+    @Autowired
+    private ProductImageRepo productImageRepo;
 
     @Override
     public List<Product> findAll() {
         return productRepo.findAll();
+    }
+
+    @Override
+    public List<Product> findByProductStatus(ProductStatus status) {
+        return productRepo.findByProductStatus(status);
     }
 
     @Override
@@ -64,56 +74,62 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductFilterPaging findByFilter(ProductFilterDTO filter){
-        ProductFilterPaging pfd = new ProductFilterPaging();
-        List<Product> productList = productRepo.findAll();
+    public ProductFilterDTO findByFilter(ProductFilterRequest filter) {
+        ProductFilterDTO pfd = new ProductFilterDTO();
+        List<Product> productList = productRepo.findByProductStatus(ProductStatus.HIDDEN);
 
-        productList=productListByFilter(filter,productList);
+        productList = productListByFilter(filter, productList);
 
         int sizeList = productList.size();
         int pageSize = filter.getPagination().getLimit() == null ? sizeList : filter.getPagination().getLimit();
-        int pageNumber = filter.getPagination().getPage() == null || pageSize >= sizeList  ? 1 : filter.getPagination().getPage();
+        int pageNumber = filter.getPagination().getPage() == null || pageSize >= sizeList ? 1
+                : filter.getPagination().getPage();
         int pageCount = sizeList % pageSize == 0 ? sizeList / pageSize : sizeList / pageSize + 1;
 
         pfd.setPageCount(pageCount);
         pfd.setPageNumber(pageNumber);
 
-        //pagination
-        productList = getProductListByPage(filter,productList);
+        // pagination
+        productList = getProductListByPage(filter, productList);
 
-        List<ProductFullDetailDTO> list=new ArrayList<>();
-        for(Product p:productList){
+        List<ProductFullDetailDTO> list = new ArrayList<>();
+        for (Product p : productList) {
             List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
-            list.add(ProductFullDetailMapper.toProductFullDetailDTO(p,productDetailList));
+            List<ProductImage> productImageList = productImageRepo.findByProduct(p);
+            System.out.println(productImageList.toString());
+            list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
         }
         pfd.setListProduct(list);
         return pfd;
     }
 
     @Override
-    public List<ProductFullDetailDTO> findAllProductFullDetail(){
-        List<Product> productList=productRepo.findAll();
-        List<ProductFullDetailDTO> list=new ArrayList<>();
-        for(Product p:productList){
+    public List<ProductFullDetailDTO> findAllProductFullDetail() {
+        List<Product> productList = productRepo.findAll();
+        List<ProductFullDetailDTO> list = new ArrayList<>();
+        for (Product p : productList) {
             List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
-            list.add(ProductFullDetailMapper.toProductFullDetailDTO(p,productDetailList));
+            List<ProductImage> productImageList = productImageRepo.findByProduct(p);
+            list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
         }
-        return  list;
+        return list;
     }
 
     @Override
-    public ProductFullDetailDTO findProductFullDetailById(Long id){
-        Product product=productRepo.findById(id).orElse(null);
+    public ProductFullDetailDTO findProductFullDetailById(Long id) {
+        Product product = productRepo.findById(id).orElse(null);
         ProductFullDetailDTO productFullDetailDTO = null;
-        if(product != null){
+        if (product != null) {
             List<ProductDetail> productDetailList = productDetailRepo.findByProduct(product);
-            productFullDetailDTO = ProductFullDetailMapper.toProductFullDetailDTO(product,productDetailList);
+            List<ProductImage> productImageList = productImageRepo.findByProduct(product);
+            productFullDetailDTO = ProductFullDetailMapper.toProductFullDetailDTO(product, productDetailList,
+                    productImageList);
         }
 
-        return  productFullDetailDTO;
+        return productFullDetailDTO;
     }
 
-    private List<Product> productListByFilter(ProductFilterDTO filter,List<Product> productList){
+    private List<Product> productListByFilter(ProductFilterRequest filter, List<Product> productList) {
         if (filter.getColorList() != null && !filter.getColorList().isEmpty()) {
             productList = productList.stream()
                     .filter(product -> getColorListForProduct(product, filter.getColorList()).size() > 0)
@@ -128,7 +144,8 @@ public class ProductServiceImpl implements ProductService {
 
         if (filter.getMinPrice() != null && filter.getMaxPrice() != null) {
             productList = productList.stream()
-                    .filter(product -> hasProductDetailWithinPriceRange(product, filter.getMinPrice(), filter.getMaxPrice()))
+                    .filter(product -> hasProductDetailWithinPriceRange(product, filter.getMinPrice(),
+                            filter.getMaxPrice()))
                     .collect(Collectors.toList());
         }
 
@@ -144,42 +161,41 @@ public class ProductServiceImpl implements ProductService {
                     .collect(Collectors.toList());
         }
 
-        if(filter.getSort()!=null && filter.getSort().getSortById()!=null){
-            productList.sort(filter.getSort().getSortById().equals(SortConstant.ASC)?
-                    Comparator.comparing(Product::getId):
-                    Comparator.comparing(Product::getId).reversed());
+        if (filter.getSort() != null && filter.getSort().getSortById() != null) {
+            productList
+                    .sort(filter.getSort().getSortById().equals(SortConstant.ASC) ? Comparator.comparing(Product::getId)
+                            : Comparator.comparing(Product::getId).reversed());
         }
 
-        if(filter.getSort()!=null && filter.getSort().getSortByName()!=null){
-            productList.sort(filter.getSort().getSortByName().equals(SortConstant.ASC)?
-                    Comparator.comparing(Product::getName):
-                    Comparator.comparing(Product::getName).reversed());
+        if (filter.getSort() != null && filter.getSort().getSortByName() != null) {
+            productList.sort(
+                    filter.getSort().getSortByName().equals(SortConstant.ASC) ? Comparator.comparing(Product::getName)
+                            : Comparator.comparing(Product::getName).reversed());
         }
 
-        if(filter.getSort()!=null && filter.getSort().getSortByPrice()!=null){
-            productList.sort(filter.getSort().getSortByPrice().equals(SortConstant.ASC)?
-                    Comparator.comparingDouble(this::getAverageExportPriceForProduct):
-                    Comparator.comparingDouble(this::getAverageExportPriceForProduct).reversed());
+        if (filter.getSort() != null && filter.getSort().getSortByPrice() != null) {
+            productList.sort(filter.getSort().getSortByPrice().equals(SortConstant.ASC)
+                    ? Comparator.comparingDouble(this::getAverageExportPriceForProduct)
+                    : Comparator.comparingDouble(this::getAverageExportPriceForProduct).reversed());
         }
 
-        //sort default
-        if(filter.getSort()!=null && filter.getSort().getSortByPrice()==null&&
-                filter.getSort().getSortByName()==null&& filter.getSort().getSortById()==null){
+        // sort default
+        if (filter.getSort() != null && filter.getSort().getSortByPrice() == null &&
+                filter.getSort().getSortByName() == null && filter.getSort().getSortById() == null) {
             productList.sort(Comparator.comparing(Product::getId).reversed());
         }
 
         return productList;
     }
 
-    private List<Product> getProductListByPage(ProductFilterDTO filter,List<Product> productList){
-        //pagination
-        if(filter.getPagination()!=null && filter.getPagination().getLimit()!=null
-                && filter.getPagination().getPage()!=null && filter.getPagination().getOffset()!=null
-        ){
+    private List<Product> getProductListByPage(ProductFilterRequest filter, List<Product> productList) {
+        // pagination
+        if (filter.getPagination() != null && filter.getPagination().getLimit() != null
+                && filter.getPagination().getPage() != null && filter.getPagination().getOffset() != null) {
             int offset = filter.getPagination().getOffset();
             int limit = filter.getPagination().getLimit();
             System.out.println(offset + "-" + limit);
-            if(offset <= productList.size() - 1){
+            if (offset <= productList.size() - 1) {
                 productList = productList.subList(offset, Math.min(limit + offset, productList.size()));
             }
         }
@@ -201,7 +217,6 @@ public class ProductServiceImpl implements ProductService {
                 .filter(listColor::contains)
                 .collect(Collectors.toList());
     }
-
 
     private List<Size> getSizeListForProduct(Product product, List<Size> listSize) {
         List<ProductDetail> productDetails = productDetailRepo.findByProduct(product);

@@ -250,6 +250,7 @@
       paginationOptions.on("click", function() {
         paginationOptions.not($(this)).removeClass('active');
         $(this).addClass('active');
+        $("#pagination").find(".page-item").removeClass('active');
         updateAndCallAPI(true);
       });
 
@@ -429,7 +430,7 @@
                   '<div class="product">' +
                     '<div class="product-image">' +
                       '<div class="ribbon ribbon-info">Fresh</div>' +
-                      '<img class="img-fluid" src="' + list.product.urlAvatar + '" alt="product" />' +
+                      '<img class="img-fluid" src="/images/product/' + list.product.urlAvatar + '" alt="product" />' +
                       '<div class="product-hover-overlay">' +
                         '<a class="product-hover-overlay-link" href="/mike/collection/shop/product-detail/' + list.product.id + '"></a>' +
                         '<div class="product-hover-overlay-buttons">' +
@@ -504,6 +505,7 @@
           success: function(response) {
             var product = response.product;
             var productDetail = response.productDetail;
+            var productImage = response.productImage;
             var unique = new Set();
             var $productModelBody = $(".product-model-body");
             var $productSingle = 
@@ -512,20 +514,19 @@
                 <div class="col-lg-6">
                   <div class="owl-carousel owl-theme owl-dots-modern detail-full" data-slider-id="1">
                       <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
+                            style="background: center center url('/images/product/${product.urlAvatar}') no-repeat; background-size: cover;">
                       </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
+                      ${productImage.map((image, index) => {
+                        if (!unique.has(image.urlImage)) { // Check if the size is not already in the Set
+                          unique.add(image.urlImage); // Add the size to the Set
+                          return `
+                            <div class="detail-full-item-modal"
+                                  style="background: center center url('/images/product/${image.urlImage}') no-repeat; background-size: cover;">
+                            </div>
+                          `;
+                        }
+                        return ''; // Return an empty string for duplicate sizes
+                      }).join('')}
                   </div>
                 </div>
                 <div class="col-lg-6 d-flex align-items-center">

@@ -36,18 +36,19 @@ public class UserResource {
     private final UserService userService;
     @Value("${spring.auth.secret}")
     private String secret;
+
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if(authorizationHeader!=null&&authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm=Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier= JWT.require(algorithm).build();
-                DecodedJWT decodedJWT=verifier.verify(refreshToken);
-                String userName=decodedJWT.getSubject();
-                Account account=userService.findAccountByUserName(userName);
-                List<Role> roles=userService.findRoleByAccount(account);
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refreshToken);
+                String userName = decodedJWT.getSubject();
+                Account account = userService.findAccountByUserName(userName);
+                List<Role> roles = userService.findRoleByAccount(account);
                 String accessToken = JWT.create()
                         .withSubject(account.getUsername())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
@@ -56,15 +57,17 @@ public class UserResource {
                         .sign(algorithm);
 
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),new TokenAuthResponse(accessToken,refreshToken));
+                new ObjectMapper().writeValue(response.getOutputStream(),
+                        new TokenAuthResponse(accessToken, refreshToken));
             } catch (Exception e) {
-                log.error("Error logging in: {}",e.getMessage());
-                response.setHeader("error",e.getMessage());
+                log.error("Error logging in: {}", e.getMessage());
+                response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),new BasicAuthResponse(StatusConstant.ERROR,e.getMessage()));
+                new ObjectMapper().writeValue(response.getOutputStream(),
+                        new BasicAuthResponse(StatusConstant.ERROR, e.getMessage()));
             }
-        }else{
+        } else {
             throw new RuntimeException("Refresh token is missing");
         }
     }
@@ -72,24 +75,26 @@ public class UserResource {
     @GetMapping("/token/accept")
     public void acceptToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if(authorizationHeader!=null&&authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String accessToken = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm=Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier= JWT.require(algorithm).build();
-                DecodedJWT decodedJWT=verifier.verify(accessToken);
-                String userName=decodedJWT.getSubject();
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(accessToken);
+                String userName = decodedJWT.getSubject();
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),new BasicAuthResponse(StatusConstant.SUCCESS,"Token is accept"));
+                new ObjectMapper().writeValue(response.getOutputStream(),
+                        new BasicAuthResponse(StatusConstant.SUCCESS, "Token is accept"));
             } catch (Exception e) {
-                log.error("Error request in: {}",e.getMessage());
-                response.setHeader("error",e.getMessage());
+                log.error("Error request in: {}", e.getMessage());
+                response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),new BasicAuthResponse(StatusConstant.ERROR,e.getMessage()));
+                new ObjectMapper().writeValue(response.getOutputStream(),
+                        new BasicAuthResponse(StatusConstant.ERROR, e.getMessage()));
             }
-        }else{
-            throw new RuntimeException("Refresh token is missing");
+        } else {
+            throw new RuntimeException("Accept token is missing");
         }
     }
 }

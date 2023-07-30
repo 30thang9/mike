@@ -3,7 +3,7 @@
 function initializeDropzoneSingle(dropzoneClass, previewTemplate) {
   var dropzones = document.querySelectorAll("." + dropzoneClass);
 
-  Array.prototype.forEach.call(dropzones, function(dropzone) {
+  Array.prototype.forEach.call(dropzones, function (dropzone) {
     new Dropzone(dropzone, {
       url: "/upload",
       previewTemplate: previewTemplate,
@@ -11,14 +11,14 @@ function initializeDropzoneSingle(dropzoneClass, previewTemplate) {
       maxFilesize: 5,
       addRemoveLinks: true,
       maxFiles: 1,
-      init: function() {
-          this.on("addedfile", function(file) {
-            if (this.files.length > 1) {
-              // Nếu đã có một tệp tin khác được tải lên trước đó, xóa tệp tin đó
-              this.removeFile(this.files[0]);
-            }
-          });
-        }
+      init: function () {
+        this.on("addedfile", function (file) {
+          if (this.files.length > 1) {
+            // Nếu đã có một tệp tin khác được tải lên trước đó, xóa tệp tin đó
+            this.removeFile(this.files[0]);
+          }
+        });
+      }
     });
   });
 }
@@ -26,7 +26,7 @@ function initializeDropzoneSingle(dropzoneClass, previewTemplate) {
 function initializeDropzoneMulti(dropzoneClass, previewTemplate) {
   var dropzones = document.querySelectorAll("." + dropzoneClass);
 
-  Array.prototype.forEach.call(dropzones, function(dropzone) {
+  Array.prototype.forEach.call(dropzones, function (dropzone) {
     new Dropzone(dropzone, {
       url: "/upload",
       previewTemplate: previewTemplate,
@@ -58,4 +58,4 @@ var previewTemplate = `<div class="dz-preview dz-file-preview">
 initializeDropzoneSingle("dropzone-single", previewTemplate);
 
 // Khởi tạo Dropzone cho các khối HTML có class "dropzone-multi" và không giới hạn số lượng tệp tin
-initializeDropzoneMulti("dropzone-multi", previewTemplate);
+initializeDropzoneMulti("dropzone-multiple", previewTemplate);

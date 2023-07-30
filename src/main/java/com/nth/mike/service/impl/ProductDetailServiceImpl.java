@@ -1,5 +1,6 @@
 package com.nth.mike.service.impl;
 
+import com.nth.mike.entity.Product;
 import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductDetailId;
 import com.nth.mike.repository.ProductDetailRepo;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
     @Autowired
@@ -38,5 +40,10 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<ProductDetail> findByProduct(Product product) {
+        return pdr.findByProduct(product);
     }
 }

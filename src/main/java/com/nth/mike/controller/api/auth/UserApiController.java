@@ -3,7 +3,7 @@ package com.nth.mike.controller.api.auth;
 import com.nth.mike.entity.Account;
 import com.nth.mike.entity.AccountStatus;
 import com.nth.mike.entity.RoleName;
-import com.nth.mike.model.dto.UserDTO;
+import com.nth.mike.model.dto.user.UserDTO;
 import com.nth.mike.model.response.shared.TokenResponse;
 import com.nth.mike.service.SendMailService;
 import com.nth.mike.service.UserService;

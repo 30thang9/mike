@@ -14,6 +14,7 @@ public interface PurchaseDetailRepo extends JpaRepository<PurchaseDetail, Purcha
 
     @Query("SELECT pd FROM PurchaseDetail pd WHERE pd.productDetail = :productDetail")
     List<PurchaseDetail> findByProductDetail(ProductDetail productDetail);
+
     @Query("SELECT pd FROM PurchaseDetail pd WHERE pd.purchase = :purchase")
     List<PurchaseDetail> findByPurchase(Purchase purchase);
 }

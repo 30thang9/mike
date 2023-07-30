@@ -1,10 +1,10 @@
 "use strict";
 $(function () {
-    var a, e = $(".product-list-table");
+    var a, e = $(".purchase-list-table");
     var accessToken = localStorage.getItem('accessToken');
     e.length && (a = e.DataTable({
         ajax: {
-            url: "/mike/api/product/list",
+            url: "/mike/api/purchase/list",
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + accessToken == null ? "" : accessToken
@@ -19,28 +19,19 @@ $(function () {
                 data: "id"
             },
             {
-                data: "name"
-            },
-            //            {
-            //                data: "descriptions"
-            //            },
-            {
-                data: "urlAvatar"
+                data: "supplier"
             },
             {
-                data: "objectCategory"
+                data: "employee"
             },
             {
-                data: "productCategory"
+                data: "paymentMethod"
             },
             {
-                data: "productStatus"
+                data: "purchaseDate"
             },
             {
-                data: "discountStatus"
-            },
-            {
-                data: "discountPercent"
+                data: "totalAmount"
             },
             {
                 data: "action"
@@ -59,135 +50,106 @@ $(function () {
             {
                 targets: 1,
                 render: function (a, e, t, s) {
-                    return '<a href="/mike/admin/product/detail/' + t.id + '">#' + t.id + "</a>";
+                    return '<a href="/mike/admin/purchase/detail/' + t.id + '">#' + t.id + "</a>";
                 }
             },
             {
                 targets: 2,
                 render: function (a, e, t, s) {
-                    return t.name;
+                    return t.supplier.name;
                 }
             },
-            //            {
-            //                targets: 3,
-            //                render: function (a, e, t, s) {
-            //                    return t.descriptions;
-            //                }
-            //            },
             {
                 targets: 3,
                 render: function (a, e, t, s) {
-                    return '<img style="height:50px; object-fit:cover;" src="' + t.urlAvatar + '" alt="Avatar" class="rounded-circle avatar-img">';
+                    return t.employee.name;
                 }
             },
             {
                 targets: 4,
                 render: function (a, e, t, s) {
-                    return t.objectCategory.name;
+                    //return t.paymentMethod;
+                    var statusBadgeClass = "";
+                    switch (t.paymentMethod) {
+                        case "CASH":
+                            statusBadgeClass = "bg-label-success";
+                            break;
+                        case "CREDIT_CARD":
+                            statusBadgeClass = "bg-label-secondary";
+                            break;
+                        case "PAYPAL":
+                            statusBadgeClass = "bg-label-info";
+                            break;
+                        case "OTHER":
+                            statusBadgeClass = "bg-label-danger";
+                            break;
+                    }
+                    return '<span class="badge ' + statusBadgeClass + '">' + t.paymentMethod + '</span>';
                 }
             },
             {
                 targets: 5,
                 render: function (a, e, t, s) {
-                    return t.productCategory.name;
+                    return t.purchaseDate;
                 }
             },
             {
                 targets: 6,
                 render: function (a, e, t, s) {
-                    var statusBadgeClass = "";
-                    switch (t.productStatus) {
-                        case "AVAILABLE":
-                            statusBadgeClass = "bg-label-success";
-                            break;
-                        case "OUT_OF_STOCK":
-                            statusBadgeClass = "bg-label-warning";
-                            break;
-                        case "DISCONTINUED":
-                            statusBadgeClass = "bg-label-danger";
-                            break;
-                    }
-                    return '<span class="badge ' + statusBadgeClass + '">' + t.productStatus + '</span>';
+                    return t.totalAmount;
                 }
             },
             {
-                targets: 7,
-                render: function (a, e, t, s) {
-                    var statusBadgeClass = "";
-                    switch (t.discountStatus) {
-                        case "ACTIVE":
-                            statusBadgeClass = "bg-label-success";
-                            break;
-                        case "INACTIVE":
-                            statusBadgeClass = "bg-label-danger";
-                            break;
-                    }
-                    return '<span class="badge ' + statusBadgeClass + '">' + t.discountStatus + '</span>';
-                }
-            },
-            {
-                targets: 8,
-                render: function (a, e, t, s) {
-                    return t.discountPercent;
-                }
-            },
-            {
+                responsivePriority: 4,
                 targets: -1,
                 title: "Actions",
                 searchable: !1,
                 orderable: !1,
                 render: function (a, e, t, s) {
-                    //                    return '<div class="d-inline-block"><a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div><a href="/mike/admin/product/edit/' + t.id + '" class="btn btn-sm btn-icon item-edit"><i class="bx bxs-edit"></i></a>';
-                    //                    return '<div class="d-flex align-items-center"><a href="javascript:;" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" title="Send Mail"><i class="bx bx-send mx-1"></i></a><a href="app-invoice-preview.html" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" title="Preview Invoice"><i class="bx bx-show mx-1"></i></a><div class="dropdown"><a href="javascript:;" class="btn dropdown-toggle hide-arrow text-body p-0" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a><div class="dropdown-menu dropdown-menu-end"><a href="javascript:;" class="dropdown-item">Download</a><a href="app-invoice-edit.html" class="dropdown-item">Edit</a><a href="javascript:;" class="dropdown-item">Duplicate</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item delete-record text-danger">Delete</a></div></div></div>';
-                    return '<div class="d-flex align-items-center"><a href="/mike/admin/product/detail/' + t.id + '" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" title="Detail"><i class="bx bx-show mx-1"></i></a><div class="dropdown"><a href="javascript:;" class="btn dropdown-toggle hide-arrow text-body p-0" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a><div class="dropdown-menu dropdown-menu-end"><a href="javascript:;" class="dropdown-item">Download</a><a href="/mike/admin/product/edit/' + t.id + '" class="dropdown-item">Edit</a><a href="javascript:;" class="dropdown-item">Duplicate</a><div class="dropdown-divider"></div><button data-product-id="' + t.id + '" class="dropdown-item delete-record text-danger btn-delete">Delete</button></div></div></div>';
-
+                    return '<div class="d-flex align-items-center"><a href="/mike/admin/invoice-purchase/detail/' + t.id + '" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" title="Detail"><i class="bx bx-show mx-1"></i></a><div class="dropdown"><a href="javascript:;" class="btn dropdown-toggle hide-arrow text-body p-0" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a><div class="dropdown-menu dropdown-menu-end"><a href="javascript:;" class="dropdown-item">Download</a><a href="/mike/admin/invoice-purchase/edit/' + t.id + '" class="dropdown-item">Edit</a><a href="javascript:;" class="dropdown-item">Duplicate</a><div class="dropdown-divider"></div><button data-purchase-id="' + t.id + '" class="dropdown-item delete-record text-danger btn-delete">Delete</button></div></div></div>';
                 }
             }
         ],
         order: [[1, "desc"]],
         dom: `
-           <"row mt-4 mb-3 ms-2 me-3 d-md-none"
-                 <"col-12 d-flex align-items-center justify-content-start px-3 gap-2"
-                   <"_title_">
-                 >
-                 <"col-12 d-flex align-items-center justify-content-start pe-3 gap-2"
-                   <"wrapper-btn-collapse">
-                 >
-           >
-           <"wrapper_control"
-              <"_divider_ d-md-none">
-              <"row mt-0 mt-md-4 mb-3 ms-2 me-3"
-                <"col-12 col-md-6 d-none d-md-flex align-items-center justify-content-start justify-content-md-start gap-2"
-                  <"_title_">
+            <"row mt-4 mb-3 ms-2 me-3 d-md-none"
+                <"col-12 d-flex align-items-center justify-content-start px-3 gap-2"
+                    <"_title_">
                 >
-                <"col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end flex-md-row pe-3 gap-md-2"
-                  <"dt-action-buttons text-xl-end text-lg-start text-md-end text-start mt-md-0 mt-3"B>
+                <"col-12 d-flex align-items-center justify-content-start pe-3 gap-2"
+                    <"wrapper-btn-collapse">
                 >
-              >
-              <"row ms-2 me-3"
-                <"col-12 col-md-2 d-flex align-items-center justify-content-start justify-content-md-start gap-2 pb-3 py-md-0" l>
-                <"col-12 col-md-10 d-flex align-items-center justify-content-start justify-content-md-end flex-column flex-md-row pe-3 gap-md-2"
-                  <"wrapper_search d-flex align-items-center justify-content-start justify-content-md-end"f>
-                  <"wrapper_select d-flex align-items-center justify-content-start justify-content-md-end flex-md-row gap-2"
-                    <"product_status my-3">
-                    <"discount_status my-3">
-                  >
+            >
+            <"wrapper_control"
+                <"_divider_ d-md-none">
+                <"row mt-0 mt-md-4 mb-3 ms-2 me-3"
+                    <"col-12 col-md-6 d-none d-md-flex align-items-center justify-content-start justify-content-md-start gap-2"
+                        <"_title_">
+                    >
+                    <"col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end flex-md-row pe-3 gap-md-2"
+                        <"dt-action-buttons text-xl-end text-lg-start text-md-end text-start mt-md-0 mt-3"B>
+                    >
                 >
-              >
-           >
-           t
-           <"row mx-2"
-              <"col-sm-12 col-md-6" i>
-              <"col-sm-12 col-md-6" p>
-           >
-        `,
-
-        //        dom: "<'row'<'col-6 d-flex align-items-center justify-content-start'><'col-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-3 gap-md-2'<'my-3'B>>>" +
-        //             "<'row w-100'<'col-6 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2'l><'col-6 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-3 gap-md-2'f<'product_status'><'discount_status'>>>" +
-        //             "<'row'<'col-12't>>" +
-        //             "<'row'<'col-12'p>>",
-
-
+                <"row ms-2 me-3"
+                    <"col-12 col-md-2 d-flex align-items-center justify-content-start justify-content-md-start gap-2 pb-3 py-md-0" l>
+                    <"col-12 col-md-10 d-flex align-items-center justify-content-start justify-content-md-end flex-column flex-md-row pe-3 gap-md-2"
+                        <"wrapper_search d-flex align-items-center justify-content-start justify-content-md-end"f>
+                    >
+                    <"col-12 d-flex align-items-center justify-content-start"
+                        <"wrapper_select w-100 d-flex align-items-center justify-content-start justify-content-md-center flex-wrap flex-md-nowrap gap-3 mb-3"
+                            <"employee_name mt-3">
+                            <"supplier_name mt-3">
+                            <"payment_method mt-3">
+                        >
+                    >
+                >
+            >
+            t
+            <"row mx-2"
+                <"col-sm-12 col-md-6" i>
+                <"col-sm-12 col-md-6" p>
+            >
+            `,
         language: {
             sLengthMenu: "_MENU_",
             search: "",
@@ -197,14 +159,14 @@ $(function () {
         lengthMenu: [5, 10, 25, 50, 75, 100],
         buttons: [{
             extend: "collection",
-            className: "btn btn-label-primary dropdown-toggle me-2",
+            className: "btn btn-label-primary dropdown-toggle me-3",
             text: '<i class="bx bx-export me-sm-1"></i> <span class="d-none d-sm-inline-block">Export</span>',
             buttons: [{
                 extend: "print",
                 text: '<i class="bx bx-printer me-1" ></i>Print',
                 className: "dropdown-item",
                 exportOptions: {
-                    columns: [2, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6],
                     //                    format: {
                     //                        body: function(e, t, a) {
                     //                            var s;
@@ -226,7 +188,7 @@ $(function () {
                 text: '<i class="bx bx-file me-1" ></i>Csv',
                 className: "dropdown-item",
                 exportOptions: {
-                    columns: [2, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6],
                     //                    format: {
                     //                        body: function(e, t, a) {
                     //                            var s;
@@ -244,7 +206,7 @@ $(function () {
                 text: '<i class="bx bxs-file-export me-1"></i>Excel',
                 className: "dropdown-item",
                 exportOptions: {
-                    columns: [2, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6],
                     //                    format: {
                     //                        body: function(e, t, a) {
                     //                            var s;
@@ -262,7 +224,7 @@ $(function () {
                 text: '<i class="bx bxs-file-pdf me-1"></i>Pdf',
                 className: "dropdown-item",
                 exportOptions: {
-                    columns: [2, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6],
                     format: {
                         //                        body: function(e, t, a) {
                         //                            var s;
@@ -280,7 +242,7 @@ $(function () {
                 text: '<i class="bx bx-copy me-1" ></i>Copy',
                 className: "dropdown-item",
                 exportOptions: {
-                    columns: [2, 4, 5, 6, 7, 8],
+                    columns: [1, 2, 3, 4, 5, 6],
                     format: {
                         //                        body: function(e, t, a) {
                         //                            var s;
@@ -299,7 +261,7 @@ $(function () {
             text: '<i class="bx bx-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add</span>',
             className: "create-new btn btn-primary",
             action: function () {
-                window.location.href = "/mike/admin/product/add";
+                window.location.href = "/mike/admin/invoice-purchase/add";
             }
         }
         ],
@@ -307,7 +269,7 @@ $(function () {
             details: {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function (a) {
-                        return "Details of " + a.data().name
+                        return "Details of " + a.data().id
                     }
                     //                    ,
                     //                    onHide: function (modal) {
@@ -324,7 +286,7 @@ $(function () {
             }
         },
         initComplete: function () {
-            $('<h4 class="fw-bold">List Product</h4>').appendTo("._title_");
+            $('<h4 class="fw-bold">List Purchase</h4>').appendTo("._title_");
             $('<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#wrapperCollapse" aria-expanded="false" aria-controls="wrapperCollapse"><i class="bx bx-collapse-vertical"></i></button>').appendTo(".wrapper-btn-collapse");
             $('<hr class="my-0">').appendTo("._divider_");
 
@@ -359,20 +321,41 @@ $(function () {
                 }
             });
 
-            this.api().columns(6).every(function () {
+            this.api().columns(2).every(function () {
                 var e = this
-                    , t = $('<select id="ProductStatus" class="form-select"><option value=""> Product Status </option></select>').appendTo(".product_status").on("change", function () {
+                    , t = $('<select id="SupplierName" class="form-select"><option value=""> Supplier Name </option></select>').appendTo(".supplier_name").on("change", function () {
                         var a = $.fn.dataTable.util.escapeRegex($(this).val());
                         e.search(a ? "^" + a + "$" : "", !0, !1).draw()
                     });
+                var unique = new Set();
                 e.data().unique().sort().each(function (a, e) {
-                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+                    var name = a.name;
+                    if (!unique.has(name)) {
+                        unique.add(name);
+                        t.append('<option value="' + name + '" class="text-capitalize">' + name + '</option>');
+                    }
                 })
             });
 
-            this.api().columns(7).every(function () {
+            this.api().columns(3).every(function () {
                 var e = this
-                    , t = $('<select id="DiscountStatus" class="form-select"><option value=""> Discount Status </option></select>').appendTo(".discount_status").on("change", function () {
+                    , t = $('<select id="EmployeeName" class="form-select"><option value=""> Employee Name </option></select>').appendTo(".employee_name").on("change", function () {
+                        var a = $.fn.dataTable.util.escapeRegex($(this).val());
+                        e.search(a ? "^" + a + "$" : "", !0, !1).draw()
+                    });
+                var unique = new Set();
+                e.data().unique().sort().each(function (a, e) {
+                    var name = a.name;
+                    if (!unique.has(name)) {
+                        unique.add(name);
+                        t.append('<option value="' + name + '" class="text-capitalize">' + name + '</option>');
+                    }
+                })
+            });
+
+            this.api().columns(4).every(function () {
+                var e = this
+                    , t = $('<select id="PaymentMethod" class="form-select"><option value=""> Payment Method </option></select>').appendTo(".payment_method").on("change", function () {
                         var a = $.fn.dataTable.util.escapeRegex($(this).val());
                         e.search(a ? "^" + a + "$" : "", !0, !1).draw()
                     });
