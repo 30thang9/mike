@@ -30,6 +30,7 @@ public class ForgotPasswordApiController {
 
     @Value("${spring.createToken.username.secret}")
     private String secretUsername;
+
     @PostMapping("/forgot-password/generate-code")
     public ResponseEntity<?> generateCode(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -59,9 +60,8 @@ public class ForgotPasswordApiController {
         userService.storeResetCode(email, resetCode);
 
         String encryptedEmail = handleUserUtils.createToken(email, secretUsername);
-        return ResponseEntity.ok(new TokenResponse(encryptedEmail,"success"));
+        return ResponseEntity.ok(new TokenResponse(encryptedEmail, "success"));
     }
-
 
     @PostMapping("/forgot-password/refresh-code")
     public ResponseEntity<String> refreshCode(@RequestBody Map<String, String> request) {
@@ -113,16 +113,16 @@ public class ForgotPasswordApiController {
 
         userService.removeCodeByExpired();
 
-        Account account =userService.findByResetCode(resetCode);
+        Account account = userService.findByResetCode(resetCode);
         String acceptPassCode;
         do {
             acceptPassCode = handleUserUtils.generateResetCode();
 
             // Check if the reset code already exists for another user
         } while (userService.findByResetCode(acceptPassCode) != null);
-        userService.storeAcceptPassCode(account.getUsername(),acceptPassCode);
-        String encryptedEmail = handleUserUtils.createToken(acceptPassCode,secretResetCode);
-        return ResponseEntity.ok(new TokenResponse(encryptedEmail,"success"));
+        userService.storeAcceptPassCode(account.getUsername(), acceptPassCode);
+        String encryptedEmail = handleUserUtils.createToken(acceptPassCode, secretResetCode);
+        return ResponseEntity.ok(new TokenResponse(encryptedEmail, "success"));
     }
 
     @PostMapping("/forgot-password/reset-password")
@@ -130,10 +130,10 @@ public class ForgotPasswordApiController {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
         String confirmPassword = request.get("confirmPassword");
-        if (token==null) {
+        if (token == null) {
             return ResponseEntity.badRequest().body("Token not found");
         }
-        String code=handleUserUtils.getCodeFromToken(token,secretResetCode);
+        String code = handleUserUtils.getCodeFromToken(token, secretResetCode);
         System.out.println(code);
         // Step 3: Verify reset code
         if (!userService.isValidResetCode(code)) {
@@ -157,7 +157,7 @@ public class ForgotPasswordApiController {
             return ResponseEntity.badRequest().body("Passwords do not match");
         }
 
-        Account account =userService.findByResetCode(code);
+        Account account = userService.findByResetCode(code);
 
         // Step 7: Update the user's password
         userService.changePassword(account.getUsername(), newPassword);
@@ -167,6 +167,5 @@ public class ForgotPasswordApiController {
 
         return ResponseEntity.ok("Password reset successful");
     }
-
 
 }

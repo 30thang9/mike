@@ -8,6 +8,7 @@
     <!-- Link CSS ở đây -->
     <th:block layout:fragment="css_head">
         <title> Product - Detail | Mike </title>
+        <link rel="stylesheet" th:href="@{/web/assets/css/product-disabled.css}" />
     </th:block>
 </head>
 <body>
@@ -15,7 +16,7 @@
 <!-- Gọi layout cha -->
 <th:block layout:fragment="content">
     <section class="product-details">
-        <div class="container">
+        <!--<div class="container">
             <div class="row">
                 <div class="col-lg-7 pt-4 order-2 order-lg-1">
                     <div class="row">
@@ -186,17 +187,26 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
     </section>
     <section class="mt-5">
         <div class="container">
             <ul class="nav nav-tabs flex-column flex-sm-row" role="tablist">
-                <li class="nav-item"><a class="nav-link detail-nav-link active" data-bs-toggle="tab" href="#description"
-                                        role="tab">Description</a></li>
-                <li class="nav-item"><a class="nav-link detail-nav-link" data-bs-toggle="tab" href="#additional-information"
-                                        role="tab">Additional Information</a></li>
-                <li class="nav-item"><a class="nav-link detail-nav-link" data-bs-toggle="tab" href="#reviews"
-                                        role="tab">Reviews</a></li>
+                <li class="nav-item">
+                    <a class="nav-link detail-nav-link active" data-bs-toggle="tab" 
+                        href="#description" role="tab">Description
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link detail-nav-link" data-bs-toggle="tab" 
+                        href="#additional-information" role="tab">Additional Information
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link detail-nav-link" data-bs-toggle="tab" 
+                        href="#reviews" role="tab">Reviews
+                    </a>
+                </li>
             </ul>
             <div class="tab-content py-4">
                 <div class="tab-pane active px-3" id="description" role="tabpanel">
@@ -513,7 +523,414 @@
 
 
 <th:block layout:fragment="js_foot">
+    <script>
+        $(document).ready(function() {
+            var href =  window.location.href;
+            var productId = href.substring(href.lastIndexOf("/") + 1);
+            var url = "/mike/api/product/product-single/" + productId;
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "JSON",
+                success: function(data) {
+                    var product = data.product;
+                    var productDetail = data.productDetail;
+                    var productImage = data.productImage;
+                    var minPrice = data.minPrice;
+                    var maxPrice = data.maxPrice;
+                    var unique = new Set();
+                    var $productDetailWrapper = $('.product-details').eq(0);
+                    var productDetailChild = 
+                    $(`
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-7 pt-4 order-1 order-lg-1">
+                                <div class="row">
+                                    <div class="d-lg-none">
+                                        <ul class="breadcrumb undefined">
+                                            <li class="breadcrumb-item"><a href="/mike/home">Home</a></li>
+                                            <li class="breadcrumb-item"><a href="/mike/collection/shop/shop-filter/pc-${product.productCategory.id}-${product.productCategory.name}">${product.productCategory.name}</a></li>
+                                            <li class="breadcrumb-item active">${product.name}</li>
+                                        </ul>
+                                        <h1 class="mb-4">${product.name}</h1>
+                                    </div>
+                                    <div class="d-none d-md-block col-md-2 pe-0">
+                                        <div class="owl-thumbs" data-slider-id="1">
+                                            <button class="owl-thumb-item detail-thumb-item mb-3">
+                                                <img class="img-fluid"
+                                                   src="/images/product/${product.urlAvatar}"
+                                                   alt="Modern Jacket 0">
+                                            </button>
+                                            ${productImage.map((image, index) => {
+                                                if (!unique.has(image.urlImage)) {
+                                                  unique.add(image.urlImage);
+                                                  return `
+                                                    <button class="owl-thumb-item detail-thumb-item mb-3">
+                                                        <img class="img-fluid"
+                                                        src="/images/product/${image.urlImage}"
+                                                        alt="Modern Jacket 1">
+                                                    </button>
+                                                  `;
+                                                }
+                                                return ''; // Return an empty string for duplicate sizes
+                                            }).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-10 detail-carousel">
+                                        ${product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+                                        ${product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+                                        ${product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
+                                        ${product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
+                                        <div class="owl-carousel detail-slider owl-theme owl-dots-modern" data-slider-id="1">
+                                            <div class="item">
+                                                <a class="glightbox" href="/images/product/${product.urlAvatar}"
+                                                     data-title="Modern Jacket 1 - Caption text" data-gallery="product-gallery">
+                                                    <img class="img-fluid"
+                                                         src="/images/product/${product.urlAvatar}"
+                                                         alt="Modern Jacket 1">
+                                                </a>
+                                            </div>
+                                            ${productImage.map((image, index) => {
+                                                if (!unique.has(image.urlImage)) {
+                                                  unique.add(image.urlImage);
+                                                  return `
+                                                    <div class="item">
+                                                        <a class="glightbox" th:href="@{/web/assets/img/photo/kyle-loftus-596319-detail-2.jpg}"
+                                                        data-title="Modern Jacket 2 - Caption text" data-gallery="product-gallery">
+                                                            <img class="img-fluid"
+                                                                src="/images/product/${image.urlImage}"
+                                                                alt="Modern Jacket 2">
+                                                        </a>
+                                                    </div>
+                                                  `;
+                                                }
+                                                return '';
+                                            }).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 ps-lg-4 order-2 order-lg-2">
+                                <div class="d-none d-lg-block">
+                                    <ul class="breadcrumb undefined">
+                                        <li class="breadcrumb-item"><a href="/mike/home">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="/mike/collection/shop/shop-filter/pc-${product.productCategory.id}-${product.productCategory.name}">${product.productCategory.name}</a></li>
+                                        <li class="breadcrumb-item active">${product.name}</li>
+                                    </ul>
+                                    <h1 class="mb-4">${product.name}</h1>
+                                </div>
+                                <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4 mt-3 mt-lg-0">
+                                    <ul class="list-inline mb-2 mb-sm-0">
+                                        <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
+                                        <li class="list-inline-item text-muted fw-light">
+                                            <del>$90.00</del>
+                                        </li>
+                                    </ul>
+                                    <div class="d-flex align-items-center">
+                                        <ul class="list-inline me-2 mb-0">
+                                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                            <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
+                                        </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
+                                    </div>
+                                </div>
+                                <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>
+                                <form action="#">
+                                    <div class="row">
+                                        <div class="col-12 detail-option mb-3">
+                                            <h6 class="detail-option-heading">Colour <span>(required)</span></h6>
+                                            <ul class="list-inline mb-0 colours-wrapper">
+                                                ${productDetail.map((detail, index) => {
+                                                    if (!unique.has(detail.color.name)) { // Check if the size is not already in the Set
+                                                        unique.add(detail.color.name); // Add the size to the Set
+                                                        return `
+                                                            <li class="list-inline-item">
+                                                                <label class="btn-colour" for="colour_${detail.color.id}" 
+                                                                    style="background-color: ${detail.color.colorHex}"></label>
+                                                                <input class="input-invisible input-color-product" type="radio" 
+                                                                    name="color" value="${detail.color.id}" id="colour_${detail.color.id}"
+                                                                    required>
+                                                            </li>
+                                                        `;
+                                                    }
+                                                    return '';
+                                                }).join('')}
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                                            <h6 class="detail-option-heading">Size <span>(required)</span></h6>
+                                            ${productDetail.map((detail, index) => {
+                                                if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
+                                                    unique.add(detail.size.name); // Add the size to the Set
+                                                    return `
+                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" 
+                                                            for="size_${detail.size.id}"> ${detail.size.name}
+                                                            <input class="input-invisible input-size-product" type="radio" 
+                                                                name="size" value="${detail.size.id}" 
+                                                                id="size_${detail.size.id}" required>
+                                                        </label>
+                                                    `;
+                                                }
+                                                return '';
+                                            }).join('')}
+                                        </div>
+                                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                                            <h6 class="detail-option-heading">Type <span>(required)</span></h6>
+                                            ${productDetail.map((detail, index) => {
+                                                if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
+                                                    unique.add(detail.material.name); // Add the size to the Set
+                                                    return `
+                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" 
+                                                            for="material_${detail.material.id}"> ${detail.material.name}
+                                                            <input class="input-invisible input-material-product" type="radio" 
+                                                                name="material" value="${detail.material.id}" 
+                                                                id="material_${detail.material.id}" required>
+                                                        </label>
+                                                    `;
+                                                }
+                                                return '';
+                                            }).join('')}
+                                        </div>
+                                        <div class="col-12 col-lg-6 detail-option mb-5">
+                                            <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
+                                            <input class="form-control detail-quantity" name="items" type="number" 
+                                                min="1" step="1" value="1" pattern="[0-9]+">
+                                        </div>
+                                    </div>
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <button class="btn btn-dark btn-lg mb-1" type="submit"> <i class="fa fa-shopping-cart me-2"></i>Add to
+                                                Cart</button>
+                                        </li>
+                                        <li class="list-inline-item"><a class="btn btn-outline-secondary mb-1" href="#"> <i
+                                                class="far fa-heart me-2"></i>Add to wishlist</a></li>
+                                    </ul>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    `);
 
+                    $productDetailWrapper.append(productDetailChild);
+
+                    var owlCarousel = $('.owl-carousel');
+                    owlCarousel.owlCarousel({
+                      items: 1, // Số phần tử hiển thị trên mỗi slide
+                      loop: true, // Lặp lại carousel
+                      dots: true, // Hiển thị các chấm chỉ số
+                      nav: false, // Ẩn các nút next/prev
+                    });
+                    // Cập nhật carousel
+                    owlCarousel.trigger('refresh.owl.carousel');
+
+                    const lightbox = GLightbox({
+                        selector: '.glightbox',
+                        // Các tùy chọn khác nếu cần
+                    });
+                },
+                error: function(xhr, status, error) {
+
+                }
+            });
+
+            $(".product-details").eq(0).on('change', '.input-size-product', function(){
+                $(this).closest('.detail-option').find('label').not($(this).closest('label')).removeClass('active');
+                if ($(this).prop('checked')) {
+                  $(this).closest('label').addClass('active');
+                }else{
+                  $(this).closest('label').removeClass('active');
+                }
+            });
+          
+            $(".product-details").eq(0).on('change', '.input-material-product', function(){
+                $(this).closest('.detail-option').find('label').not($(this).closest('label')).removeClass('active');
+                if ($(this).prop('checked')) {
+                    $(this).closest('label').addClass('active');
+                }else{
+                    $(this).closest('label').removeClass('active');
+                }
+            });
+        
+            $(".product-details").eq(0).on('change', '.input-color-product', function(){
+                $(this).closest('.colours-wrapper').find('label.btn-colour').not($(this).prevAll('label.btn-colour:first')).removeClass('active');
+                if ($(this).prop('checked')) {
+                    $(this).prevAll('label.btn-colour:first').addClass('active');
+                }else{
+                    $(this).prevAll('label.btn-colour:first').removeClass('active');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.product-details').on('submit', 'form', function(e) {
+                e.preventDefault();
+                //var formData = new FormData();
+              
+                var href = window.location.href;
+                var productId = href.substring(href.lastIndexOf('/') + 1);
+                var sizeId = $(this).find('input.input-size-product').filter(':checked').val().trim();
+                var materialId = $(this).find('input.input-material-product').filter(':checked').val().trim();
+                var colorId = $(this).find('input.input-color-product').filter(':checked').val().trim();
+                var quantity = $(this).find('input.detail-quantity').val().trim();
+                var price = 250000;
+              
+                //formData.append('id.productId', productId);
+                //formData.append('id.sizeId', sizeId);
+                //formData.append('id.materialId', materialId);
+                //formData.append('id.colorId', colorId);
+                //formData.append('price', price);
+                //formData.append('quantity', quantity);
+                var formData =
+                {
+                    id:
+                    {
+                        productId: productId,
+                        sizeId: sizeId,
+                        materialId: materialId,
+                        colorId: colorId
+                    },
+                    quantity: quantity,
+                    price: price
+                }
+              
+                var url = "/mike/api/cart/add";
+                $.ajax({
+                  url: url,
+                  type: 'POST',
+                  data: JSON.stringify(formData),
+                  //processData: false,
+                  //contentType: false,
+                  contentType: 'application/json',
+                  success: function(data) {
+                    console.log(data);
+                    //window.location.reload();
+                    var cart = data.cart;
+                    var totalAmount = data.totalAmount;
+                    var totalQuantity = data.totalQuantity;
+
+                    var $headerCartWrapper = $('#header-cart-wrapper');
+                    var $headerCartQuantity = $('#header-cart-quantity');
+                    var $headerCartDropdown = $('#header-cart-dropdown');
+                    var $headerCartQuantity = $headerCartWrapper.find('#header-cart-quantity');
+                    var newCartDropdown = 
+                    $(`
+                    <div class="navbar-cart-product-wrapper">
+                        <!-- cart item-->
+                        ${cart.map((cartItem, index) => {
+                            var item = cartItem.item;
+                            return `
+                                <div class="navbar-cart-product">
+                                    <div class="d-flex align-items-center">
+                                        <a href="/mike/collection/shop/product-detail/${item.id.productId}"><img
+                                            class="img-fluid navbar-cart-product-image"
+                                            src="/images/product/${item.urlAvatar}"
+                                            alt="...">
+                                        </a>
+                                        <div class="w-100">
+                                            <a class="navbar-cart-product-close" href="#">
+                                                <i class="fa fa-times"> </i>
+                                            </a>
+                                            <div class="ps-3">
+                                                <a class="navbar-cart-product-link" 
+                                                    href="/mike/collection/shop/product-detail/${item.id.productId}">${item.name}
+                                                </a>
+                                                <small class="d-block text-muted">Quantity: ${cartItem.quantity} </small>
+                                                <strong class="d-block text-sm"> ${cartItem.price} </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                        }).join('')}
+                        <!--<div class="navbar-cart-product">
+                            <div class="d-flex align-items-center">
+                                <a href="/mike/collection/shop/product-detail/"><img
+                                    class="img-fluid navbar-cart-product-image"
+                                    src="/web/assets/img/product/product-square-ian-dooley-347968-unsplash.jpg"
+                                    alt="...">
+                                </a>
+                                <div class="w-100">
+                                    <a class="navbar-cart-product-close" href="#">
+                                        <i class="fa fa-times"> </i>
+                                    </a>
+                                    <div class="ps-3">
+                                        <a class="navbar-cart-product-link" href="detail.html">Skull Tee</a>
+                                        <small class="d-block text-muted">Quantity: 1 </small>
+                                        <strong class="d-block text-sm">$75.00 </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                    <!-- total price-->
+                    <div class="navbar-cart-total">
+                        <span class="text-uppercase text-muted">Total</span>
+                        <strong class="text-uppercase">${totalAmount}</strong>
+                    </div>
+                    <!-- buttons-->
+                    <div class="d-flex justify-content-between">
+                        <a class="btn btn-link text-dark me-3" href="cart.html">View Cart
+                            <i class="fa-arrow-right fa"></i>
+                        </a>
+                        <a class="btn btn-outline-dark" href="checkout1.html">Checkout</a>
+                    </div>
+                    `);
+                    //if(data.cart.)
+                    $headerCartDropdown.empty();
+                    $headerCartDropdown.append(newCartDropdown);
+                    $headerCartQuantity.text(totalQuantity);
+                    $('#header-cart-quantity-mobile').text(totalQuantity);
+                    $headerCartDropdown.addClass('show');
+                  },
+                  error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                  }
+                });
+            });              
+        });
+    </script>
+
+    <script>
+        $(document).on('click', function(event) {
+            if(!$('#cartdetails').hasClass('show') && $('#header-cart-dropdown').hasClass('show')) {
+                $('#header-cart-dropdown').removeClass('show');
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.product-details').on('change', '.input-color-product', function (){
+                if ($(this).prop('checked')) {
+                    var href =  window.location.href;
+                    var productId = href.substring(href.lastIndexOf("/") + 1);
+                    const colorId = $(this).val();
+                    var url = "/mike/api/product/product-color-single?productId=" + productId + "&colorId=" + colorId;
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function(data) {
+                            var productDetail = data.productDetail;
+                            console.log(productDetail);
+                            var $inputSizeProduct = $('.input-size-product');
+                            var $inputMaterialProduct = $('.input-material-product');
+                        },
+                        error: function(jqXHR, textStatus, errorTh){
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </th:block>
 </body>
 </html>

@@ -14,23 +14,29 @@
 
 <!-- Gọi layout cha -->
 <th:block layout:fragment="content">
-    <section class="position-relative dark-overlay py-3 py-lg-7 overflow-hidden" data-parallax="scroll"
-             data-image-src="/web/assets/img/photo/erii-gutierrez-487083-unsplash.jpg" data-speed="0.3" data-position-x="right">
-        <div class="container overlay-content hero hero-page">
-            <ul class="breadcrumb justify-content-center no-border mb-0">
-                <li class="breadcrumb-item"><a class="text-white" href="index.html">Home</a></li>
-                <li class="breadcrumb-item text-white active">Ladies</li>
-            </ul>
-            <div class="hero-content pb-5 text-center text-white">
-                <h1 class="hero-heading">Ladies</h1>
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+    <section class="hero">
+        <div class="container">
+          <!-- Breadcrumbs -->
+          <ol class="breadcrumb justify-content-center">
+            <li class="breadcrumb-item">
+                <a th:href="@{/mike/home}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Shop</li>
+          </ol>
+          <!-- Hero Content-->
+          <div class="hero-content pb-5 text-center">
+            <h1 class="hero-heading">Jackets and tops</h1>
+            <div class="row">   
+              <div class="col-xl-8 offset-xl-2"><p class="lead text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p></div>
             </div>
+          </div>
         </div>
-    </section>
-    <div class="container mt-5">
-        <div class="row">
+      </section>
+      <main>
+        <div class="container">
+          <div class="row">
             <!-- Grid -->
-            <div class="products-grid col-xl-9 col-lg-8 order-lg-2">
+            <div class="products-grid col-12 sidebar-none">
                 <header class="product-grid-header">
                     <div class="me-3 mb-3">
                         Showing <strong>1-12 </strong>of <strong>158 </strong>products
@@ -56,116 +62,19 @@
                     </div>
                 </header>
                 <div class="row" id="wrapper-list-product">
-                    <!--Content-->
+                    <!-- content -->
                 </div>
                 <!-- Pagination-->
                 <nav class="d-flex justify-content-center mb-5 mt-3" aria-label="page navigation">
-                  <ul class="pagination" id="pagination">
-                    <!--content-->
-                  </ul>
+                    <ul class="pagination" id="pagination">
+                        <!--content-->
+                    </ul>
                 </nav>
             </div>
             <!-- / Grid End-->
-            <!-- Sidebar-->
-            <div class="sidebar col-xl-3 col-lg-4 order-lg-1">
-                <div class="sidebar-block px-3 px-lg-0 me-lg-4">
-                    <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
-                       href="#categoriesMenu" aria-expanded="false" aria-controls="categoriesMenu">Product Categories</a>
-                    <div class="expand-lg collapse" id="categoriesMenu">
-                        <div class="nav nav-pills flex-column mt-4 mt-lg-0" role="menu">
-                            <div class="sidebar-menu-item mb-2 active" data-bs-toggle="collapse" data-bs-target="#productUserMenu"
-                                 aria-expanded="true" aria-controls="productUserMenu" role="menuitem">
-                                <a class="nav-link active" href="javascript:void(0)">
-                                    <span>Product User</span>
-<!--                                    <span class="sidebar-badge ms-2">123</span>-->
-                                </a>
-                            </div>
-                            <div class="collapse show" id="productUserMenu">
-                                <div class="nav nav-pills flex-column ms-3">
-                                    <a class="nav-link mb-2 product-user-item" href="javascript:void(0)"
-                                       th:each="objectCate: ${objectCates}"
-                                       th:text="${objectCate.name}"
-                                       th:data-product-user-item-id="${objectCate.id}">
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="sidebar-menu-item mb-2" data-bs-toggle="collapse" data-bs-target="#productCategoryMenu"
-                                 aria-expanded="false" aria-controls="productCategoryMenu" role="menuitem">
-                                <a class="nav-link" href="javascript:void(0)">
-                                    <span>Product Category</span>
-<!--                                    <span class="sidebar-badge ms-2">55</span>-->
-                                </a>
-                            </div>
-                            <div class="collapse" id="productCategoryMenu">
-                                <div class="nav nav-pills flex-column ms-3">
-                                    <a class="nav-link mb-2 product-category-item" href="javascript:void(0)"
-                                       th:each="productCate: ${productCates}"
-                                       th:text="${productCate.name}"
-                                       th:data-product-category-item-id="${productCate.id}">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="sidebar-block px-3 px-lg-0 me-lg-4">
-                    <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
-                       href="#priceFilterMenu" aria-expanded="false" aria-controls="priceFilterMenu">Filter by price</a>
-                    <div class="expand-lg collapse" id="priceFilterMenu">
-                        <h6 class="sidebar-heading d-none d-lg-block">Price </h6>
-                        <div class="mt-4 mt-lg-0" id="slider-snap"> </div>
-                        <div class="nouislider-values">
-                            <div class="min">From $<span id="slider-snap-value-lower"></span></div>
-                            <div class="max">To $<span id="slider-snap-value-upper"></span></div>
-                            <input class="slider-snap-input product-price-lower" type="hidden"
-                                   name="pricefrom" id="slider-snap-input-lower" value="">
-                            <input class="slider-snap-input product-price-upper" type="hidden"
-                                   name="priceto" id="slider-snap-input-upper" value="">
-                        </div>
-                    </div>
-                </div>
-                <div class="sidebar-block px-3 px-lg-0 me-lg-4">
-                    <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
-                       href="#sizeFilterMenu" aria-expanded="true" aria-controls="sizeFilterMenu">Filter by size</a>
-                    <!-- Brand filter menu - this menu has .show class, so is expanded by default-->
-                    <div class="expand-lg collapse show" id="sizeFilterMenu">
-                        <h6 class="sidebar-heading d-none d-lg-block">Size </h6>
-                        <form class="mt-4 mt-lg-0" action="#">
-                            <div class="mb-1" th:each="size: ${sizes}">
-                                <div class="form-check">
-                                    <input class="form-check-input product-size-item" th:id="size + ${size.id}"
-                                           type="checkbox" name="clothes-size"
-                                           th:value="${size.id}">
-                                    <label class="form-check-label" th:for="size + ${size.id}" th:text="${size.name}"></label>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="sidebar-block px-3 px-lg-0 me-lg-4">
-                    <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
-                       href="#colourFilterMenu" aria-expanded="false" aria-controls="colourFilterMenu">Filter by colour</a>
-                    <!-- Size filter menu-->
-                    <div class="expand-lg collapse" id="colourFilterMenu">
-                        <h6 class="sidebar-heading d-none d-lg-block">Colour </h6>
-                        <div class="mt-4 mt-lg-0">
-                            <ul class="list-inline mb-0 colours-wrapper">
-                                <li class="list-inline-item" th:each="color: ${colors}">
-                                    <label class="btn-colour"
-                                           th:for="'colour_sidebar_' + ${color.name}"
-                                           th:style="${'background-color:' + color.colorHex}"
-                                           data-allow-multiple> </label>
-                                    <input class="input-invisible product-color-item" type="checkbox" name="colour" th:value="${color.id}"
-                                           th:id="'colour_sidebar_' + ${color.name}">
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Sidebar end-->
+          </div>
         </div>
-    </div>
+      </main>
     <!-- Quickview Modal    -->
     <div class="modal fade quickview" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
@@ -190,304 +99,253 @@
 
   <script>
     $(document).ready(function() {
-      var url = "/mike/api/product/product-filter?filter=(;sbi=DESC;pag=12.1;)";
-
-      getProductData(url,true);
-
-      let productUserItems = $('.product-user-item');
-      let productCategoryItems = $('.product-category-item');
-      let productPriceLower = $('.product-price-lower');
-      let productPriceUpper = $('.product-price-upper');
-      let productSizeItems = $('.product-size-item');
-      let productColorItems = $('.product-color-item');
-      let productSortItem = $('.product-sort-item');
-      let paginationOptions = $('.pagination-option');
-
-      productUserItems.on("click", function() {
-        productUserItems.not($(this)).removeClass('active');
-        if($(this).hasClass('active')){
-            $(this).removeClass('active');
-            $(this).blur();
+        var url = "/mike/api/product/product-filter?filter=(;sbi=DESC;pag=12.1;)";
+        var currentUrl = window.location.href;
+        var srs = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+        var sr = srs.split("-");
+        if(srs.includes("pc") || srs.includes("oc")){
+          if(sr.length === 3) {
+            url = "/mike/api/product/product-filter?filter=(;" + 
+              sr[0] + "=" + sr[1] + ";" + "sbi=DESC;pag=12.1;)";
+          }
         }
-        else{
-            $(this).addClass('active');
+        if(srs.includes("mip") && srs.includes("map")){
+          if(sr.length === 4) {
+            url = "/mike/api/product/product-filter?filter=(;" + 
+              sr[0] + "=" + sr[1] + ";" + sr[2] + "=" + sr[3] + ";" + "sbi=DESC;pag=12.1;)";
+          }
+          if(sr.length === 3) {
+            url = "/mike/api/product/product-filter?filter=(;" + 
+              sr[0] + "=" + sr[1] + ";" + sr[2] + "=" + "10000000" + ";" + "sbi=DESC;pag=12.1;)";
+          }
         }
-        updateAndCallAPI(true);
-      });
 
-      productCategoryItems.on("click", function() {
-        productCategoryItems.not($(this)).removeClass('active');
-        if($(this).hasClass('active')){
-            $(this).removeClass('active');
-            $(this).blur();
-        }
-        else{
-            $(this).addClass('active');
-        }
-        updateAndCallAPI(true);
-      });
+        url = url.replace(/\s+/g,"");
 
-      productPriceLower.on("change", function() {
-        updateAndCallAPI(true);
-      });
+        getProductData(url,true);
 
-      productPriceUpper.on("change", function() {
-        updateAndCallAPI(true);
-      });
-
-      productSizeItems.on("change", function() {
-        updateAndCallAPI(true);
-      });
-
-      productColorItems.on("change", function() {
-        updateAndCallAPI(true);
-      });
-
-      productSortItem.on("change", function() {
-        updateAndCallAPI(true);
-      });
-
-      paginationOptions.on("click", function() {
-        paginationOptions.not($(this)).removeClass('active');
-        $(this).addClass('active');
-        updateAndCallAPI(true);
-      });
-
-      $("#pagination").on("click", ".page-item:not(.active)", function() {
-        var $pagination = $("#pagination");
-        var $pageItems = $pagination.find('.page-item');
-        var $clickedItem = $(this);
-
-        if ($clickedItem.hasClass("prev-item")) {
-          var $activeItem = $pagination.find('.page-item.active');
-          var index = $pageItems.index($activeItem);
-
-          if (index !== -1 && index > 1) {
-            $pageItems.removeClass('active');
-            $pageItems.eq(index - 1).addClass('active');
+        let productSortItem = $('.product-sort-item');
+        let paginationOptions = $('.pagination-option');
+  
+        productSortItem.on("change", function() {
+          updateAndCallAPI(true);
+        });
+  
+        paginationOptions.on("click", function() {
+          paginationOptions.not($(this)).removeClass('active');
+          $(this).addClass('active');
+          $("#pagination").find(".page-item").removeClass('active');
+          updateAndCallAPI(true);
+        });
+  
+        $("#pagination").on("click", ".page-item:not(.active)", function() {
+          var $pagination = $("#pagination");
+          var $pageItems = $pagination.find('.page-item');
+          var $clickedItem = $(this);
+  
+          if ($clickedItem.hasClass("prev-item")) {
+            var $activeItem = $pagination.find('.page-item.active');
+            var index = $pageItems.index($activeItem);
+  
+            if (index !== -1 && index > 1) {
+              $pageItems.removeClass('active');
+              $pageItems.eq(index - 1).addClass('active');
+              updateAndCallAPI(false);
+            }
+          } else if ($clickedItem.hasClass("next-item")) {
+            var $activeItem = $pagination.find('.page-item.active');
+            var index = $pageItems.index($activeItem);
+  
+            if (index !== -1 && index < $pageItems.length - 2) {
+              $pageItems.removeClass('active');
+              $pageItems.eq(index + 1).addClass('active');
+              updateAndCallAPI(false);
+            }
+          } else {
+            $pageItems.not($clickedItem).removeClass('active');
+            $clickedItem.addClass('active');
+            console.log('click');
             updateAndCallAPI(false);
           }
-        } else if ($clickedItem.hasClass("next-item")) {
-          var $activeItem = $pagination.find('.page-item.active');
-          var index = $pageItems.index($activeItem);
-
-          if (index !== -1 && index < $pageItems.length - 2) {
-            $pageItems.removeClass('active');
-            $pageItems.eq(index + 1).addClass('active');
-            updateAndCallAPI(false);
-          }
-        } else {
-          $pageItems.not($clickedItem).removeClass('active');
-          $clickedItem.addClass('active');
-          console.log('click');
-          updateAndCallAPI(false);
-        }
-      });
-
-      function updateAndCallAPI(addPagination) {
-        var filter = "(;";
-
-        // Retrieve the selected options
-        var productUserId = null;
-        productUserItems.each(function() {
-          if ($(this).hasClass("active")) {
-            productUserId = $(this).attr('data-product-user-item-id');
-          }
         });
+  
+        function updateAndCallAPI(addPagination) {
+          var filter = "(;";
 
-        var productCategoryId = null;
-        productCategoryItems.each(function() {
-          if ($(this).hasClass("active")) {
-            productCategoryId = $(this).attr('data-product-category-item-id');
-          }
-        });
-
-        var productPriceLowerValue = productPriceLower.val();
-        var productPriceUpperValue = productPriceUpper.val();
-
-        var sizeList = productSizeItems
-          .filter(":checked")
-          .map(function() {
-            return $(this).val();
-          })
-          .get()
-          .join(".");
-
-        var colorList = productColorItems
-          .filter(":checked")
-          .map(function() {
-            return $(this).val();
-          })
-          .get()
-          .join(".");
-
-        var productSortItemValue = productSortItem.val();
-
-        var paginationOptionValue = null;
-        paginationOptions.each(function() {
-          if ($(this).hasClass("active")) {
-            paginationOptionValue = parseInt($(this).text().replace(" ", ""));
-          }
-        });
-
-        var pageLinkValue = null;
-        $("#pagination").find(".page-item").each(function() {
-          if ($(this).hasClass("active")) {
-            pageLinkValue = parseInt($(this).text().replace(" ", ""));
-          }
-        });
-
-        // Build the filter parameter based on the selected options
-        if (productUserId) {
-          filter += "oc=" + productUserId + ";";
-        }
-        if (productCategoryId) {
-          filter += "pc=" + productCategoryId + ";";
-        }
-        if (sizeList) {
-          filter += "s=" + sizeList + ";";
-        }
-        if (colorList) {
-          filter += "c=" + colorList + ";";
-        }
-        if (productPriceLowerValue && productPriceUpperValue) {
-          filter += "mip=" + productPriceLowerValue + ";";
-          filter += "map=" + productPriceUpperValue + ";";
-        }
-
-        if (paginationOptionValue){
-          if(paginationOptionValue === 12 || paginationOptionValue === 24){
-            filter += "pag=" + paginationOptionValue + ".1;";
-          }else{
-            filter += "pag=" + ";";
-          }
-        }
-
-        if (pageLinkValue) {
-          if (filter.includes("pag=")) {
-            var startIndex = filter.indexOf("pag=");
-            var endIndex = filter.indexOf(";", startIndex);
-            var pagValue = filter.substring(startIndex, endIndex);
-
-            if (pagValue.length > 5) {
-              var newPagValue = pagValue.replace(/(\.\d+)$/, '.' + pageLinkValue);
-              filter = filter.replace(pagValue, newPagValue);
+          var currentUrl = window.location.href;
+          var srs = currentUrl.substring(currentUrl.lastIndexOf("/") + 1);
+          var sr = srs.split("-");
+          if(srs.includes("pc") || srs.includes("oc")){
+            if(sr.length === 3) {
+              filter += sr[0] + "=" + sr[1] + ";";
             }
           }
-        }
 
-        // Add sorting options
-        if(productSortItemValue){
-            if(productSortItemValue === "price_ASC"){
-                filter += "sbp=ASC;";
-            }else if(productSortItemValue === "price_DESC"){
-                filter += "sbp=DESC;";
-            }else if(productSortItemValue === "name_ASC"){
-                filter += "sbn=ASC;";
-            }else if(productSortItemValue === "name_DESC"){
-                filter += "sbn=DESC;";
-            }else if(productSortItemValue === "id_ASC"){
-                filter += "sbi=ASC;";
-            }else if(productSortItemValue === "id_DESC"){
-                filter += "sbi=DESC;";
+          if(srs.includes("mip") && srs.includes("map")){
+            if(sr.length === 4) {
+              filter += sr[0] + "=" + sr[1] + ";" + sr[2] + "=" + sr[3] + ";";
             }
-        }
-
-        // Complete the filter parameter
-        filter += ")";
-
-        // Update the URL with the new filter parameter
-        url = "/mike/api/product/product-filter?filter=" + encodeURIComponent(filter);
-        url = url.replace(" ","");
-        // Make the AJAX request with the updated URL
-        console.log(url);
-        getProductData(url,addPagination);
-      }
-
-      function getProductData(url, addPagination) {
-        $.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          success: function(response) {
-            // Handle the response data
-            console.log(response);
-
-            // Get the wrapper element
-            var $wrapper = $('#wrapper-list-product');
-
-            // Clear existing product elements
-            $wrapper.empty();
-
-            // Iterate over the products and add them to the wrapper element
-            for (var i = 0; i < response.listProduct.length; i++) {
-              var res = response[i];
-              var list = response.listProduct[i];
-              // Create a new product element
-              var $productElement = 
-              $('<div class="col-xl-4 col-sm-6 wrapper-product" data-product-id="' + list.product.id + '">' +
-                  '<div class="product">' +
-                    '<div class="product-image">' +
-                      '<div class="ribbon ribbon-info">Fresh</div>' +
-                      '<img class="img-fluid" src="' + list.product.urlAvatar + '" alt="product" />' +
-                      '<div class="product-hover-overlay">' +
-                        '<a class="product-hover-overlay-link" href="/mike/collection/shop/product-detail/' + list.product.id + '"></a>' +
-                        '<div class="product-hover-overlay-buttons">' +
-                          '<a class="btn btn-outline-dark btn-product-left d-none d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"></i></a>' +
-                          '<a class="btn btn-dark btn-buy" href="/mike/collection/shop/product-detail/' + list.product.id + '"><i class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>' +
-                          '<a class="btn btn-outline-dark btn-product-right d-none d-sm-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-expand-arrows-alt"></i></a>' +
-                        '</div>' +
-                      '</div>' +
-                    '</div>' +
-                    '<div class="py-2">' +
-                      '<p class="text-muted text-sm mb-1">' + list.product.productCategory.name + '</p>' +
-                      '<h3 class="h6 text-uppercase mb-1"><a class="text-dark" href="/mike/collection/shop/product-detail/' + list.product.id + '">' + list.product.name + '</a></h3>' +
-                      '<span class="text-muted">$' + list.minPrice + '</span>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>');
-              // Append the product element to the wrapper
-              $wrapper.append($productElement);
+            if(sr.length === 3) {
+              filter += sr[0] + "=" + sr[1] + ";" + sr[2] + "=" + "10000000" + ";";
             }
+          }
 
-            // Pagination
-            if (addPagination) {
-              var $pagination = $('#pagination');
-              $pagination.empty();
-
-              if (response.pageCount > 1) {
-                var $prevItem = $('<li class="page-item prev-item"><a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">Prev</span><span class="sr-only">Previous</span></a></li>');
-                var $nextItem = $('<li class="page-item next-item"><a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">Next</span><span class="sr-only">Next</span></a></li>');
-
-                $pagination.append($prevItem);
-
-                for (var i = 1; i <= response.pageCount; i++) {
-                  var $pageItem = $('<li class="page-item"><a class="page-link" href="javascript:void(0)">' + i + '</a></li>');
-
-                  if (i === response.pageNumber) {
-                    $pageItem.addClass('active');
-                  }
-
-                  // if(i > 7){
-                  //   $pagination.append($('<li><span>...</span></li>'));
-                  // }
-
-                  $pagination.append($pageItem);
-                }
-
-                $pagination.append($nextItem);
-
+          // Retrieve the selected options
+          var productSortItemValue = productSortItem.val();
+  
+          var paginationOptionValue = null;
+          paginationOptions.each(function() {
+            if ($(this).hasClass("active")) {
+              paginationOptionValue = parseInt($(this).text().replace(" ", ""));
+            }
+          });
+  
+          var pageLinkValue = null;
+          $("#pagination").find(".page-item").each(function() {
+            if ($(this).hasClass("active")) {
+              pageLinkValue = parseInt($(this).text().replace(" ", ""));
+            }
+          });
+  
+          // Build the filter parameter based on the selected options
+          if (paginationOptionValue){
+            if(paginationOptionValue === 12 || paginationOptionValue === 24){
+              filter += "pag=" + paginationOptionValue + ".1;";
+            }else{
+              filter += "pag=" + ";";
+            }
+          }
+  
+          if (pageLinkValue) {
+            if (filter.includes("pag=")) {
+              var startIndex = filter.indexOf("pag=");
+              var endIndex = filter.indexOf(";", startIndex);
+              var pagValue = filter.substring(startIndex, endIndex);
+  
+              if (pagValue.length > 5) {
+                var newPagValue = pagValue.replace(/(\.\d+)$/, '.' + pageLinkValue);
+                filter = filter.replace(pagValue, newPagValue);
               }
             }
-          },
-          error: function(xhr, status, error) {
-            // Handle the error if the request fails
-            console.log('Error:', error);
           }
-        });
-      }
-
-    });
+  
+          // Add sorting options
+          if(productSortItemValue){
+              if(productSortItemValue === "price_ASC"){
+                  filter += "sbp=ASC;";
+              }else if(productSortItemValue === "price_DESC"){
+                  filter += "sbp=DESC;";
+              }else if(productSortItemValue === "name_ASC"){
+                  filter += "sbn=ASC;";
+              }else if(productSortItemValue === "name_DESC"){
+                  filter += "sbn=DESC;";
+              }else if(productSortItemValue === "id_ASC"){
+                  filter += "sbi=ASC;";
+              }else if(productSortItemValue === "id_DESC"){
+                  filter += "sbi=DESC;";
+              }
+          }
+  
+          // Complete the filter parameter
+          filter += ")";
+  
+          // Update the URL with the new filter parameter
+          url = "/mike/api/product/product-filter?filter=" + encodeURIComponent(filter);
+          url = url.replace(/\s+/g,"");
+          // Make the AJAX request with the updated URL
+          console.log(url);
+          getProductData(url,addPagination);
+        }
+  
+        function getProductData(url, addPagination) {
+          $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+              // Handle the response data
+              console.log(response);
+  
+              // Get the wrapper element
+              var $wrapper = $('#wrapper-list-product');
+  
+              // Clear existing product elements
+              $wrapper.empty();
+  
+              // Iterate over the products and add them to the wrapper element
+              for (var i = 0; i < response.listProduct.length; i++) {
+                var res = response[i];
+                var list = response.listProduct[i];
+                // Create a new product element
+                var $productElement = 
+                $(`
+                <div class="col-xl-3 col-lg-4 col-sm-6 wrapper-product" data-product-id="${list.product.id}">
+                  <div class="product">
+                    <div class="product-image">
+                      ${list.product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+                      ${list.product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+                      ${list.product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
+                      ${list.product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
+                      <img class="img-fluid" src="/images/product/${list.product.urlAvatar}" alt="product" />
+                      <div class="product-hover-overlay">
+                        <a class="product-hover-overlay-link" href="/mike/collection/shop/product-detail/${list.product.id}"></a>
+                        <div class="product-hover-overlay-buttons">
+                          <a class="btn btn-outline-dark btn-product-left d-none d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"></i></a>
+                          <a class="btn btn-dark btn-buy" href="/mike/collection/shop/product-detail/${list.product.id}"><i class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
+                          <a class="btn btn-outline-dark btn-product-right d-none d-sm-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-expand-arrows-alt"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="py-2">
+                      <p class="text-muted text-sm mb-1">${list.product.productCategory.name}</p>
+                      <h3 class="h6 text-uppercase mb-1"><a class="text-dark" href="/mike/collection/shop/product-detail/${list.product.id}">${list.product.name}</a></h3>
+                      <span class="text-muted">$${list.minPrice}</span>
+                    </div>
+                  </div>
+                </div>
+                `);
+                // Append the product element to the wrapper
+                $wrapper.append($productElement);
+              }
+  
+              // Pagination
+              if (addPagination) {
+                var $pagination = $('#pagination');
+                $pagination.empty();
+  
+                if (response.pageCount > 1) {
+                  var $prevItem = $('<li class="page-item prev-item"><a class="page-link" href="javascript:void(0)" aria-label="Previous"><span aria-hidden="true">Prev</span><span class="sr-only">Previous</span></a></li>');
+                  var $nextItem = $('<li class="page-item next-item"><a class="page-link" href="javascript:void(0)" aria-label="Next"><span aria-hidden="true">Next</span><span class="sr-only">Next</span></a></li>');
+  
+                  $pagination.append($prevItem);
+  
+                  for (var i = 1; i <= response.pageCount; i++) {
+                    var $pageItem = $('<li class="page-item"><a class="page-link" href="javascript:void(0)">' + i + '</a></li>');
+  
+                    if (i === response.pageNumber) {
+                      $pageItem.addClass('active');
+                    }
+  
+                    // if(i > 7){
+                    //   $pagination.append($('<li><span>...</span></li>'));
+                    // }
+  
+                    $pagination.append($pageItem);
+                  }
+  
+                  $pagination.append($nextItem);
+  
+                }
+              }
+            },
+            error: function(xhr, status, error) {
+              // Handle the error if the request fails
+              console.log('Error:', error);
+            }
+          });
+        }
+  
+      });
   </script>
   
   <script type="text/javascript">
@@ -504,126 +362,131 @@
           success: function(response) {
             var product = response.product;
             var productDetail = response.productDetail;
+            var productImage = response.productImage;
             var unique = new Set();
             var $productModelBody = $(".product-model-body");
             var $productSingle = 
-            $(`<div class="ribbon ribbon-primary">Sale</div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="owl-carousel owl-theme owl-dots-modern detail-full" data-slider-id="1">
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                  </div>
+            $(`
+            ${product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+            ${product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+            ${product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
+            ${product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="owl-carousel owl-theme owl-dots-modern detail-full" data-slider-id="1">
+                    <div class="detail-full-item-modal"
+                          style="background: center center url('/images/product/${product.urlAvatar}') no-repeat; background-size: cover;">
+                    </div>
+                    ${productImage.map((image, index) => {
+                      if (!unique.has(image.urlImage)) { // Check if the size is not already in the Set
+                        unique.add(image.urlImage); // Add the size to the Set
+                        return `
+                          <div class="detail-full-item-modal"
+                                style="background: center center url('/images/product/${image.urlImage}') no-repeat; background-size: cover;">
+                          </div>
+                        `;
+                      }
+                      return ''; // Return an empty string for duplicate sizes
+                    }).join('')}
                 </div>
-                <div class="col-lg-6 d-flex align-items-center">
-                  <div>
-                    <h2 class="mb-4 mt-4 mt-lg-1">${product.name}</h2>
-                    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
-                      <ul class="list-inline mb-2 mb-sm-0">
-                        <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
-                        <li class="list-inline-item text-muted fw-light">
-                            <del>$90.00</del>
-                        </li>
-                      </ul>
-                      <div class="d-flex align-items-center">
-                        <ul class="list-inline me-2 mb-0">
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
-                        </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
+              </div>
+              <div class="col-lg-6 d-flex align-items-center">
+                <div>
+                  <h2 class="mb-4 mt-4 mt-lg-1">${product.name}</h2>
+                  <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
+                    <ul class="list-inline mb-2 mb-sm-0">
+                      <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
+                      <li class="list-inline-item text-muted fw-light">
+                          <del>$90.00</del>
+                      </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                      <ul class="list-inline me-2 mb-0">
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
+                      </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
+                    </div>
+                  </div>
+                  <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco</p>
+                  <form action="#">
+                    <div class="row">
+                      <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Size <span>(required)</span></h6>
+                        ${productDetail.map((detail, index) => {
+                          if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
+                            unique.add(detail.size.name); // Add the size to the Set
+                            return `
+                              <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_${index}">
+                                ${detail.size.name} <!-- Access the size name from productDetail array -->
+                                <input class="input-invisible input-size-modal" type="radio" name="size" value="value_${index}" id="size_${index}" required>
+                              </label>
+                            `;
+                          }
+                          return ''; // Return an empty string for duplicate sizes
+                        }).join('')}
+                      </div>
+                      <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Type <span>(required)</span></h6>
+                        ${productDetail.map((detail, index) => {
+                          if (!unique.has(detail.material.name)) { // Check if the material is not already in the Set
+                            unique.add(detail.material.name); // Add the material to the Set
+                            return `
+                              <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_${index}">
+                                ${detail.material.name} <!-- Access the material name from productDetail array -->
+                                <input class="input-invisible input-material-modal" type="radio" name="material" 
+                                  value="value_${index}" id="material_${index}" required>
+                              </label>
+                            `;
+                          }
+                          return ''; // Return an empty string for duplicate materials
+                        }).join('')}
+                      </div>
+                      <div class="col-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Colour <span>(required)</span></h6>
+                        <ul class="list-inline mb-0 colours-wrapper">
+                          ${productDetail.map((detail, index) => {
+                            if (!unique.has(detail.color.name)) { // Check if the color is not already in the Set
+                              unique.add(detail.color.name); // Add the color to the Set
+                              return `
+                                <li class="list-inline-item">
+                                  <label class="btn-colour" for="colour_${index}" style="background-color: ${detail.color.colorHex}"></label>
+                                  <input class="input-invisible input-color-modal" type="radio" name="colour" 
+                                    value="value_${index}" id="colour_${index}" required>
+                                </li>
+                              `;
+                            }
+                            return ''; // Return an empty string for duplicate colors
+                          }).join('')}
+                        </ul>
+                      </div>
+                      <div class="col-12 col-lg-6 detail-option mb-5">
+                        <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
+                        <input class="form-control detail-quantity" name="items" 
+                          type="number" min="1" step="1" value="1" pattern="[0-9]+" required>
                       </div>
                     </div>
-                    <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                        ullamco</p>
-                    <form action="#">
-                      <div class="row">
-                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Size <span>(required)</span></h6>
-                          ${productDetail.map((detail, index) => {
-                            if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
-                              unique.add(detail.size.name); // Add the size to the Set
-                              return `
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_${index}">
-                                  ${detail.size.name} <!-- Access the size name from productDetail array -->
-                                  <input class="input-invisible input-size-modal" type="radio" name="size" value="value_${index}" id="size_${index}" required>
-                                </label>
-                              `;
-                            }
-                            return ''; // Return an empty string for duplicate sizes
-                          }).join('')}
-                        </div>
-                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Type <span>(required)</span></h6>
-                          ${productDetail.map((detail, index) => {
-                            if (!unique.has(detail.material.name)) { // Check if the material is not already in the Set
-                              unique.add(detail.material.name); // Add the material to the Set
-                              return `
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_${index}">
-                                  ${detail.material.name} <!-- Access the material name from productDetail array -->
-                                  <input class="input-invisible input-material-modal" type="radio" name="material" 
-                                    value="value_${index}" id="material_${index}" required>
-                                </label>
-                              `;
-                            }
-                            return ''; // Return an empty string for duplicate materials
-                          }).join('')}
-                        </div>
-                        <div class="col-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Colour <span>(required)</span></h6>
-                          <ul class="list-inline mb-0 colours-wrapper">
-                            ${productDetail.map((detail, index) => {
-                              if (!unique.has(detail.color.name)) { // Check if the color is not already in the Set
-                                unique.add(detail.color.name); // Add the color to the Set
-                                return `
-                                  <li class="list-inline-item">
-                                    <label class="btn-colour" for="colour_${index}" style="background-color: ${detail.color.colorHex}"></label>
-                                    <input class="input-invisible input-color-modal" type="radio" name="colour" 
-                                      value="value_${index}" id="colour_${index}" required>
-                                  </li>
-                                `;
-                              }
-                              return ''; // Return an empty string for duplicate colors
-                            }).join('')}
-                          </ul>
-                        </div>
-                        <div class="col-12 col-lg-6 detail-option mb-5">
-                          <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
-                          <input class="form-control detail-quantity" name="items" 
-                            type="number" min="1" step="1" value="1" pattern="[0-9]+" required>
-                        </div>
-                      </div>
-                      <ul class="list-inline">
-                        <li class="list-inline-item">
-                          <button class="btn btn-dark btn-lg mb-1" type="submit"> 
-                            <i class="fa fa-shopping-cart me-2"></i>Add to Cart
-                          </button>
-                        </li>
-                        <li class="list-inline-item">
-                          <a class="btn btn-outline-secondary mb-1" href="#"> 
-                            <i class="far fa-heart me-2"></i>Add to wishlist
-                          </a>
-                        </li>
-                      </ul>
-                    </form>
-                  </div>
+                    <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <button class="btn btn-dark btn-lg mb-1" type="submit"> 
+                          <i class="fa fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                      </li>
+                      <li class="list-inline-item">
+                        <a class="btn btn-outline-secondary mb-1" href="#"> 
+                          <i class="far fa-heart me-2"></i>Add to wishlist
+                        </a>
+                      </li>
+                    </ul>
+                  </form>
                 </div>
-              </div>`);
+              </div>
+            </div>
+            `);
             
             $productModelBody.empty();
             $productModelBody.append($productSingle);

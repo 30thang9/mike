@@ -2,7 +2,10 @@ package com.nth.mike.service.impl;
 
 import com.nth.mike.entity.*;
 import com.nth.mike.model.dto.user.UserDTO;
+import com.nth.mike.model.dto.user.UserLoginDTO;
+import com.nth.mike.model.mapper.user.UserLoginMapper;
 import com.nth.mike.model.mapper.user.UserMapper;
+import com.nth.mike.model.other.AuthenProvider;
 import com.nth.mike.repository.AccountRepo;
 import com.nth.mike.repository.AccountRoleRepo;
 import com.nth.mike.repository.RoleRepo;
@@ -10,12 +13,14 @@ import com.nth.mike.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -58,6 +63,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Role saveRole(Role role) {
+        List<Role> roles = roleRepo.findAll();
+        Boolean existRoleName = false;
+        for (Role r : roles) {
+            if (r.getName().equals(role.getName())) {
+                existRoleName = true;
+                break;
+            }
+        }
+        if (existRoleName) {
+            return null;
+        }
         return roleRepo.save(role);
     }
 
@@ -216,4 +232,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         });
         return new User(account.getUsername(), account.getPassword(), authorities);
     }
+
+    @Override
+    public UserLoginDTO findUserLoginByAccount(Account account, AuthenProvider auth) {
+        UserLoginDTO user = new UserLoginDTO();
+        List<Role> roles = accountRoleRepo.findRoleByAccount(account);
+        user = UserLoginMapper.toUserLoginDTO(account, roles, auth);
+        return user;
+    }
+
 }

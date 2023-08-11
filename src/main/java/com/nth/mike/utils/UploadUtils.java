@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -33,17 +34,17 @@ public class UploadUtils {
         String uploadDir = getUploadDirectory();
         Path filePath = Path.of(uploadDir + fileName);
 
-        try {
+        try (InputStream inputStream = file.getInputStream()) { // Sử dụng try-with-resources để tự động đóng
+                                                                // InputStream
             if (!Files.exists(filePath.getParent())) {
                 Files.createDirectories(filePath.getParent());
             }
 
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new IOException("Failed to save image: " + e.getMessage());
         }
 
-        // return getRelativeImagePath(fileName);
         return fileName;
     }
 

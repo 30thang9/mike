@@ -99,7 +99,7 @@
                 <div class="valid-feedback"> Looks good! </div>
                 <div class="invalid-feedback"> Please select your hot status.</div>
               </div>
-              
+
               <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
                 <label for="bs-validation-bl-status" class="form-label">Best Seller Status</label>
                 <select id="bs-validation-bl-status" class="select2 form-select form-select-lg"
@@ -113,7 +113,7 @@
 
               <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
                 <label for="bs-validation-dstatus" class="form-label">Discount Status</label>
-                <select id="bs-validation-dstatus" class="select2 form-select form-select-lg" data-allow-clear="true" 
+                <select id="bs-validation-dstatus" class="select2 form-select form-select-lg" data-allow-clear="true"
                       name="discountStatus" required>
                     <option value="">Select value</option>
                     <option th:each="item : ${discountStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>

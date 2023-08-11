@@ -36,24 +36,26 @@ public class UserApiController {
     @Value("${spring.createToken.username.secret}")
     private String secretUsername;
 
-
     @GetMapping("/list")
-    public ResponseEntity<List<UserDTO>> getUser(){
+    public ResponseEntity<List<UserDTO>> getUser() {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> addUser(@RequestBody Map<String, String> request) {
+        String fullName = request.get("fullName");
         String username = request.get("username");
         String password = request.get("password");
         String confirmPassword = request.get("confirm_password");
 
-        if (username.isBlank() || password.isBlank() || !password.equals(confirmPassword) || !isStrongPassword(password)) {
+        if (fullName.isBlank() || username.isBlank() || password.isBlank() || !password.equals(confirmPassword)
+                || !isStrongPassword(password)) {
             return ResponseEntity.badRequest().body("Invalid input");
         }
 
         try {
             Account account = new Account();
+            account.setFullName(fullName);
             account.setUsername(username);
             account.setPassword(password);
             userService.saveAccountHashPass(account);
@@ -77,13 +79,12 @@ public class UserApiController {
             userService.storeResetCode(account.getUsername(), resetCode);
 
             String encryptedEmail = handleUserUtils.createToken(account.getUsername(), secretUsername);
-            return ResponseEntity.ok(new TokenResponse(encryptedEmail,"success"));
+            return ResponseEntity.ok(new TokenResponse(encryptedEmail, "success"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add user");
         }
     }
-
 
     @PostMapping("/auth/verify-user/create-code")
     public ResponseEntity<?> createCodeVerifyUser(@RequestBody Map<String, String> request) {
@@ -96,7 +97,7 @@ public class UserApiController {
         if (user == null) {
             return ResponseEntity.badRequest().body("Invalid email address");
         }
-        if(user.getAccountStatus()!=AccountStatus.PENDING){
+        if (user.getAccountStatus() != AccountStatus.PENDING) {
             return ResponseEntity.badRequest().body("Account status is not pending ");
         }
         // Step 2: Generate and send reset code to the user's email
@@ -119,7 +120,7 @@ public class UserApiController {
             userService.storeResetCode(username, resetCode);
 
             String encryptedEmail = handleUserUtils.createToken(username, secretUsername);
-            return ResponseEntity.ok(new TokenResponse(encryptedEmail,"success"));
+            return ResponseEntity.ok(new TokenResponse(encryptedEmail, "success"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to active user");
@@ -159,15 +160,13 @@ public class UserApiController {
         return ResponseEntity.ok("Refresh token success");
     }
 
-
-
     @PostMapping("/auth/verify-user/accept-user")
     public ResponseEntity<String> acceptUser(@RequestBody Map<String, String> request) {
         String token = request.get("token");
-        if (token==null) {
+        if (token == null) {
             return ResponseEntity.badRequest().body("Token not found");
         }
-        String code=handleUserUtils.getCodeFromToken(token,secretResetCode);
+        String code = handleUserUtils.getCodeFromToken(token, secretResetCode);
         System.out.println(code);
         // Step 3: Verify reset code
         if (!userService.isValidResetCode(code)) {
@@ -179,16 +178,13 @@ public class UserApiController {
             return ResponseEntity.badRequest().body("Reset code has expired");
         }
 
-
-        Account account =userService.findByResetCode(code);
+        Account account = userService.findByResetCode(code);
         account.setAccountStatus(AccountStatus.ACTIVE);
         // Step 7: Update the user's
         userService.saveAccount(account);
 
-
         return ResponseEntity.ok("User verify successful");
     }
-
 
     private boolean isStrongPassword(String password) {
         // Add your password strength validation logic here

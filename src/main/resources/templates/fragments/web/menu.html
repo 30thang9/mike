@@ -10,10 +10,10 @@
                         th:href="@{/mike/collection/shop/all}">Shop All
                     </a>
                 </li>
-                <li class="megamenu-list-item" 
+                <li class="megamenu-list-item"
                     th:each="menuPC : ${menuPCs}">
-                    <a class="megamenu-list-link" 
-                        th:href="@{'/mike/collection/shop/shop-cate/pc-' + ${menuPC.id} + '-' + ${menuPC.name}}" 
+                    <a class="megamenu-list-link"
+                        th:href="@{'/mike/collection/shop/shop-filter/pc-' + ${menuPC.id} + '-' + ${menuPC.name}}"
                         th:text="${menuPC.name}">
                     </a>
                 </li>
@@ -28,10 +28,10 @@
             <!-- Megamenu list-->
             <h6 class="text-uppercase">Objects</h6>
             <ul class="megamenu-list list-unstyled">
-                <li class="megamenu-list-item" 
+                <li class="megamenu-list-item"
                 th:each="menuOC : ${menuOCs}">
-                <a class="megamenu-list-link" 
-                    th:href="@{'/mike/collection/shop/shop-cate/oc-' + ${menuOC.id} + '-' + ${menuOC.name}}" 
+                <a class="megamenu-list-link"
+                    th:href="@{'/mike/collection/shop/shop-filter/oc-' + ${menuOC.id} + '-' + ${menuOC.name}}"
                     th:text="${menuOC.name}">
                 </a>
             </li>
@@ -42,13 +42,13 @@
             <h6 class="text-uppercase">Prices</h6>
             <ul class="megamenu-list list-unstyled">
                 <li class="megamenu-list-item">
-                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-cate/mip-0-map-500000">0 - 500.000</a>
+                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-filter/mip-0-map-500000">0 - 500.000</a>
                 </li>
                 <li class="megamenu-list-item">
-                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-cate/mip-500000-map-1000000">500.000 - 1.000.000</a>
+                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-filter/mip-500000-map-1000000">500.000 - 1.000.000</a>
                 </li>
                 <li class="megamenu-list-item">
-                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-cate/mip-1000000-map">&gt; 1.000.000</a>
+                    <a class="megamenu-list-link" href="/mike/collection/shop/shop-filter/mip-1000000-map">&gt; 1.000.000</a>
                 </li>
             </ul>
         </div>

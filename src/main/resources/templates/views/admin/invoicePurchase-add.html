@@ -569,16 +569,16 @@
                     var sizeName = $(sizes[i]).find('option:selected').text();
                     var colorName = $(colors[i]).find('option:selected').text();
                     var materialName = $(materials[i]).find('option:selected').text();
-                    
+
                     var combinationList = $("<ul class='list-group'></ul>");
                     combinationList.append("<li class='list-group-item'>Product: " + productName + "</li>");
                     combinationList.append("<li class='list-group-item'>Size: " + sizeName + "</li>");
                     combinationList.append("<li class='list-group-item'>Color: " + colorName + "</li>");
                     combinationList.append("<li class='list-group-item'>Material: " + materialName + "</li>");
-                
+
                     var combinationMessage = "Duplicate combination found: ";
                     combinationMessage += combinationList.prop('outerHTML');
-                
+
                     // Check for duplicate combinations
                     if (combinationSet.has(combinationMessage)) {
                     // Show the message for duplicate combination

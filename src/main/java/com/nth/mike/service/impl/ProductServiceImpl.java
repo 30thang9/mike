@@ -9,16 +9,20 @@ import com.nth.mike.entity.ProductStatus;
 import com.nth.mike.entity.Size;
 import com.nth.mike.model.dto.product.ProductFilterDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
+import com.nth.mike.model.dto.product.ProductPagingDTO;
 import com.nth.mike.model.mapper.product.ProductFullDetailMapper;
+import com.nth.mike.model.pagination.Pagination;
 import com.nth.mike.model.request.product.ProductFilterRequest;
+import com.nth.mike.model.request.product.ProductSearchRequest;
 import com.nth.mike.repository.ProductDetailRepo;
 import com.nth.mike.repository.ProductImageRepo;
 import com.nth.mike.repository.ProductRepo;
 import com.nth.mike.service.ProductService;
+import com.nth.mike.utils.ConvertUTF8Utils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -76,30 +80,60 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductFilterDTO findByFilter(ProductFilterRequest filter) {
         ProductFilterDTO pfd = new ProductFilterDTO();
-        List<Product> productList = productRepo.findByProductStatus(ProductStatus.HIDDEN);
+        if (filter != null) {
+            List<Product> productList = productRepo.findByProductStatus(ProductStatus.HIDDEN);
 
-        productList = productListByFilter(filter, productList);
+            productList = productListByFilter(filter, productList);
 
-        int sizeList = productList.size();
-        int pageSize = filter.getPagination().getLimit() == null ? sizeList : filter.getPagination().getLimit();
-        int pageNumber = filter.getPagination().getPage() == null || pageSize >= sizeList ? 1
-                : filter.getPagination().getPage();
-        int pageCount = sizeList % pageSize == 0 ? sizeList / pageSize : sizeList / pageSize + 1;
+            // pagination
+            ProductPagingDTO ppd = getProductListByPage(filter.getPagination(), productList);
+            productList = ppd.getListProduct();
+            pfd.setPageCount(ppd.getPageCount());
+            pfd.setPageNumber(ppd.getPageNumber());
 
-        pfd.setPageCount(pageCount);
-        pfd.setPageNumber(pageNumber);
-
-        // pagination
-        productList = getProductListByPage(filter, productList);
-
-        List<ProductFullDetailDTO> list = new ArrayList<>();
-        for (Product p : productList) {
-            List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
-            List<ProductImage> productImageList = productImageRepo.findByProduct(p);
-            System.out.println(productImageList.toString());
-            list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
+            List<ProductFullDetailDTO> list = new ArrayList<>();
+            for (Product p : productList) {
+                List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
+                List<ProductImage> productImageList = productImageRepo.findByProduct(p);
+                System.out.println(productImageList.toString());
+                list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
+            }
+            pfd.setListProduct(list);
+        } else {
+            pfd.setPageCount(0);
+            pfd.setPageNumber(0);
+            pfd.setListProduct(new ArrayList<ProductFullDetailDTO>());
         }
-        pfd.setListProduct(list);
+        return pfd;
+    }
+
+    @Override
+    public ProductFilterDTO findBySearch(ProductSearchRequest filter) {
+        ProductFilterDTO pfd = new ProductFilterDTO();
+        if (filter != null) {
+            List<Product> productList = productRepo.findByProductStatus(ProductStatus.HIDDEN);
+
+            productList = productListBySearch(filter, productList);
+
+            // pagination
+            ProductPagingDTO ppd = getProductListByPage(filter.getPagination(), productList);
+            productList = ppd.getListProduct();
+            pfd.setPageCount(ppd.getPageCount());
+            pfd.setPageNumber(ppd.getPageNumber());
+
+            List<ProductFullDetailDTO> list = new ArrayList<>();
+            for (Product p : productList) {
+                List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
+                List<ProductImage> productImageList = productImageRepo.findByProduct(p);
+                System.out.println(productImageList.toString());
+                list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
+            }
+            pfd.setListProduct(list);
+        } else {
+            pfd.setPageCount(0);
+            pfd.setPageNumber(0);
+            pfd.setListProduct(new ArrayList<ProductFullDetailDTO>());
+        }
         return pfd;
     }
 
@@ -116,9 +150,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductFullDetailDTO findProductFullDetailById(Long id) {
-        Product product = productRepo.findById(id).orElse(null);
-        ProductFullDetailDTO productFullDetailDTO = null;
+    public ProductFullDetailDTO findProductFullDetailByProduct(Product product) {
+        ProductFullDetailDTO productFullDetailDTO = new ProductFullDetailDTO();
         if (product != null) {
             List<ProductDetail> productDetailList = productDetailRepo.findByProduct(product);
             List<ProductImage> productImageList = productImageRepo.findByProduct(product);
@@ -129,7 +162,67 @@ public class ProductServiceImpl implements ProductService {
         return productFullDetailDTO;
     }
 
+    @Override
+    public ProductFullDetailDTO findProductFullDetailByProductColor(Product product, Color color) {
+        ProductFullDetailDTO productFullDetailDTO = new ProductFullDetailDTO();
+        if (product != null && color != null) {
+            List<ProductDetail> productDetailList = productDetailRepo.findByProductColor(product, color);
+            List<ProductImage> productImageList = productImageRepo.findByProduct(product);
+            productFullDetailDTO = ProductFullDetailMapper.toProductFullDetailDTO(product, productDetailList,
+                    productImageList);
+        }
+
+        return productFullDetailDTO;
+    }
+
+    private List<Product> productListBySearch(ProductSearchRequest search, List<Product> productList) {
+        if (search.getSearch() != null && !search.equals("")) {
+            System.out.println(search.getSearch());
+            productList = productList.stream()
+                    .filter(product -> ConvertUTF8Utils.convert(product.getName()).toLowerCase()
+                            .contains(ConvertUTF8Utils.convert(search.getSearch().toLowerCase()))
+
+                            || ConvertUTF8Utils.convert(product.getObjectCategory().getName()).toLowerCase()
+                                    .contains(ConvertUTF8Utils.convert(search.getSearch().toLowerCase()))
+
+                            || ConvertUTF8Utils.convert(product.getProductCategory().getName()).toLowerCase()
+                                    .contains(ConvertUTF8Utils.convert(search.getSearch().toLowerCase())))
+                    .collect(Collectors.toList());
+
+            if (search.getSort() != null && search.getSort().getSortById() != null) {
+                productList
+                        .sort(search.getSort().getSortById().equals(SortConstant.ASC)
+                                ? Comparator.comparing(Product::getId)
+                                : Comparator.comparing(Product::getId).reversed());
+            }
+
+            if (search.getSort() != null && search.getSort().getSortByName() != null) {
+                productList.sort(
+                        search.getSort().getSortByName().equals(SortConstant.ASC)
+                                ? Comparator.comparing(Product::getName)
+                                : Comparator.comparing(Product::getName).reversed());
+            }
+
+            if (search.getSort() != null && search.getSort().getSortByPrice() != null) {
+                productList.sort(search.getSort().getSortByPrice().equals(SortConstant.ASC)
+                        ? Comparator.comparingDouble(this::getAverageExportPriceForProduct)
+                        : Comparator.comparingDouble(this::getAverageExportPriceForProduct).reversed());
+            }
+
+            // sort default
+            if (search.getSort() != null && search.getSort().getSortByPrice() == null &&
+                    search.getSort().getSortByName() == null && search.getSort().getSortById() == null) {
+                productList.sort(Comparator.comparing(Product::getId).reversed());
+            }
+
+            return productList;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     private List<Product> productListByFilter(ProductFilterRequest filter, List<Product> productList) {
+
         if (filter.getColorList() != null && !filter.getColorList().isEmpty()) {
             productList = productList.stream()
                     .filter(product -> getColorListForProduct(product, filter.getColorList()).size() > 0)
@@ -163,13 +256,15 @@ public class ProductServiceImpl implements ProductService {
 
         if (filter.getSort() != null && filter.getSort().getSortById() != null) {
             productList
-                    .sort(filter.getSort().getSortById().equals(SortConstant.ASC) ? Comparator.comparing(Product::getId)
+                    .sort(filter.getSort().getSortById().equals(SortConstant.ASC)
+                            ? Comparator.comparing(Product::getId)
                             : Comparator.comparing(Product::getId).reversed());
         }
 
         if (filter.getSort() != null && filter.getSort().getSortByName() != null) {
             productList.sort(
-                    filter.getSort().getSortByName().equals(SortConstant.ASC) ? Comparator.comparing(Product::getName)
+                    filter.getSort().getSortByName().equals(SortConstant.ASC)
+                            ? Comparator.comparing(Product::getName)
                             : Comparator.comparing(Product::getName).reversed());
         }
 
@@ -186,20 +281,39 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productList;
+
     }
 
-    private List<Product> getProductListByPage(ProductFilterRequest filter, List<Product> productList) {
-        // pagination
-        if (filter.getPagination() != null && filter.getPagination().getLimit() != null
-                && filter.getPagination().getPage() != null && filter.getPagination().getOffset() != null) {
-            int offset = filter.getPagination().getOffset();
-            int limit = filter.getPagination().getLimit();
-            System.out.println(offset + "-" + limit);
-            if (offset <= productList.size() - 1) {
-                productList = productList.subList(offset, Math.min(limit + offset, productList.size()));
+    private ProductPagingDTO getProductListByPage(Pagination pagination, List<Product> productList) {
+        ProductPagingDTO ppd = new ProductPagingDTO();
+        if (productList.isEmpty()) {
+            ppd.setListProduct(productList);
+            ppd.setPageCount(0);
+            ppd.setPageNumber(0);
+            return ppd;
+        } else {
+            if (pagination != null && pagination.getLimit() != null
+                    && pagination.getPage() != null && pagination.getOffset() != null) {
+                List<Product> temp = new ArrayList<>(productList);
+                int offset = pagination.getOffset();
+                int limit = pagination.getLimit();
+                if (offset <= productList.size() - 1) {
+                    productList = productList.subList(offset, Math.min(limit + offset, productList.size()));
+                }
+                ppd.setListProduct(productList);
+                Integer pageCount = temp.size() % limit == 0 ? temp.size() / limit
+                        : temp.size() / limit + 1;
+                System.out.println("PageCount is: " + pageCount);
+                Integer pageNumber = pagination.getPage() > pageCount ? pageCount : pagination.getPage();
+                ppd.setPageCount(pageCount);
+                ppd.setPageNumber(pageNumber);
+                return ppd;
             }
+            ppd.setListProduct(productList);
+            ppd.setPageCount(1);
+            ppd.setPageNumber(1);
+            return ppd;
         }
-        return productList;
     }
 
     private double getAverageExportPriceForProduct(Product product) {

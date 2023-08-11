@@ -235,13 +235,13 @@
                         <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
                             data-bs-toggle="modal" data-bs-target="#editListImages">Edit List Images
                         </button>
-                        <button class="btn btn-label-secondary d-grid w-100 mb-3">
-                            Download
-                        </button>
                         <a th:href="@{/mike/admin/product/edit/{productId}(productId=${products.id})}"
                            class="btn btn-label-secondary d-grid w-100 mb-3">
                             Edit Product
                         </a>
+                        <button class="btn btn-label-secondary d-grid w-100 mb-3">
+                            Download
+                        </button>
                     </div>
                 </div>
             </div>
@@ -393,8 +393,8 @@
                     for (var i = 0; i < files.length; i++) {
                         var file = files[i];
                         formData.append('listImages', file, file.name);
-                    }            
-                    
+                    }
+
                     console.log(formData);
                     var url = myForm.getAttribute('action');
 
@@ -461,7 +461,7 @@
                         if (file.status === 'success') {
                             formData.append('listImages', file, file.name);
                         }
-                    }            
+                    }
                     var url = myForm.getAttribute('action');
 
                     $.ajax({

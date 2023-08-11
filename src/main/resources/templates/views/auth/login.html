@@ -75,6 +75,22 @@
                         <!-- /Logo -->
                         <h4 class="mb-2">Welcome to Mike! 👋</h4>
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
+                        <th:block th:if="${logoutParam == 'logout'}">
+                            <div class="alert alert-success alert-dismissible d-flex" role="alert">
+                                <span class="badge badge-center rounded-pill bg-success border-label-success p-3 me-2">
+                                    <i class="bx bx-desktop fs-6"></i>
+                                </span>
+                                <div class="d-flex flex-column ps-1">
+                                    <h6 class="alert-heading d-flex align-items-center mb-1">Success!!</h6>
+                                    <span>Logout successfully. Please login again!</span>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </th:block>
+
+                        <div class="error-message" id="error-message">
+                          <!--content-->
+                        </div>
 
                         <form id="formAuthentication" class="mb-3" action="javascript:void(0);" method="POST">
                             <div class="mb-3">
@@ -118,11 +134,11 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
+                            <a th:href="@{/oauth2/authorization/facebook}" class="btn btn-icon btn-label-facebook me-3">
                                 <i class="tf-icons bx bxl-facebook"></i>
                             </a>
 
-                            <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
+                            <a th:href="@{/oauth2/authorization/google}" class="btn btn-icon btn-label-google-plus me-3">
                                 <i class="tf-icons bx bxl-google-plus"></i>
                             </a>
 
@@ -154,9 +170,14 @@
           $("#formAuthentication").submit(function(event) {
             event.preventDefault();
 
+            var username = $("#email").val().trim();
+            var password = $("#password").val().trim();
+            if(password.length < 6){
+              return;
+            }
             var formData = {
-              username: $("#email").val(),
-              password: $("#password").val()
+              username: username,
+              password: password
             };
 
             login(formData);
@@ -178,25 +199,37 @@
                 localStorage.setItem('accessToken', loginResponse.accessToken);
                 localStorage.setItem('refreshToken', loginResponse.refreshToken);
 
-                var isUser = false;
+                var isAdmin = false;
 
                 loginResponse.roles.forEach(function(role) {
-                  if (role.name === "ROLE_USER") {
-                    isUser = true;
+                  if (role.name !== "ROLE_USER") {
+                    isAdmin = true;
                     return;
                   }
                 });
 
-                if (isUser) {
-                  window.location.href = "/mike/home";
-                } else {
+                if (isAdmin) {
                   window.location.href = "/mike/admin/home";
+                } else {
+                  window.location.href = "/mike/home";
                 }
               }
             },
             error: function(xhr, status, error) {
               console.log("Login failed");
               console.log(error);
+              $('#error-message').empty();
+              $('#error-message').append(`
+              <div class="alert alert-danger alert-dismissible d-flex" role="alert">
+                  <span class="badge badge-center rounded-pill bg-danger border-label-danger p-3 me-2"><i class="bx bx-store fs-6"></i></span>
+                  <div class="d-flex flex-column ps-1">
+                    <h6 class="alert-heading d-flex align-items-center mb-1">Error!!</h6>
+                    <span>The email or password is incorrect. Please try again!</span>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                  </button>
+              </div>
+              `);
             }
           });
         }

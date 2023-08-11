@@ -4,7 +4,9 @@ import com.nth.mike.entity.*;
 import com.nth.mike.model.dto.product.ProductFilterDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
 import com.nth.mike.model.mapper.product.ProductFilterRequestMapper;
+import com.nth.mike.model.mapper.product.ProductSearchRequestMapper;
 import com.nth.mike.model.request.product.ProductFilterRequest;
+import com.nth.mike.model.request.product.ProductSearchRequest;
 import com.nth.mike.model.response.shared.BasicResponse;
 import com.nth.mike.service.*;
 import com.nth.mike.utils.UploadUtils;
@@ -52,18 +54,61 @@ public class ProductApiController {
         return ResponseEntity.ok(productService.findAll());
     }
 
-    @GetMapping("/product-single/{id}")
-    public ResponseEntity<ProductFullDetailDTO> getProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(productService.findProductFullDetailById(id));
+    @GetMapping("/product-detail-single/{id}")
+    public ResponseEntity<ProductDetail> getProductDetail(@PathVariable("id") String id) {
+        try {
+            String[] s = id.trim().replaceAll(" ", "").split("-");
+            if (s.length != 4) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            List<Long> t = new ArrayList<Long>();
+            for (String l : s) {
+                t.add(Long.parseLong(l));
+            }
+            ProductDetailId productDetailId = new ProductDetailId(t.get(0), t.get(1), t.get(2), t.get(3));
+            ProductDetail productDetail = productDetailService.findById(productDetailId);
+
+            if (productDetail == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(productDetail);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/product-single/{productId}")
+    public ResponseEntity<ProductFullDetailDTO> getProduct(@PathVariable("productId") Long productId) {
+        Product product = productService.findById(productId);
+        return ResponseEntity.ok(productService.findProductFullDetailByProduct(product));
+    }
+
+    @GetMapping("/product-color-single")
+    public ResponseEntity<ProductFullDetailDTO> getProductSize(@RequestParam("productId") Long productId,
+            @RequestParam("colorId") Long colorId) {
+        Product product = productService.findById(productId);
+        Color color = colorService.findById(colorId);
+        return ResponseEntity.ok(productService.findProductFullDetailByProductColor(product, color));
     }
 
     @GetMapping("/product-filter")
     public ResponseEntity<ProductFilterDTO> getProductByFilter(
-            @RequestParam(required = false) String filter) {
+            @RequestParam(required = true) String filter) {
         ProductFilterRequest pfd = ProductFilterRequestMapper
                 .requestToProductFilterRequest(filter, colorService, sizeService, objectCategoryService,
                         productCategoryService);
         return ResponseEntity.ok(productService.findByFilter(pfd));
+    }
+
+    @GetMapping("/product-search")
+    public ResponseEntity<ProductFilterDTO> getProductBySearch(
+            @RequestParam(required = true) String search) {
+        ProductSearchRequest psr = ProductSearchRequestMapper
+                .requestToProductSearchRequest(search, colorService, sizeService, objectCategoryService,
+                        productCategoryService);
+        return ResponseEntity.ok(productService.findBySearch(psr));
     }
 
     @PostMapping("/add")

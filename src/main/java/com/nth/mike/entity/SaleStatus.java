@@ -1,8 +1,5 @@
 package com.nth.mike.entity;
 
 public enum SaleStatus {
-    COMPLETED,
-    PROCESSING,
-    CANCELLED,
-    UNPAID
+    PROCESSING, UNPAID, PAID, CANCELLED
 }

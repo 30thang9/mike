@@ -77,7 +77,15 @@
             <h4 class="mb-2">Adventure starts here 🚀</h4>
             <p class="mb-4">Make your app management easy and fun!</p>
 
+            <div class="error-message" id="error-message">
+              <!--content-->
+            </div>
+
             <form id="formAuthentication" class="mb-3" method="POST" action="javascript:void(0);">
+              <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name.">
+              </div>
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="email" placeholder="Enter your email">
@@ -161,13 +169,20 @@
       // Handle form submission
       $("#formAuthentication").submit(function(event) {
         event.preventDefault(); // Prevent default form submission
+        var fullName = $('#fullName').val().trim();
+        var username = $("#username").val().trim();
+        var password = $("#password").val().trim();
+        var confirmPassword = $("#confirm-password").val().trim();
 
+        if (fullName.length < 6 || password !== confirmPassword || password.length < 6 || confirmPassword.length < 6) {
+          return;
+        }
         // Create JSON object from form data
         var formData = {
-          username: $("#username").val(),
-          password: $("#password").val(),
-          confirm_password: $("#confirm-password").val(),
-          //terms: $("#terms-conditions").is(":checked")
+          fullName: fullName,
+          username: username,
+          password: password,
+          confirm_password: confirmPassword
         };
 
         console.log(formData);
@@ -183,14 +198,28 @@
               // Handle success response
               // Construct the new URL with the token parameter
               var token = response.token;
-              var newUrl = '/mike/auth/verify-email?token=' + token;
-              // Redirect to the new URL
-              window.location.href = newUrl;
+              if(token) {
+                var newUrl = '/mike/auth/verify-email?token=' + token;
+                // Redirect to the new URL
+                window.location.href = newUrl;
+              }
             },
             error: function(xhr, status, error) {
               // Handle error response
               console.log("Form submission failed");
               console.log(error);
+              $('#error-message').empty();
+              $('#error-message').append(`
+              <div class="alert alert-danger alert-dismissible d-flex" role="alert">
+                  <span class="badge badge-center rounded-pill bg-danger border-label-danger p-3 me-2"><i class="bx bx-store fs-6"></i></span>
+                  <div class="d-flex flex-column ps-1">
+                    <h6 class="alert-heading d-flex align-items-center mb-1">Error!!</h6>
+                    <span>This email is registered. Please login!</span>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                  </button>
+              </div>
+              `);
             }
           });
         }

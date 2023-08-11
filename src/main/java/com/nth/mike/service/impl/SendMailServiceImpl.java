@@ -17,9 +17,10 @@ public class SendMailServiceImpl implements SendMailService {
     private String email;
     @Autowired
     private JavaMailSender mailSender;
+
     @Override
     public void sendForgotPasswordCode(String toEmail, String resetCode) {
-        SimpleMailMessage message=new SimpleMailMessage();
+        SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(email);
         message.setTo(toEmail);
         message.setSubject("Reset Password");
@@ -41,7 +42,9 @@ public class SendMailServiceImpl implements SendMailService {
             helper.setSubject("Email Verification");
 
             // Nội dung email là HTML
-            String htmlContent = "<html><body><h1>Email Verification</h1><p>Please click the following link to verify your email:</p><p><a href=\"http://localhost:8080/mike/auth/accept-email?token=" + token + "\">Verify Email</a></p></body></html>";
+            String htmlContent = "<html><body><h1>Email Verification</h1><p>Please click the following link to verify your email:</p><p><a href='"
+                    + "http://localhost:8080" + "/mike/auth/accept-email?token=" + token
+                    + "'>Verify Email</a></p></body></html>";
             helper.setText(htmlContent, true); // Sử dụng true để đánh dấu là nội dung HTML
 
             // Gửi email
@@ -53,6 +56,5 @@ public class SendMailServiceImpl implements SendMailService {
             throw new RuntimeException(e);
         }
     }
-
 
 }

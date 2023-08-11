@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/web/layoutWeb"
+      layout:decorator="layouts/web/layoutWeb :: content, layouts/web/layoutWeb :: css_head, layouts/web/layoutWeb :: js_foot">
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> Unauthorized | Mike </title>
+    </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <!-- Hero Section-->
+    <section class="hero">
+        <div class="container">
+          <!-- Breadcrumbs -->
+          <ol class="breadcrumb justify-content-center">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Unauthorized</li>
+          </ol>
+          <!-- Hero Content-->
+          <div class="hero-content pb-5 text-center">
+            <h1 class="mb-5">Unauthorized</h1>
+            <div class="row">   
+              <div class="col-xl-8 offset-xl-2"><p class="lead mb-0">You are not authorized to. </p></div>
+            </div>
+            <div class="row mt-3">
+                <a class="btn btn-link text-dark me-3" href="/mike/home">Visit home page
+                    <i class="fa-arrow-right fa"></i>
+                </a>
+            </div>
+          </div>
+        </div>
+    </section>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+
+</th:block>
+</body>
+</html>
+

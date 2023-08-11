@@ -83,6 +83,17 @@ document.addEventListener("DOMContentLoaded", function(e) {
                         message: "Please agree terms & conditions"
                     }
                 }
+            },
+            fullName: {
+                validators: {
+                    notEmpty: {
+                        message: "Please enter your full name"
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: "Password must be more than 6 characters"
+                    }
+                }
             }
         },
         plugins: {

@@ -11,8 +11,9 @@ import com.nth.mike.entity.Role;
 import com.nth.mike.security.response.BasicAuthResponse;
 import com.nth.mike.security.response.TokenAuthResponse;
 import com.nth.mike.service.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +32,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
 @RequestMapping("/mike/api/user/auth")
-@RequiredArgsConstructor
 public class UserResource {
-    private final UserService userService;
-    @Value("${spring.auth.secret}")
+    @Autowired
+    private UserService userService;
+
+    @Value("${spring.auth.hashToken.secret}")
     private String secret;
 
     @GetMapping("/token/refresh")
@@ -60,7 +62,7 @@ public class UserResource {
                 new ObjectMapper().writeValue(response.getOutputStream(),
                         new TokenAuthResponse(accessToken, refreshToken));
             } catch (Exception e) {
-                log.error("Error logging in: {}", e.getMessage());
+                log.error("Error refresh token: {}", e.getMessage());
                 response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
@@ -82,11 +84,20 @@ public class UserResource {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(accessToken);
                 String userName = decodedJWT.getSubject();
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(),
-                        new BasicAuthResponse(StatusConstant.SUCCESS, "Token is accept"));
+                Account account = userService.findAccountByUserName(userName);
+                if (account == null) {
+                    response.setHeader("error", "Account not found");
+                    response.setStatus(FORBIDDEN.value());
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(),
+                            new BasicAuthResponse(StatusConstant.ERROR, "Account not found"));
+                } else {
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(),
+                            new BasicAuthResponse(StatusConstant.SUCCESS, "Token is accept"));
+                }
             } catch (Exception e) {
-                log.error("Error request in: {}", e.getMessage());
+                log.error("Error accept token: {}", e.getMessage());
                 response.setHeader("error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 response.setContentType(APPLICATION_JSON_VALUE);

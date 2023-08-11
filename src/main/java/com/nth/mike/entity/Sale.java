@@ -15,6 +15,7 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "saleDate")
     @Temporal(TemporalType.DATE)
     private Date saleDate;
@@ -22,9 +23,9 @@ public class Sale {
     @Column(name = "totalAmount")
     private Double totalAmount;
 
-    @Column(name = "saleStatus")
+    @Column(name = "saleStatus", nullable = false, columnDefinition = "ENUM('PROCESSING', 'UNPAID', 'PAID', 'CANCELLED') DEFAULT 'PROCESSING'")
     @Enumerated(EnumType.STRING)
-    private SaleStatus saleStatus;
+    private SaleStatus saleStatus = SaleStatus.PROCESSING;
 
     @Column(name = "paymentMethod", nullable = false, columnDefinition = "ENUM('CASH', 'CREDIT_CARD', 'PAYPAL', 'OTHER')")
     @Enumerated(EnumType.STRING)

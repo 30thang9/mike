@@ -1,6 +1,7 @@
 package com.nth.mike.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,21 +18,24 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "customerId")
-    private Long customerId;
+    @ManyToOne
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "orderDate")
-    private LocalDateTime orderDate;
+    @Temporal(TemporalType.DATE)
+    private Date orderDate;
 
     @Column(name = "totalAmount")
     private Double totalAmount;
 
     @Column(name = "orderStatus", nullable = false, columnDefinition = "ENUM('PURCHASED', 'NOT_PURCHASED') DEFAULT 'NOT_PURCHASED'")
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.NOT_PURCHASED;
 
     @Column(name = "updateDate", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updateDate;
+    @Temporal(TemporalType.DATE)
+    private Date updateDate;
 
     // Constructors, Getters, and Setters
 }

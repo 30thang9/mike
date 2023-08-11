@@ -1,10 +1,12 @@
 package com.nth.mike.service;
 
+import com.nth.mike.entity.Color;
 import com.nth.mike.entity.Product;
 import com.nth.mike.entity.ProductStatus;
 import com.nth.mike.model.dto.product.ProductFilterDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
 import com.nth.mike.model.request.product.ProductFilterRequest;
+import com.nth.mike.model.request.product.ProductSearchRequest;
 
 import java.util.List;
 
@@ -25,7 +27,11 @@ public interface ProductService {
 
     ProductFilterDTO findByFilter(ProductFilterRequest filter);
 
+    ProductFilterDTO findBySearch(ProductSearchRequest filter);
+
     List<ProductFullDetailDTO> findAllProductFullDetail();
 
-    ProductFullDetailDTO findProductFullDetailById(Long id);
+    ProductFullDetailDTO findProductFullDetailByProduct(Product product);
+
+    ProductFullDetailDTO findProductFullDetailByProductColor(Product product, Color color);
 }

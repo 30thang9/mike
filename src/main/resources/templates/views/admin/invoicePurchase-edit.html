@@ -566,7 +566,7 @@
         $(document).ready(function() {
             $('#wizard-checkout-form').submit(function(event) {
                 event.preventDefault();
-
+                
                 var supplier = $('[name="supplier"]', this).val();
                 var employee = $('[name="employee"]', this).val();
                 var paymentMethod = $('[name="paymentMethod"]:checked', this).val();
@@ -594,16 +594,16 @@
                     var sizeName = $(sizes[i]).find('option:selected').text();
                     var colorName = $(colors[i]).find('option:selected').text();
                     var materialName = $(materials[i]).find('option:selected').text();
-                    
+
                     var combinationList = $("<ul class='list-group'></ul>");
                     combinationList.append("<li class='list-group-item'>Product: " + productName + "</li>");
                     combinationList.append("<li class='list-group-item'>Size: " + sizeName + "</li>");
                     combinationList.append("<li class='list-group-item'>Color: " + colorName + "</li>");
                     combinationList.append("<li class='list-group-item'>Material: " + materialName + "</li>");
-                
+
                     var combinationMessage = "Duplicate combination found: ";
                     combinationMessage += combinationList.prop('outerHTML');
-                
+
                     // Check for duplicate combinations
                     if (combinationSet.has(combinationMessage)) {
                     // Show the message for duplicate combination
@@ -652,10 +652,10 @@
 
                 var jsonData = JSON.stringify(formData);
                 console.log(jsonData);
-                // Gửi PUT request bằng jQuery AJAX  
+                // Gửi PUT request bằng jQuery AJAX
                 var href = window.location.href;
                 var purchaseId = href.substring(href.lastIndexOf('/') + 1);
-                var url = '/mike/api/purchase/edit/'+ purchaseId;         
+                var url = '/mike/api/purchase/edit/'+ purchaseId;
                 $.ajax({
                     url: url,
                     type: 'PUT',
@@ -826,7 +826,7 @@
                                 </div>
                             `);
 
-        
+
                             // Append the newly created element to the appropriate wrapper
                             wrapperItem.find('.wrapper-size').remove();
                             wrapperItem.find('.wrapper-color').remove();
@@ -863,8 +863,8 @@
                 }
             });
         });
-        
-        
+
+
     </script>
 
     <script>
@@ -883,8 +883,6 @@
                     var wrapperItem = $(this).closest('.wrapper-item');
                     callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem);
                 }
-                console.log(purchaseDetailData);
-                console.log("1");
             });
             function callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem) {
                 var url = "/mike/api/product/product-single/" + productId;

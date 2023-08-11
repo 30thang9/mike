@@ -30,7 +30,7 @@
     <div class="container mt-5">
         <div class="row">
             <!-- Grid -->
-            <div class="products-grid col-xl-9 col-lg-8 order-lg-2">
+            <div class="products-grid col-xl-9 col-lg-8 order-2 order-lg-2">
                 <header class="product-grid-header">
                     <div class="me-3 mb-3">
                         Showing <strong>1-12 </strong>of <strong>158 </strong>products
@@ -67,7 +67,7 @@
             </div>
             <!-- / Grid End-->
             <!-- Sidebar-->
-            <div class="sidebar col-xl-3 col-lg-4 order-lg-1">
+            <div class="sidebar col-xl-3 col-lg-4 order-1 order-lg-1">
                 <div class="sidebar-block px-3 px-lg-0 me-lg-4">
                     <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
                        href="#categoriesMenu" aria-expanded="false" aria-controls="categoriesMenu">Product Categories</a>
@@ -126,9 +126,9 @@
                 </div>
                 <div class="sidebar-block px-3 px-lg-0 me-lg-4">
                     <a class="d-lg-none block-toggler" data-bs-toggle="collapse"
-                       href="#sizeFilterMenu" aria-expanded="true" aria-controls="sizeFilterMenu">Filter by size</a>
+                       href="#sizeFilterMenu" aria-expanded="false" aria-controls="sizeFilterMenu">Filter by size</a>
                     <!-- Brand filter menu - this menu has .show class, so is expanded by default-->
-                    <div class="expand-lg collapse show" id="sizeFilterMenu">
+                    <div class="expand-lg collapse" id="sizeFilterMenu">
                         <h6 class="sidebar-heading d-none d-lg-block">Size </h6>
                         <form class="mt-4 mt-lg-0" action="#">
                             <div class="mb-1" th:each="size: ${sizes}">
@@ -191,7 +191,7 @@
   <script>
     $(document).ready(function() {
       var url = "/mike/api/product/product-filter?filter=(;sbi=DESC;pag=12.1;)";
-
+      url = url.replace(/\s+/g,"");
       getProductData(url,true);
 
       let productUserItems = $('.product-user-item');
@@ -399,7 +399,7 @@
 
         // Update the URL with the new filter parameter
         url = "/mike/api/product/product-filter?filter=" + encodeURIComponent(filter);
-        url = url.replace(" ","");
+        url = url.replace(/\s+/g,"");
         // Make the AJAX request with the updated URL
         console.log(url);
         getProductData(url,addPagination);
@@ -426,27 +426,32 @@
               var list = response.listProduct[i];
               // Create a new product element
               var $productElement = 
-              $('<div class="col-xl-4 col-sm-6 wrapper-product" data-product-id="' + list.product.id + '">' +
-                  '<div class="product">' +
-                    '<div class="product-image">' +
-                      '<div class="ribbon ribbon-info">Fresh</div>' +
-                      '<img class="img-fluid" src="/images/product/' + list.product.urlAvatar + '" alt="product" />' +
-                      '<div class="product-hover-overlay">' +
-                        '<a class="product-hover-overlay-link" href="/mike/collection/shop/product-detail/' + list.product.id + '"></a>' +
-                        '<div class="product-hover-overlay-buttons">' +
-                          '<a class="btn btn-outline-dark btn-product-left d-none d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"></i></a>' +
-                          '<a class="btn btn-dark btn-buy" href="/mike/collection/shop/product-detail/' + list.product.id + '"><i class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>' +
-                          '<a class="btn btn-outline-dark btn-product-right d-none d-sm-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-expand-arrows-alt"></i></a>' +
-                        '</div>' +
-                      '</div>' +
-                    '</div>' +
-                    '<div class="py-2">' +
-                      '<p class="text-muted text-sm mb-1">' + list.product.productCategory.name + '</p>' +
-                      '<h3 class="h6 text-uppercase mb-1"><a class="text-dark" href="/mike/collection/shop/product-detail/' + list.product.id + '">' + list.product.name + '</a></h3>' +
-                      '<span class="text-muted">$' + list.minPrice + '</span>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>');
+              $(`
+              <div class="col-xl-4 col-sm-6 wrapper-product" data-product-id="${list.product.id}">
+                <div class="product">
+                  <div class="product-image">
+                    ${list.product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+                    ${list.product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+                    ${list.product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
+                    ${list.product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
+                    <img class="img-fluid" src="/images/product/${list.product.urlAvatar}" alt="product" />
+                    <div class="product-hover-overlay">
+                      <a class="product-hover-overlay-link" href="/mike/collection/shop/product-detail/${list.product.id}"></a>
+                      <div class="product-hover-overlay-buttons">
+                        <a class="btn btn-outline-dark btn-product-left d-none d-sm-inline-block" href="#"><i class="fa fa-shopping-cart"></i></a>
+                        <a class="btn btn-dark btn-buy" href="/mike/collection/shop/product-detail/${list.product.id}"><i class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
+                        <a class="btn btn-outline-dark btn-product-right d-none d-sm-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-expand-arrows-alt"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="py-2">
+                    <p class="text-muted text-sm mb-1">${list.product.productCategory.name}</p>
+                    <h3 class="h6 text-uppercase mb-1"><a class="text-dark" href="/mike/collection/shop/product-detail/${list.product.id}">${list.product.name}</a></h3>
+                    <span class="text-muted">$${list.minPrice}</span>
+                  </div>
+                </div>
+              </div>
+              `);
               // Append the product element to the wrapper
               $wrapper.append($productElement);
             }
@@ -509,122 +514,128 @@
             var unique = new Set();
             var $productModelBody = $(".product-model-body");
             var $productSingle = 
-            $(`<div class="ribbon ribbon-primary">Sale</div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="owl-carousel owl-theme owl-dots-modern detail-full" data-slider-id="1">
-                      <div class="detail-full-item-modal"
-                            style="background: center center url('/images/product/${product.urlAvatar}') no-repeat; background-size: cover;">
-                      </div>
-                      ${productImage.map((image, index) => {
-                        if (!unique.has(image.urlImage)) { // Check if the size is not already in the Set
-                          unique.add(image.urlImage); // Add the size to the Set
-                          return `
-                            <div class="detail-full-item-modal"
-                                  style="background: center center url('/images/product/${image.urlImage}') no-repeat; background-size: cover;">
-                            </div>
-                          `;
-                        }
-                        return ''; // Return an empty string for duplicate sizes
-                      }).join('')}
-                  </div>
+            $(`
+            <!--<div class="ribbon ribbon-primary">Sale</div>-->
+            ${product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+            ${product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+            ${product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
+            ${product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="owl-carousel owl-theme owl-dots-modern detail-full" data-slider-id="1">
+                    <div class="detail-full-item-modal"
+                          style="background: center center url('/images/product/${product.urlAvatar}') no-repeat; background-size: cover;">
+                    </div>
+                    ${productImage.map((image, index) => {
+                      if (!unique.has(image.urlImage)) { // Check if the size is not already in the Set
+                        unique.add(image.urlImage); // Add the size to the Set
+                        return `
+                          <div class="detail-full-item-modal"
+                                style="background: center center url('/images/product/${image.urlImage}') no-repeat; background-size: cover;">
+                          </div>
+                        `;
+                      }
+                      return ''; // Return an empty string for duplicate sizes
+                    }).join('')}
                 </div>
-                <div class="col-lg-6 d-flex align-items-center">
-                  <div>
-                    <h2 class="mb-4 mt-4 mt-lg-1">${product.name}</h2>
-                    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
-                      <ul class="list-inline mb-2 mb-sm-0">
-                        <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
-                        <li class="list-inline-item text-muted fw-light">
-                            <del>$90.00</del>
-                        </li>
-                      </ul>
-                      <div class="d-flex align-items-center">
-                        <ul class="list-inline me-2 mb-0">
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
-                            <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
-                        </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
+              </div>
+              <div class="col-lg-6 d-flex align-items-center">
+                <div>
+                  <h2 class="mb-4 mt-4 mt-lg-1">${product.name}</h2>
+                  <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
+                    <ul class="list-inline mb-2 mb-sm-0">
+                      <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
+                      <li class="list-inline-item text-muted fw-light">
+                          <del>$90.00</del>
+                      </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                      <ul class="list-inline me-2 mb-0">
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                          <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
+                      </ul><span class="text-muted text-uppercase text-sm">25 reviews</span>
+                    </div>
+                  </div>
+                  <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco</p>
+                  <form action="#">
+                    <div class="row">
+                      <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Size <span>(required)</span></h6>
+                        ${productDetail.map((detail, index) => {
+                          if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
+                            unique.add(detail.size.name); // Add the size to the Set
+                            return `
+                              <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_${index}">
+                                ${detail.size.name} <!-- Access the size name from productDetail array -->
+                                <input class="input-invisible input-size-modal" type="radio" name="size" value="value_${index}" id="size_${index}" required>
+                              </label>
+                            `;
+                          }
+                          return ''; // Return an empty string for duplicate sizes
+                        }).join('')}
+                      </div>
+                      <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Type <span>(required)</span></h6>
+                        ${productDetail.map((detail, index) => {
+                          if (!unique.has(detail.material.name)) { // Check if the material is not already in the Set
+                            unique.add(detail.material.name); // Add the material to the Set
+                            return `
+                              <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_${index}">
+                                ${detail.material.name} <!-- Access the material name from productDetail array -->
+                                <input class="input-invisible input-material-modal" type="radio" name="material" 
+                                  value="value_${index}" id="material_${index}" required>
+                              </label>
+                            `;
+                          }
+                          return ''; // Return an empty string for duplicate materials
+                        }).join('')}
+                      </div>
+                      <div class="col-12 detail-option mb-3">
+                        <h6 class="detail-option-heading">Colour <span>(required)</span></h6>
+                        <ul class="list-inline mb-0 colours-wrapper">
+                          ${productDetail.map((detail, index) => {
+                            if (!unique.has(detail.color.name)) { // Check if the color is not already in the Set
+                              unique.add(detail.color.name); // Add the color to the Set
+                              return `
+                                <li class="list-inline-item">
+                                  <label class="btn-colour" for="colour_${index}" style="background-color: ${detail.color.colorHex}"></label>
+                                  <input class="input-invisible input-color-modal" type="radio" name="colour" 
+                                    value="value_${index}" id="colour_${index}" required>
+                                </li>
+                              `;
+                            }
+                            return ''; // Return an empty string for duplicate colors
+                          }).join('')}
+                        </ul>
+                      </div>
+                      <div class="col-12 col-lg-6 detail-option mb-5">
+                        <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
+                        <input class="form-control detail-quantity" name="items" 
+                          type="number" min="1" step="1" value="1" pattern="[0-9]+" required>
                       </div>
                     </div>
-                    <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                        ullamco</p>
-                    <form action="#">
-                      <div class="row">
-                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Size <span>(required)</span></h6>
-                          ${productDetail.map((detail, index) => {
-                            if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
-                              unique.add(detail.size.name); // Add the size to the Set
-                              return `
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_${index}">
-                                  ${detail.size.name} <!-- Access the size name from productDetail array -->
-                                  <input class="input-invisible input-size-modal" type="radio" name="size" value="value_${index}" id="size_${index}" required>
-                                </label>
-                              `;
-                            }
-                            return ''; // Return an empty string for duplicate sizes
-                          }).join('')}
-                        </div>
-                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Type <span>(required)</span></h6>
-                          ${productDetail.map((detail, index) => {
-                            if (!unique.has(detail.material.name)) { // Check if the material is not already in the Set
-                              unique.add(detail.material.name); // Add the material to the Set
-                              return `
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_${index}">
-                                  ${detail.material.name} <!-- Access the material name from productDetail array -->
-                                  <input class="input-invisible input-material-modal" type="radio" name="material" 
-                                    value="value_${index}" id="material_${index}" required>
-                                </label>
-                              `;
-                            }
-                            return ''; // Return an empty string for duplicate materials
-                          }).join('')}
-                        </div>
-                        <div class="col-12 detail-option mb-3">
-                          <h6 class="detail-option-heading">Colour <span>(required)</span></h6>
-                          <ul class="list-inline mb-0 colours-wrapper">
-                            ${productDetail.map((detail, index) => {
-                              if (!unique.has(detail.color.name)) { // Check if the color is not already in the Set
-                                unique.add(detail.color.name); // Add the color to the Set
-                                return `
-                                  <li class="list-inline-item">
-                                    <label class="btn-colour" for="colour_${index}" style="background-color: ${detail.color.colorHex}"></label>
-                                    <input class="input-invisible input-color-modal" type="radio" name="colour" 
-                                      value="value_${index}" id="colour_${index}" required>
-                                  </li>
-                                `;
-                              }
-                              return ''; // Return an empty string for duplicate colors
-                            }).join('')}
-                          </ul>
-                        </div>
-                        <div class="col-12 col-lg-6 detail-option mb-5">
-                          <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
-                          <input class="form-control detail-quantity" name="items" 
-                            type="number" min="1" step="1" value="1" pattern="[0-9]+" required>
-                        </div>
-                      </div>
-                      <ul class="list-inline">
-                        <li class="list-inline-item">
-                          <button class="btn btn-dark btn-lg mb-1" type="submit"> 
-                            <i class="fa fa-shopping-cart me-2"></i>Add to Cart
-                          </button>
-                        </li>
-                        <li class="list-inline-item">
-                          <a class="btn btn-outline-secondary mb-1" href="#"> 
-                            <i class="far fa-heart me-2"></i>Add to wishlist
-                          </a>
-                        </li>
-                      </ul>
-                    </form>
-                  </div>
+                    <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <button class="btn btn-dark btn-lg mb-1" type="submit"> 
+                          <i class="fa fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                      </li>
+                      <li class="list-inline-item">
+                        <a class="btn btn-outline-secondary mb-1" href="#"> 
+                          <i class="far fa-heart me-2"></i>Add to wishlist
+                        </a>
+                      </li>
+                    </ul>
+                  </form>
                 </div>
-              </div>`);
+              </div>
+            </div>
+            `);
             
             $productModelBody.empty();
             $productModelBody.append($productSingle);
@@ -636,7 +647,6 @@
               dots: true, // Hiển thị các chấm chỉ số
               nav: false, // Ẩn các nút next/prev
             });
-
             // Cập nhật carousel
             owlCarousel.trigger('refresh.owl.carousel');
 

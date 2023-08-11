@@ -4,8 +4,6 @@ import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -27,7 +25,7 @@ public class Purchase {
     @JoinColumn(name = "employeeId", referencedColumnName = "id")
     private Employee employee;
 
-    @Column(name = "paymentMethod",nullable = false, columnDefinition = "ENUM('CASH', 'CREDIT_CARD', 'PAYPAL', 'OTHER')")
+    @Column(name = "paymentMethod", nullable = false, columnDefinition = "ENUM('CASH', 'CREDIT_CARD', 'PAYPAL', 'OTHER')")
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
@@ -40,4 +38,3 @@ public class Purchase {
 
     // Constructors, Getters, and Setters
 }
-

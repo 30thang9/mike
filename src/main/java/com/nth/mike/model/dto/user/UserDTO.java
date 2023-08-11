@@ -6,10 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.util.List;
 
 @Data
@@ -19,6 +15,7 @@ import java.util.List;
 public class UserDTO {
     private Long id;
     private String username;
+    private String fullName;
     private AccountStatus accountStatus;
     private List<Role> roles;
 }

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProductFilterRequestMapper {
+
     public static ProductFilterRequest requestToProductFilterRequest(
             String requestFilter,
             ColorService colorService,
@@ -20,9 +21,11 @@ public class ProductFilterRequestMapper {
             ObjectCategoryService objectCategoryService,
             ProductCategoryService productCategoryService) {
         // filter=(;c=2.1;s=2;oc=2;pc=4;mip=450000;map=600000;sbi=asc;sbn=asc;sbp=asc;)
-        ProductFilterRequest filter = new ProductFilterRequest();
+        ProductFilterRequest filter = null;
 
-        if (requestFilter != null && !requestFilter.equals("")) {
+        if (requestFilter != null && !requestFilter.equals("")
+                && requestFilter.startsWith("(;") && requestFilter.endsWith(";)")) {
+            filter = new ProductFilterRequest();
             requestFilter = requestFilter.replace(" ", "")
                     .replace("(", "")
                     .replace(")", "");
@@ -90,13 +93,12 @@ public class ProductFilterRequestMapper {
                     if (fStr.length() > 4) {
                         String pagination = fStr.substring(4).toUpperCase();
                         List<String> list = Arrays.stream(pagination.split("\\.")).toList();
-                        if (list.size() == 2) {
+                        if (list.size() == 2 && list.get(0).matches("-?\\d+") && list.get(1).matches("-?\\d+")) {
                             filter.getPagination().setLimit(Integer.parseInt(list.get(0)));
                             filter.getPagination()
                                     .setPage(Integer.parseInt(list.get(1)) <= 0 ? 1 : Integer.parseInt(list.get(1)));
                             filter.getPagination().setOffset(
                                     (filter.getPagination().getPage() - 1) * filter.getPagination().getLimit());
-                            // System.out.println(filter.getPagination().getOffset());
                         }
                     }
                 }

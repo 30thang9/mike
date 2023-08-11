@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/web/layoutWeb"
+      layout:decorator="layouts/web/layoutWeb :: content, layouts/web/layoutWeb :: css_head, layouts/web/layoutWeb :: js_foot">
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> User Order | Mike </title>
+    </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <!-- Hero Section-->
+    <section class="hero">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Orders        </li>
+            </ol>
+            <!-- Hero Content-->
+            <div class="hero-content pb-5 text-center">
+                <h1 class="hero-heading">Your orders</h1>
+                <div class="row">
+                    <div class="col-xl-8 offset-xl-2"><p class="lead">Your orders in one place.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-xl-9 order-2 order-lg-1">
+                    <table class="table table-borderless table-hover table-responsive-md">
+                        <thead class="bg-light">
+                        <tr>
+                            <th class="py-4 text-uppercase text-sm">Order #</th>
+                            <th class="py-4 text-uppercase text-sm">Date</th>
+                            <th class="py-4 text-uppercase text-sm">Total</th>
+                            <th class="py-4 text-uppercase text-sm">Status</th>
+                            <th class="py-4 text-uppercase text-sm">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th class="py-4 align-middle"># 1735</th>
+                            <td class="py-4 align-middle">22/6/2017</td>
+                            <td class="py-4 align-middle">$150.00</td>
+                            <td class="py-4 align-middle"><span class="badge p-2 text-uppercase badge-info-light">Being prepared</span></td>
+                            <td class="py-4 align-middle"><a class="btn btn-outline-dark btn-sm" href="customer-order.html">View</a></td>
+                        </tr>
+                        <tr>
+                            <th class="py-4 align-middle"># 1734</th>
+                            <td class="py-4 align-middle">7/5/2017</td>
+                            <td class="py-4 align-middle">$150.00</td>
+                            <td class="py-4 align-middle"><span class="badge p-2 text-uppercase badge-warning-light">Action needed</span></td>
+                            <td class="py-4 align-middle"><a class="btn btn-outline-dark btn-sm" href="customer-order.html">View</a></td>
+                        </tr>
+                        <tr>
+                            <th class="py-4 align-middle"># 1730</th>
+                            <td class="py-4 align-middle">30/9/2016</td>
+                            <td class="py-4 align-middle">$150.00</td>
+                            <td class="py-4 align-middle"><span class="badge p-2 text-uppercase badge-success-light">Received</span></td>
+                            <td class="py-4 align-middle"><a class="btn btn-outline-dark btn-sm" href="customer-order.html">View</a></td>
+                        </tr>
+                        <tr>
+                            <th class="py-4 align-middle"># 1705</th>
+                            <td class="py-4 align-middle">22/6/2016</td>
+                            <td class="py-4 align-middle">$150.00</td>
+                            <td class="py-4 align-middle"><span class="badge p-2 text-uppercase badge-danger-light">Cancelled</span></td>
+                            <td class="py-4 align-middle"><a class="btn btn-outline-dark btn-sm" href="customer-order.html">View</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Customer Sidebar-->
+                <div class="col-xl-3 col-lg-4 order-1 order-lg-2 mb-5">
+                    <div class="customer-sidebar card border-0">
+                        <div class="customer-profile"><a class="d-inline-block" href="#"><img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
+                            <h5 th:text="${session.user.fullName}"></h5>
+                            <p class="text-muted text-sm mb-0">Ostrava, Czech Republic</p>
+                        </div>
+                        <nav class="list-group customer-nav">
+                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/order}">
+                    <span>
+                      <svg class="svg-icon svg-icon-heavy me-2">
+                        <use xlink:href="#paper-bag-1"> </use>
+                      </svg>Orders
+                    </span>
+                                <div class="badge rounded-pill bg-dark fw-normal px-3">5</div>
+                            </a>
+                            <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
+                    <span>
+                      <svg class="svg-icon svg-icon-heavy me-2">
+                        <use xlink:href="#male-user-1"> </use>
+                      </svg>Profile
+                    </span>
+                            </a>
+                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
+                    <span>
+                      <svg class="svg-icon svg-icon-heavy me-2">
+                        <use xlink:href="#navigation-map-1"> </use>
+                      </svg>Addresses
+                    </span>
+                            </a>
+                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/auth/logout}">
+                    <span>
+                      <svg class="svg-icon svg-icon-heavy me-2">
+                        <use xlink:href="#exit-1"> </use>
+                      </svg>Log out
+                    </span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                <!-- /Customer Sidebar-->
+            </div>
+        </div>
+    </section>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+
+</th:block>
+</body>
+</html>
