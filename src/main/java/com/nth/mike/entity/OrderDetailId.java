@@ -21,8 +21,4 @@ public class OrderDetailId implements Serializable {
     private Long colorId;
     @Column(name = "sizeId")
     private Long sizeId;
-    @Column(name = "materialId")
-    private Long materialId;
-
-    // Constructors, equals, and hashCode methods
 }

@@ -5,7 +5,6 @@ import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductImage;
 import com.nth.mike.model.dto.product.ProductDetailDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
-import com.nth.mike.model.dto.product.ProductImageDTO;
 
 import java.util.Comparator;
 import java.util.List;
@@ -58,9 +57,12 @@ public class ProductFullDetailMapper {
                                 .map(ProductDetailMapper::toProductDetailDTO)
                                 .collect(Collectors.toList());
 
-                List<ProductImageDTO> listImage = productImage.stream()
-                                .map(ProductImageMapper::toProductImageDTO)
-                                .collect(Collectors.toList());
+                // List<ProductImageDTO> listImage = productImage.stream()
+                // .map(ProductImageMapper::toProductImageDTO)
+                // .collect(Collectors.toList());
+
+                List<String> listImage = productImage.stream()
+                                .map(ProductImage::getUrlImage).collect(Collectors.toList());
 
                 pfdd.setMinPrice(minPrice);
                 pfdd.setMaxPrice(maxPrice);

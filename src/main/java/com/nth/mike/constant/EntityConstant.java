@@ -13,8 +13,11 @@ public class EntityConstant {
     public static final String EMPLOYEES = "employees";
     public static final String COLORS = "colors";
     public static final String SIZES = "sizes";
-    public static final String MATERIALS = "materials";
     public static final String PRODUCTIMAGES = "productImages";
     public static final String PURCHASES = "purchases";
     public static final String PURCHASEDETAILS = "purchaseDetails";
+    public static final String CITY = "city";
+    public static final String DISTRICTS = "districts";
+    public static final String WARDS = "wards";
+    public static final String SHIPPINGADDRESS = "shippingAddress";
 }

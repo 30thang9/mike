@@ -539,6 +539,7 @@
                     var minPrice = data.minPrice;
                     var maxPrice = data.maxPrice;
                     var unique = new Set();
+                    var unique1 = new Set();
                     var $productDetailWrapper = $('.product-details').eq(0);
                     var productDetailChild = 
                     $(`
@@ -549,7 +550,9 @@
                                     <div class="d-lg-none">
                                         <ul class="breadcrumb undefined">
                                             <li class="breadcrumb-item"><a href="/mike/home">Home</a></li>
-                                            <li class="breadcrumb-item"><a href="/mike/collection/shop/shop-filter/pc-${product.productCategory.id}-${product.productCategory.name}">${product.productCategory.name}</a></li>
+                                            <li class="breadcrumb-item">
+                                                <a href="/mike/collection/shop/shop-filter/pc-${product.productCategory.id}-${product.productCategory.name}">${product.productCategory.name}</a>
+                                            </li>
                                             <li class="breadcrumb-item active">${product.name}</li>
                                         </ul>
                                         <h1 class="mb-4">${product.name}</h1>
@@ -562,12 +565,12 @@
                                                    alt="Modern Jacket 0">
                                             </button>
                                             ${productImage.map((image, index) => {
-                                                if (!unique.has(image.urlImage)) {
-                                                  unique.add(image.urlImage);
+                                                if (!unique.has(image)) {
+                                                  unique.add(image);
                                                   return `
                                                     <button class="owl-thumb-item detail-thumb-item mb-3">
                                                         <img class="img-fluid"
-                                                        src="/images/product/${image.urlImage}"
+                                                        src="/images/product/${image}"
                                                         alt="Modern Jacket 1">
                                                     </button>
                                                   `;
@@ -591,14 +594,14 @@
                                                 </a>
                                             </div>
                                             ${productImage.map((image, index) => {
-                                                if (!unique.has(image.urlImage)) {
-                                                  unique.add(image.urlImage);
+                                                if (!unique1.has(image)) {
+                                                  unique1.add(image);
                                                   return `
                                                     <div class="item">
-                                                        <a class="glightbox" th:href="@{/web/assets/img/photo/kyle-loftus-596319-detail-2.jpg}"
+                                                        <a class="glightbox" href="/images/product/${image}"
                                                         data-title="Modern Jacket 2 - Caption text" data-gallery="product-gallery">
                                                             <img class="img-fluid"
-                                                                src="/images/product/${image.urlImage}"
+                                                                src="/images/product/${image}"
                                                                 alt="Modern Jacket 2">
                                                         </a>
                                                     </div>
@@ -647,7 +650,7 @@
                                                     if (!unique.has(detail.color.name)) { // Check if the size is not already in the Set
                                                         unique.add(detail.color.name); // Add the size to the Set
                                                         return `
-                                                            <li class="list-inline-item">
+                                                            <li class="list-inline-item ${product.productStatus == 'OUT_OF_STOCK' ? 'soldout' : ''}">
                                                                 <label class="btn-colour" for="colour_${detail.color.id}" 
                                                                     style="background-color: ${detail.color.colorHex}"></label>
                                                                 <input class="input-invisible input-color-product" type="radio" 
@@ -660,34 +663,17 @@
                                                 }).join('')}
                                             </ul>
                                         </div>
-                                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                                        <div class="col-12 detail-option mb-3">
                                             <h6 class="detail-option-heading">Size <span>(required)</span></h6>
                                             ${productDetail.map((detail, index) => {
                                                 if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
                                                     unique.add(detail.size.name); // Add the size to the Set
                                                     return `
-                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" 
+                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label ${product.productStatus == 'OUT_OF_STOCK' ? 'soldout' : ''}" 
                                                             for="size_${detail.size.id}"> ${detail.size.name}
                                                             <input class="input-invisible input-size-product" type="radio" 
                                                                 name="size" value="${detail.size.id}" 
                                                                 id="size_${detail.size.id}" required>
-                                                        </label>
-                                                    `;
-                                                }
-                                                return '';
-                                            }).join('')}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                                            <h6 class="detail-option-heading">Type <span>(required)</span></h6>
-                                            ${productDetail.map((detail, index) => {
-                                                if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
-                                                    unique.add(detail.material.name); // Add the size to the Set
-                                                    return `
-                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" 
-                                                            for="material_${detail.material.id}"> ${detail.material.name}
-                                                            <input class="input-invisible input-material-product" type="radio" 
-                                                                name="material" value="${detail.material.id}" 
-                                                                id="material_${detail.material.id}" required>
                                                         </label>
                                                     `;
                                                 }
@@ -716,15 +702,28 @@
 
                     $productDetailWrapper.append(productDetailChild);
 
-                    var owlCarousel = $('.owl-carousel');
-                    owlCarousel.owlCarousel({
-                      items: 1, // Số phần tử hiển thị trên mỗi slide
-                      loop: true, // Lặp lại carousel
-                      dots: true, // Hiển thị các chấm chỉ số
-                      nav: false, // Ẩn các nút next/prev
+                    var $owlCarousel = $('.owl-carousel');
+                    $owlCarousel.owlCarousel({
+                        loop: true, // Lặp lại carousel
+                        dots: false, // Hiển thị các chấm chỉ số
+                        nav: false, // Ẩn các nút next/prev
+                        responsive: {
+                            0: {
+                                items: 1
+                            },
+                        },
+                        thumbs: true,
+                        // When only using images in your slide (like the demo) use this option to dynamicly create thumbnails without using the attribute data-thumb.
+                        thumbImage: false,
+                        // Enable this if you have pre-rendered thumbnails in your html instead of letting this plugin generate them. This is recommended as it will prevent FOUC
+                        thumbsPrerendered: true,
+                        // Class that will be used on the thumbnail container
+                        thumbContainerClass: 'owl-thumbs',
+                        // Class that will be used on the thumbnail item's
+                        thumbItemClass: 'owl-thumb-item'
                     });
                     // Cập nhật carousel
-                    owlCarousel.trigger('refresh.owl.carousel');
+                    $owlCarousel.trigger('refresh.owl.carousel');
 
                     const lightbox = GLightbox({
                         selector: '.glightbox',
@@ -745,15 +744,6 @@
                 }
             });
           
-            $(".product-details").eq(0).on('change', '.input-material-product', function(){
-                $(this).closest('.detail-option').find('label').not($(this).closest('label')).removeClass('active');
-                if ($(this).prop('checked')) {
-                    $(this).closest('label').addClass('active');
-                }else{
-                    $(this).closest('label').removeClass('active');
-                }
-            });
-        
             $(".product-details").eq(0).on('change', '.input-color-product', function(){
                 $(this).closest('.colours-wrapper').find('label.btn-colour').not($(this).prevAll('label.btn-colour:first')).removeClass('active');
                 if ($(this).prop('checked')) {
@@ -769,29 +759,20 @@
         $(document).ready(function() {
             $('.product-details').on('submit', 'form', function(e) {
                 e.preventDefault();
-                //var formData = new FormData();
               
                 var href = window.location.href;
                 var productId = href.substring(href.lastIndexOf('/') + 1);
                 var sizeId = $(this).find('input.input-size-product').filter(':checked').val().trim();
-                var materialId = $(this).find('input.input-material-product').filter(':checked').val().trim();
                 var colorId = $(this).find('input.input-color-product').filter(':checked').val().trim();
                 var quantity = $(this).find('input.detail-quantity').val().trim();
                 var price = 250000;
               
-                //formData.append('id.productId', productId);
-                //formData.append('id.sizeId', sizeId);
-                //formData.append('id.materialId', materialId);
-                //formData.append('id.colorId', colorId);
-                //formData.append('price', price);
-                //formData.append('quantity', quantity);
                 var formData =
                 {
                     id:
                     {
                         productId: productId,
                         sizeId: sizeId,
-                        materialId: materialId,
                         colorId: colorId
                     },
                     quantity: quantity,
@@ -839,8 +820,10 @@
                                                 <a class="navbar-cart-product-link" 
                                                     href="/mike/collection/shop/product-detail/${item.id.productId}">${item.name}
                                                 </a>
+                                                <small class="d-block text-muted">Color: ${item.itemDetail.color.name} </small>
+                                                <small class="d-block text-muted">Size: ${item.itemDetail.size.name} </small>
                                                 <small class="d-block text-muted">Quantity: ${cartItem.quantity} </small>
-                                                <strong class="d-block text-sm"> ${cartItem.price} </strong>
+                                                <small class="d-block text-muted">$${cartItem.price} </small>
                                             </div>
                                         </div>
                                     </div>
@@ -919,9 +902,36 @@
                         dataType: "JSON",
                         success: function(data) {
                             var productDetail = data.productDetail;
-                            console.log(productDetail);
                             var $inputSizeProduct = $('.input-size-product');
-                            var $inputMaterialProduct = $('.input-material-product');
+                            $('.input-size-product:checked').closest('label').removeClass('active');
+                            $('.input-size-product:checked').prop('checked', false);
+                            var unique = new Set();
+                            var unique1 = new Set();
+                            var newArray = [];
+
+                            $inputSizeProduct.each(function(){
+                                $(this).closest('label.detail-option-btn-label').removeClass('soldout')
+                                unique.add($(this).val().trim());
+                            });
+                            productDetail.map((detail, index) => {
+                                if (!unique1.has(detail.size.id) && detail.quantity > 0) {
+                                    unique1.add(detail.size.id); // 
+                                }
+                            });
+
+                            unique.forEach(element => {
+                                const numericElement = parseInt(element);
+                                if (!unique1.has(numericElement)) {
+                                    newArray.push(element);
+                                }
+                            });
+
+                            $inputSizeProduct.each(function(){
+                                if(newArray.includes($(this).val().trim())){
+                                    $(this).closest('label.detail-option-btn-label').addClass('soldout');
+                                }
+                            });
+                            
                         },
                         error: function(jqXHR, textStatus, errorTh){
 

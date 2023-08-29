@@ -11,5 +11,4 @@ public class ProductDetailNameResponse {
     private String productName;
     private String colorName;
     private String sizeName;
-    private String materialName;
 }

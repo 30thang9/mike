@@ -378,11 +378,11 @@
                           style="background: center center url('/images/product/${product.urlAvatar}') no-repeat; background-size: cover;">
                     </div>
                     ${productImage.map((image, index) => {
-                      if (!unique.has(image.urlImage)) { // Check if the size is not already in the Set
-                        unique.add(image.urlImage); // Add the size to the Set
+                      if (!unique.has(image)) { // Check if the size is not already in the Set
+                        unique.add(image); // Add the size to the Set
                         return `
                           <div class="detail-full-item-modal"
-                                style="background: center center url('/images/product/${image.urlImage}') no-repeat; background-size: cover;">
+                                style="background: center center url('/images/product/${image}') no-repeat; background-size: cover;">
                           </div>
                         `;
                       }
@@ -428,22 +428,6 @@
                             `;
                           }
                           return ''; // Return an empty string for duplicate sizes
-                        }).join('')}
-                      </div>
-                      <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                        <h6 class="detail-option-heading">Type <span>(required)</span></h6>
-                        ${productDetail.map((detail, index) => {
-                          if (!unique.has(detail.material.name)) { // Check if the material is not already in the Set
-                            unique.add(detail.material.name); // Add the material to the Set
-                            return `
-                              <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_${index}">
-                                ${detail.material.name} <!-- Access the material name from productDetail array -->
-                                <input class="input-invisible input-material-modal" type="radio" name="material" 
-                                  value="value_${index}" id="material_${index}" required>
-                              </label>
-                            `;
-                          }
-                          return ''; // Return an empty string for duplicate materials
                         }).join('')}
                       </div>
                       <div class="col-12 detail-option mb-3">
@@ -512,15 +496,6 @@
     });
 
     $(".product-model-body").on('change', '.input-size-modal', function(){
-      $(this).closest('.detail-option').find('label').not($(this).closest('label')).removeClass('active');
-      if ($(this).prop('checked')) {
-        $(this).closest('label').addClass('active');
-      }else{
-        $(this).closest('label').removeClass('active');
-      }
-    });
-
-    $(".product-model-body").on('change', '.input-material-modal', function(){
       $(this).closest('.detail-option').find('label').not($(this).closest('label')).removeClass('active');
       if ($(this).prop('checked')) {
         $(this).closest('label').addClass('active');

@@ -1,10 +1,14 @@
 package com.nth.mike.controller.api;
 
+import com.nth.mike.constant.StatusConstant;
 import com.nth.mike.entity.*;
 import com.nth.mike.model.dto.product.ProductFilterDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
+import com.nth.mike.model.mapper.product.ProductDetailRequestMapper;
 import com.nth.mike.model.mapper.product.ProductFilterRequestMapper;
 import com.nth.mike.model.mapper.product.ProductSearchRequestMapper;
+import com.nth.mike.model.request.product.ListImageNameRequest;
+import com.nth.mike.model.request.product.ProductDetailRequest;
 import com.nth.mike.model.request.product.ProductFilterRequest;
 import com.nth.mike.model.request.product.ProductSearchRequest;
 import com.nth.mike.model.response.shared.BasicResponse;
@@ -16,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,7 +72,7 @@ public class ProductApiController {
             for (String l : s) {
                 t.add(Long.parseLong(l));
             }
-            ProductDetailId productDetailId = new ProductDetailId(t.get(0), t.get(1), t.get(2), t.get(3));
+            ProductDetailId productDetailId = new ProductDetailId(t.get(0), t.get(1), t.get(2));
             ProductDetail productDetail = productDetailService.findById(productDetailId);
 
             if (productDetail == null) {
@@ -183,11 +189,6 @@ public class ProductApiController {
         }
     }
 
-    @GetMapping("/product-detail/list")
-    public ResponseEntity<List<ProductFullDetailDTO>> getProductDetail() {
-        return ResponseEntity.ok(productService.findAllProductFullDetail());
-    }
-
     // images
     @PostMapping("/product-image/add")
     public ResponseEntity<?> addImageProduct(@RequestParam String productId,
@@ -225,7 +226,7 @@ public class ProductApiController {
             return ResponseEntity.ok(new BasicResponse("success", "Add image success"));
         } catch (IOException e) {
             String errorMessage = "Failed to add product images: " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
 
@@ -254,112 +255,40 @@ public class ProductApiController {
 
             List<ProductImage> productImages = productImageService.findByProduct(product);
 
+            if (productImages.size() != fileNames.size()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Server not handle");
+            }
+
             // Sử dụng HashSet để lưu các giá trị duy nhất của fileNames và productImages
             Set<String> fileNameSet = new HashSet<>(fileNames);
             Set<String> productImageUrlSet = productImages.stream()
                     .map(ProductImage::getUrlImage)
                     .collect(Collectors.toSet());
-
             // Tìm các phần tử trùng lặp và xóa chúng khỏi fileNames
             fileNames.removeIf(fileName -> productImageUrlSet.contains(fileName));
-
             // Tìm các phần tử trùng lặp và xóa chúng khỏi productImages
             productImages.removeIf(productImage -> fileNameSet.contains(productImage.getUrlImage()));
 
-            if (!fileNames.isEmpty() || !productImages.isEmpty()) {
-                if (fileNames.isEmpty()) {
-                    for (ProductImage productImage : productImages) {
-                        try {
-                            uploadUtils.deleteImage(productImage.getUrlImage());
-                            productImageService.deleteByUrlImage(productImage.getUrlImage());
-                        } catch (Exception e) {
-                            // Log the error and continue processing other images
-                            log.error("Error deleting image: " + productImage.getUrlImage(), e);
-                        }
-                    }
-                } else if (!fileNames.isEmpty() && !productImages.isEmpty()) {
-                    List<ProductImage> updatedProductImages = new ArrayList<>();
-                    List<String> addImages = new ArrayList<>();
-                    for (int i = 0; i < fileNames.size(); i++) {
-                        for (int j = 0; j < listImages.size(); j++) {
-                            MultipartFile imageFile = listImages.get(j);
-                            String fileName = uploadUtils.getOriginalFileName(imageFile);
-                            if (fileName.equals(fileNames.get(i))) {
-                                String name = uploadUtils.saveImage(imageFile);
-                                if (i < productImages.size()) {
-                                    ProductImage updatedProductImage = productImages.get(i);
-                                    updatedProductImage.setUrlImage(name);
-                                    updatedProductImages.add(updatedProductImage);
-                                } else {
-                                    addImages.add(name);
-                                }
-                                break;
-                            }
-                        }
-                    }
-
-                    // Save the updated product images
-                    for (ProductImage updatedProductImage : updatedProductImages) {
-                        try {
-                            productImageService.save(updatedProductImage);
-                        } catch (Exception e) {
-                            // Log the error and continue processing other images
-                            log.error("Error saving image: " + updatedProductImage.getUrlImage(), e);
-                        }
-                    }
-                    if (updatedProductImages.size() < productImages.size()) {
-                        List<ProductImage> deletedProductImages = new ArrayList<>(productImages);
-
-                        Set<Long> updatedProductImageIdSet = updatedProductImages.stream()
-                                .map(ProductImage::getId)
-                                .collect(Collectors.toSet());
-
-                        // Tìm các phần tử trùng lặp và xóa chúng khỏi fileNames
-                        deletedProductImages
-                                .removeIf(productImage -> updatedProductImageIdSet.contains(productImage.getId()));
-
-                        // Handle the failed updates (e.g., retry or log errors)
-                        for (ProductImage deletedProductImage : deletedProductImages) {
-                            productImageService.deleteById(deletedProductImage.getId());
-                        }
-                    }
-                    if (!addImages.isEmpty()) {
-                        for (String addImage : addImages) {
-                            ProductImage pi = new ProductImage();
-                            pi.setProduct(product);
-                            pi.setUrlImage(addImage);
-                            productImageService.save(pi);
-                        }
-
-                    }
-
-                } else if (productImages.isEmpty()) {
-                    List<ProductImage> updatedProductImages = new ArrayList<>();
-                    for (int i = 0; i < fileNames.size(); i++) {
-                        for (int j = 0; j < listImages.size(); j++) {
-                            MultipartFile imageFile = listImages.get(j);
-                            String fileName = uploadUtils.getOriginalFileName(imageFile);
-                            if (fileName.equals(fileNames.get(i))) {
-                                String name = uploadUtils.saveImage(imageFile);
-                                ProductImage updatedProductImage = new ProductImage();
-                                updatedProductImage.setUrlImage(name);
-                                updatedProductImage.setProduct(product);
-                                updatedProductImages.add(updatedProductImage);
-                                break;
-                            }
-                        }
-                    }
-                    for (ProductImage updatedProductImage : updatedProductImages) {
-                        try {
-                            productImageService.save(updatedProductImage);
-                        } catch (Exception e) {
-                            // Log the error and continue processing other images
-                            log.error("Error saving image: " + updatedProductImage.getUrlImage(), e);
-                        }
+            if (!fileNames.isEmpty() && !productImages.isEmpty()) {
+                List<MultipartFile> listImagesUpdate = new ArrayList<>();
+                for (MultipartFile imageFile : listImages) {
+                    String fileName = uploadUtils.getOriginalFileName(imageFile);
+                    if (fileNames.contains(fileName)) {
+                        listImagesUpdate.add(imageFile);
                     }
                 }
+                for (int i = 0; i < productImages.size(); i++) {
+                    MultipartFile imageFile = listImagesUpdate.get(i);
+                    String name = uploadUtils.saveImage(imageFile);
+                    ProductImage pi = productImages.get(i);
+                    productImageService.deleteById(pi.getUrlImage());
+                    pi.setUrlImage(name);
+                    productImageService.save(pi);
+                }
+
             }
             return ResponseEntity.ok(new BasicResponse("success", "Edit image success"));
+
         } catch (IOException e) {
             String errorMessage = "Failed to add product images: " + e.getMessage();
             log.error(errorMessage, e);
@@ -373,6 +302,152 @@ public class ProductApiController {
             log.error(errorMessage, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
+    }
+
+    @DeleteMapping("/product-image/delete/{productId}")
+    public ResponseEntity<?> deleteImageProduct(@PathVariable("productId") String productId,
+            @RequestBody ListImageNameRequest listName) {
+        if (productId == null || productId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid product ID");
+        }
+
+        Product product = productService.findById(Long.parseLong(productId));
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+        List<ProductImage> productImages = productImageService.findByProduct(product);
+        List<String> listImage = listName.getListImage();
+        for (String fileName : listImage) {
+            if (!productImages.stream().anyMatch(image -> image.getUrlImage().contains(fileName))) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Once of list images not found");
+            }
+        }
+
+        try {
+            for (String fileName : listImage) {
+                productImageService.deleteById(fileName);
+            }
+
+            return ResponseEntity.ok(new BasicResponse("success", "Edit image success"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Delete error");
+        }
+
+    }
+
+    // product detail
+    @GetMapping("/product-detail/list")
+    public ResponseEntity<List<ProductFullDetailDTO>> getProductDetail() {
+        return ResponseEntity.ok(productService.findAllProductFullDetail());
+    }
+
+    @PostMapping("/product-detail/add")
+    public ResponseEntity<?> addProductDetails(@RequestBody List<@Valid ProductDetailRequest> productDetails,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid request: " + bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        for (ProductDetailRequest productDetail : productDetails) {
+            if (productService.findById(productDetail.getProductId()) == null) {
+                return ResponseEntity.badRequest().body(new BasicResponse(StatusConstant.ERROR, "Product not found."));
+            }
+
+            if (productDetailService.findById(ProductDetailRequestMapper.toProductDetailId(productDetail)) != null) {
+                return ResponseEntity.badRequest()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Product detail exists."));
+            }
+
+            try {
+                ProductDetail pd = ProductDetailRequestMapper.toProductDetail(productDetail, productService,
+                        colorService,
+                        sizeService);
+                pd = productDetailService.save(pd);
+                if (pd == null) {
+                    return ResponseEntity.internalServerError()
+                            .body(new BasicResponse(StatusConstant.ERROR, "Save error."));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.internalServerError()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Save error."));
+            }
+        }
+
+        return ResponseEntity.ok("Product details added successfully.");
+    }
+
+    @PutMapping("/product-detail/edit")
+    public ResponseEntity<?> editProductDetails(@RequestBody List<@Valid ProductDetailRequest> productDetails,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid request: " + bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        for (ProductDetailRequest productDetail : productDetails) {
+            if (productService.findById(productDetail.getProductId()) == null) {
+                return ResponseEntity.badRequest().body(new BasicResponse(StatusConstant.ERROR, "Product not found."));
+            }
+
+            if (productDetailService.findById(ProductDetailRequestMapper.toProductDetailId(productDetail)) == null) {
+                return ResponseEntity.badRequest()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Product detail not exists."));
+            }
+
+            try {
+                ProductDetail pd = ProductDetailRequestMapper.toProductDetail(productDetail, productService,
+                        colorService,
+                        sizeService);
+                pd = productDetailService.save(pd);
+                if (pd == null) {
+                    return ResponseEntity.internalServerError()
+                            .body(new BasicResponse(StatusConstant.ERROR, "Save error."));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.internalServerError()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Save error."));
+            }
+        }
+
+        return ResponseEntity.ok("Product details added successfully.");
+    }
+
+    @DeleteMapping("/product-detail/delete")
+    public ResponseEntity<?> deleteProductDetails(@RequestBody List<@Valid ProductDetailRequest> productDetails,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body("Invalid request: " + bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        for (ProductDetailRequest productDetail : productDetails) {
+            if (productService.findById(productDetail.getProductId()) == null) {
+                return ResponseEntity.badRequest().body(new BasicResponse(StatusConstant.ERROR, "Product not found."));
+            }
+
+            if (productDetailService.findById(ProductDetailRequestMapper.toProductDetailId(productDetail)) == null) {
+                return ResponseEntity.badRequest()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Product detail not exists."));
+            }
+
+            try {
+                productDetailService.deleteById(ProductDetailRequestMapper.toProductDetailId(productDetail));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.internalServerError()
+                        .body(new BasicResponse(StatusConstant.ERROR, "Save error."));
+            }
+        }
+
+        return ResponseEntity.ok("Product details added successfully.");
     }
 
 }

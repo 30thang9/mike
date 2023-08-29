@@ -38,7 +38,8 @@
               <div class="block mb-5">
                 <div class="block-header"><strong class="text-uppercase">Change your password</strong></div>
                 <div class="block-body">
-                  <form>
+                  <div id="message-change-pass"></div>
+                  <form id="changePassForm">
                     <div class="row">
                       <div class="col-sm-6">
                         <div class="mb-4">
@@ -149,42 +150,44 @@
             </div>
             <!-- Customer Sidebar-->
             <div class="col-xl-3 col-lg-4 order-1 order-lg-2 mb-5">
-              <div class="customer-sidebar card border-0"> 
-                <div class="customer-profile"><a class="d-inline-block" href="#"><img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
-                  <h5 th:text="${session.user.fullName}"></h5>
-                  <p class="text-muted text-sm mb-0">Ostrava, Czech Republic</p>
-                </div>
-                <nav class="list-group customer-nav">
-                  <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/order}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#paper-bag-1"> </use>
-                      </svg>Orders
-                    </span>
-                    <div class="badge rounded-pill bg-dark fw-normal px-3">5</div>
-                  </a>
-                  <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#male-user-1"> </use>
-                      </svg>Profile
-                    </span>
-                  </a>
-                  <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#navigation-map-1"> </use>
-                      </svg>Addresses
-                    </span>
-                  </a>
-                  <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/auth/logout}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#exit-1"> </use>
-                      </svg>Log out
-                    </span>
-                  </a>
-                </nav>
+              <div class="customer-sidebar card border-0">
+                  <div class="customer-profile"><a class="d-inline-block" href="#">
+                      <img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
+                      <h5 th:text="${session.user.fullName}"></h5>
+                      <span th:text="${session.user.username}" id="usernameSub" class="mb-3"></span>
+                      <p class="text-muted text-sm mb-0">Ostrava, Czech Republic</p>
+                  </div>
+                  <nav class="list-group customer-nav">
+                      <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/order}">
+                          <span>
+                              <svg class="svg-icon svg-icon-heavy me-2">
+                                  <use xlink:href="#paper-bag-1"> </use>
+                              </svg>Orders
+                          </span>
+                          <div class="badge rounded-pill bg-dark fw-normal px-3">5</div>
+                      </a>
+                      <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
+                          <span>
+                              <svg class="svg-icon svg-icon-heavy me-2">
+                                  <use xlink:href="#male-user-1"> </use>
+                              </svg>Profile
+                          </span>
+                      </a>
+                      <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
+                          <span>
+                              <svg class="svg-icon svg-icon-heavy me-2">
+                                  <use xlink:href="#navigation-map-1"> </use>
+                              </svg>Addresses
+                          </span>
+                      </a>
+                      <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/auth/logout}">
+                          <span>
+                              <svg class="svg-icon svg-icon-heavy me-2">
+                                  <use xlink:href="#exit-1"> </use>
+                              </svg>Log out
+                          </span>
+                      </a>
+                  </nav>
               </div>
             </div>
             <!-- /Customer Sidebar-->
@@ -196,6 +199,90 @@
 
 <th:block layout:fragment="js_foot">
 
+    <script>
+        $(document).ready(function() {
+            var $changePassForm = $('#changePassForm');
+            $changePassForm.on('submit', function(event) {
+                event.preventDefault();
+                var $msgChangePass = $('#message-change-pass');
+                var username = $('#usernameSub').text();
+                var oldPass = $('#password_old').val();
+                var newPass = $('#password_1').val();
+                var confirmPass = $('#password_2').val();
+
+                if (username && oldPass && newPass && confirmPass) {
+                    if (newPass !== confirmPass) {
+                        showMessage($msgChangePass, 'New password and confirm password do not match.');
+                    } else {
+                        var formData = {
+                            username: username,
+                            oldPassword: oldPass,
+                            newPassword: newPass,
+                            confirmPassword: confirmPass
+                        };
+                        $.ajax({
+                            url: '/mike/api/user/change-pass',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(formData),
+                            success: function(data) {
+                                console.log(data);
+                                showModal("Change password successfully",true);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                try {
+                                    var errorResponse = JSON.parse(jqXHR.responseText);
+                                    showMessage($msgChangePass, 'Change password failed: ' + errorResponse.message);
+                                    console.log(errorResponse);
+                                } catch (e) {
+                                    showMessage($msgChangePass, 'An error occurred while processing your request.');
+                                    console.log('Error parsing JSON response:', e);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    showMessage($msgChangePass, 'Please fill in all fields.');
+                }
+            });
+
+            function showMessage($msgWrapper, message) {
+                $msgWrapper.empty();
+                var content = $(`
+                    <div class="alert alert-danger" role="alert">${message}</div>
+                `);
+                $msgWrapper.append(content);
+            }
+          
+            function showModal(message, isSuccess) {
+                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
+                var modalBody = $("<div class='modal-body'></div>").append(message);
+                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
+                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
+                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
+                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
+                var modal = $("<div class='modal fade'></div>").append(modalDialog);
+
+                modal.on("hidden.bs.modal", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.remove();
+                });
+
+                closeButton.on("click", function() {
+                if(isSuccess){
+                    location.reload();
+                }
+                modal.modal("hide");
+                });
+
+                $("body").append(modal);
+                modal.modal("show");
+            }
+        });
+
+    </script>
 </th:block>
 </body>
 </html>

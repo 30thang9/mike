@@ -20,7 +20,7 @@
             <!-- Breadcrumbs -->
             <ol class="breadcrumb justify-content-center">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Your addresses        </li>
+                <li class="breadcrumb-item active">Your addresses</li>
             </ol>
             <!-- Hero Content-->
             <div class="hero-content pb-5 text-center">
@@ -34,124 +34,87 @@
                 <div class="col-lg-8 col-xl-9 order-2 order-lg-1">
                     <form action="#">
                         <div class="block">
-                            <!-- Invoice Address-->
                             <div class="block-header">
-                                <h6 class="text-uppercase mb-0">Invoice address</h6>
+                                <h6 class="text-uppercase mb-0">Shipping address </h6>
                             </div>
                             <div class="block-body">
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="fullname_invoice">Full Name</label>
-                                        <input class="form-control" type="text" name="fullname_invoice" placeholder="Joe Black" id="fullname_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="emailaddress_invoice">Email Address</label>
-                                        <input class="form-control" type="text" name="emailaddress_invoice" placeholder="joe.black@gmail.com" id="emailaddress_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="street_invoice">Street</label>
-                                        <input class="form-control" type="text" name="street_invoice" placeholder="123 Main St." id="street_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="city_invoice">City</label>
-                                        <input class="form-control" type="text" name="city_invoice" placeholder="City" id="city_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="zip_invoice">ZIP</label>
-                                        <input class="form-control" type="text" name="zip_invoice" placeholder="Postal code" id="zip_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="state_invoice">State</label>
-                                        <input class="form-control" type="text" name="state_invoice" placeholder="State" id="state_invoice">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="form-label" for="phonenumber_invoice">Phone Number</label>
-                                        <input class="form-control" type="text" name="phonenumber_invoice" placeholder="Phone Number" id="phonenumber_invoice">
-                                    </div>
-                                    <div class="mb-4 col-12 mt-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="show-shipping-address" type="checkbox" name="clothes-brand">
-                                            <label class="form-check-label align-middle" for="show-shipping-address" data-bs-toggle="collapse" data-bs-target="#shippingAddress">Use a different shipping address</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /Invoice Address-->
+
                             </div>
-                            <!-- Shippping Address-->
-                            <div class="collapse" id="shippingAddress">
-                                <div class="block">
-                                    <div class="block-header">
-                                        <h6 class="text-uppercase mb-0">Shipping address </h6>
-                                    </div>
-                                    <div class="block-body">
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label class="form-label" for="street_shipping">Street</label>
-                                                <input class="form-control" type="text" name="street_shipping" placeholder="123 Main St." id="street_shipping">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label class="form-label" for="city_shipping">City</label>
-                                                <input class="form-control" type="text" name="city_shipping" placeholder="City" id="city_shipping">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label class="form-label" for="zip_shipping">ZIP</label>
-                                                <input class="form-control" type="text" name="zip_shipping" placeholder="Postal code" id="zip_shipping">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label class="form-label" for="state_shipping">State</label>
-                                                <input class="form-control" type="text" name="state_shipping" placeholder="State" id="state_shipping">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label class="form-label" for="phonenumber_shipping">Phone Number</label>
-                                                <input class="form-control" type="text" name="phonenumber_shipping" placeholder="Phone Number" id="phonenumber_shipping">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /Shipping Address-->
-                            </div>
+                            <!-- /Shipping Address-->
                         </div>
-                        <div class="mb-4 mt-3 text-center">
+                        <div class="mb-4 text-center">
+                            <div class="row text-start mb-3 px-1" id="wrapper-shipping-address" th:data-username="${session.user.username}">
+                                <div class="col-12 col-md-6 p-2" data-id="1">
+                                    <div class="border border-secondary rounded p-2 cursor-pointer">
+                                        <a href="javascript:void(0);" class="text-decoration-none text-dark">
+                                            <h5>Nguyễn Hướng <span class="fw-normal"> | 0123456789</span></h5>
+                                            <span>huongtn@gmail.com</span>
+                                            <br>
+                                            <span class="mt-2">Đồng Du, Bình Lục, Hà Nam</span>
+                                            <br>
+                                            <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 p-2" data-id="1">
+                                    <div class="border border-secondary rounded p-2 cursor-pointer">
+                                        <a href="javascript:void(0);" class="text-decoration-none text-dark">
+                                            <h5>Nguyễn Hướng <span class="fw-normal"> | 0123456789</span></h5>
+                                            <span>huongtn@gmail.com</span>
+                                            <br>
+                                            <span class="mt-2">Đồng Du, Bình Lục, Hà Nam</span>
+                                            <br>
+                                            <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="btn btn-outline-dark" type="submit"><i class="far fa-save me-2"></i>Save changes</button>
+                            <button type="button" class="btn btn-outline-dark"
+                                    data-bs-toggle="modal" data-bs-target="#addShippingAddress">
+                                <i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add New Address
+                            </button>
                         </div>
                     </form>
                 </div>
                 <!-- Customer Sidebar-->
                 <div class="col-xl-3 col-lg-4 order-1 order-lg-2 mb-5">
                     <div class="customer-sidebar card border-0">
-                        <div class="customer-profile"><a class="d-inline-block" href="#"><img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
+                        <div class="customer-profile"><a class="d-inline-block" href="#">
+                            <img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
                             <h5 th:text="${session.user.fullName}"></h5>
+                            <span th:text="${session.user.username}" id="usernameSub" class="mb-3"></span>
                             <p class="text-muted text-sm mb-0">Ostrava, Czech Republic</p>
                         </div>
                         <nav class="list-group customer-nav">
                             <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/order}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#paper-bag-1"> </use>
-                      </svg>Orders
-                    </span>
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#paper-bag-1"> </use>
+                                    </svg>Orders
+                                </span>
                                 <div class="badge rounded-pill bg-dark fw-normal px-3">5</div>
                             </a>
-                            <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#male-user-1"> </use>
-                      </svg>Profile
-                    </span>
+                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#male-user-1"> </use>
+                                    </svg>Profile
+                                </span>
                             </a>
-                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#navigation-map-1"> </use>
-                      </svg>Addresses
-                    </span>
+                            <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#navigation-map-1"> </use>
+                                    </svg>Addresses
+                                </span>
                             </a>
                             <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/auth/logout}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#exit-1"> </use>
-                      </svg>Log out
-                    </span>
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#exit-1"> </use>
+                                    </svg>Log out
+                                </span>
                             </a>
                         </nav>
                     </div>
@@ -160,11 +123,203 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="addShippingAddress" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+            <div class="modal-content p-3 p-md-5">
+                <div class="modal-body">
+                    <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <form action="#" id="addShippingAddressForm">
+                        <div class="block">
+                            <div class="block-header">
+                                <h6 class="text-uppercase mb-0 text-center">Shipping address </h6>
+                            </div>
+                            <div class="block-body">
+                                <div id="message-errorAdd-shippingAddress"></div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="fullName_shipping">Full Name</label>
+                                        <input class="form-control" type="text" name="fullName_shipping" placeholder="John" id="fullname_shipping">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="email_shipping">Email Number</label>
+                                        <input class="form-control" type="text" name="email_shipping" placeholder="Email Number" id="email_shipping">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="phoneNumber_shipping">Phone Number</label>
+                                        <input class="form-control" type="text" name="phoneNumber_shipping" placeholder="Phone Number" id="phonenumber_shipping">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="city_shipping">City</label>
+                                        <select class="form-control" name="city_shipping" id="city_shipping">
+                                            <option value="">Choose city</option>
+                                            <option th:each="ci : ${city}" th:value="${ci.id}" th:text="${ci.name}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="district_shipping">District</label>
+                                        <select class="form-control" name="district_shipping" id="district_shipping">
+                                            <option value="">Please choose city</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="ward_shipping">Ward</label>
+                                        <select class="form-control" name="ward_shipping" id="ward_shipping">
+                                            <option value="">Please choose city & district</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="street_shipping">Street</label>
+                                        <input class="form-control" type="text" name="street_shipping" placeholder="123 Main St." id="street_shipping">
+                                    </div>
+                                    <div class="col-12 my-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="isDefault_shipping" id="isDefault_shipping">
+                                            <label class="form-check-label align-middle" for="isDefault_shipping">Default Address</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Shipping Address-->
+                        </div>
+                        <div class="mb-4 mt-3 text-center">
+                            <button class="btn btn-outline-dark" type="submit"><i class="far fa-save me-2"></i>Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 
 
 <th:block layout:fragment="js_foot">
 
+    <script>
+        $(document).ready(function() {
+            var $citySelect = $('#city_shipping');
+            var $districtSelect = $('#district_shipping');
+            var $wardSelect = $('#ward_shipping');
+
+            $citySelect.on('change', function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    var apiUrl = '/mike/api/area-address/district/' + cityId;
+                    callApi(apiUrl, $districtSelect, "district");
+                }
+                //else {
+                //    $districtSelect.empty();
+                //}
+            });
+
+            $districtSelect.on('change', function() {
+                var districtId = $(this).val();
+                if (districtId) {
+                    var apiUrl = '/mike/api/area-address/ward/' + districtId;
+                    callApi(apiUrl, $wardSelect, "ward");
+                }
+                //else {
+                //    $wardSelect.empty();
+                //}
+            });
+
+            function callApi(url, $select, text) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $select.empty();
+                        if (data && data.length > 0) {
+                            var textOp = "Choose " + text;
+                            var optionDefault = $('<option>').text(textOp).attr('value', '');
+                            $select.append(optionDefault);
+                            for (var i = 0; i < data.length; i++) {
+                                var option = $('<option>').text(data[i].name).attr('value', data[i].id);
+                                $select.append(option);
+                            }
+                        } else {
+                            var textOpn = "No " + text + " available";
+                            $select.append($('<option>').text(textOpn));
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var $wrapper = $('#wrapper-shipping-address');
+            var username = $wrapper.data('username');
+            if(username){
+                var url = "/mike/api/user-profile/shipping-address/" + username;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        //$wrapper.empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var sa = data[i];
+                            var content = $(`
+                                             <div class="col-12 col-md-6 p-2" data-id="1">
+                                                <div class="border border-secondary rounded p-2 cursor-pointer">
+                                                    <a href="javascript:void(0);" class="text-decoration-none text-dark">
+                                                        <h5>${sa.fullName} <span class="fw-normal"> | ${sa.phoneNumber}</span></h5>
+                                                        <span>${sa.email}</span>
+                                                        <br>
+                                                        <span class="mt-2">${sa.street + ',' + sa.ward + ',' + sa.district + ',' + sa.city}</span>
+                                                        <br>
+                                                        <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                          `);
+                            $wrapper.append(content);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                })
+            }
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            var $addForm = $('#addShippingAddressForm');
+            $addForm.on('submit', function(event) {
+                event.preventDefault();
+                var fullNameVal = $(this).find('#fullName_shipping').val();
+                var phoneNumberVal = $(this).find('#phoneNumber_shipping').val();
+                var emailVal = $(this).find('#email_shipping').val();
+                var cityVal = $(this).find('#city_shipping').val();
+                var districtVal = $(this).find('#district_shipping').val();
+                var wardVal = $(this).find('#ward_shipping').val();
+                var streetVal = $(this).find('#street_shipping').val();
+                var isDefault = $(this).find('#isDefault_shipping');
+
+                var $messageDiv = $(this).find('#message-errorAdd-shippingAddress');
+
+                if(fullNameVal && phoneNumberVal && emailVal && cityVal && districtVal && wardVal && streetVal){
+                    var url = "/mike/api/user-profile/shipping-address/add";
+                }else{
+                    var message = "You have not entered all the information";
+                    showMessage($messageDiv,message);
+                }
+            });
+
+            function showMessage($msgWrapper, message) {
+                $msgWrapper.empty();
+                var content = $(`
+                    <div class="alert alert-danger" role="alert">${message}</div>
+                `);
+                $msgWrapper.append(content);
+            }
+        });
+    </script>
 </th:block>
 </body>
 </html>

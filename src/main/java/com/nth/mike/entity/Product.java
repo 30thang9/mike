@@ -35,7 +35,7 @@ public class Product {
     private ProductCategory productCategory;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "productStatus", nullable = false, columnDefinition = "ENUM('AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED', 'HIDDEN') DEFAULT 'AVAILABLE'")
+    @Column(name = "productStatus", nullable = false, columnDefinition = "ENUM('COMING_SOON', 'AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED', 'HIDDEN') DEFAULT 'AVAILABLE'")
     private ProductStatus productStatus = ProductStatus.AVAILABLE;
 
     @Enumerated(EnumType.STRING)

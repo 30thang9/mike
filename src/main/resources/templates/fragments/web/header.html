@@ -268,8 +268,10 @@
                                                                th:href="@{'/mike/collection/shop/product-detail/'+${cartItem.item.id.productId}}"
                                                                th:text="${cartItem.item.name}">
                                                             </a>
+                                                            <small class="d-block text-muted" th:text="${'Color: ' + cartItem.item.itemDetail.color.name}"></small>
+                                                            <small class="d-block text-muted" th:text="${'Size: ' + cartItem.item.itemDetail.size.name}"></small>
                                                             <small class="d-block text-muted" th:text="${'Quantity: ' + cartItem.quantity}"></small>
-                                                            <strong class="d-block text-sm" th:text="${'$' + cartItem.price}"></strong>
+                                                            <small class="d-block text-muted" th:text="${'$' + cartItem.price}"></small>
                                                         </div>
                                                     </div>
                                                 </div>

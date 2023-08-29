@@ -26,8 +26,6 @@ public class PurchaseSaveMapper {
     private ColorService colorService;
     @Autowired
     private SizeService sizeService;
-    @Autowired
-    private MaterialService materialService;
 
     public Purchase toPurchase(PurchaseSaveRequest psr) {
         try {
@@ -51,13 +49,11 @@ public class PurchaseSaveMapper {
                         p.getId(),
                         detailRequest.getProductId(),
                         detailRequest.getColorId(),
-                        detailRequest.getSizeId(),
-                        detailRequest.getMaterialId());
+                        detailRequest.getSizeId());
                 ProductDetailId productDetailId = new ProductDetailId(
                         detailRequest.getProductId(),
                         detailRequest.getColorId(),
-                        detailRequest.getSizeId(),
-                        detailRequest.getMaterialId());
+                        detailRequest.getSizeId());
 
                 PurchaseDetail pd = new PurchaseDetail();
                 pd.setId(purchaseDetailId);
@@ -81,8 +77,7 @@ public class PurchaseSaveMapper {
                 ProductDetailId productDetailId = new ProductDetailId(
                         detailRequest.getProductId(),
                         detailRequest.getColorId(),
-                        detailRequest.getSizeId(),
-                        detailRequest.getMaterialId());
+                        detailRequest.getSizeId());
 
                 if (productDetailService.findById(productDetailId) == null) {
                     ProductDetailNameResponse productDetailError = new ProductDetailNameResponse();
@@ -90,8 +85,6 @@ public class PurchaseSaveMapper {
                             .setProductName(productService.findById(productDetailId.getProductId()).getName());
                     productDetailError.setColorName(colorService.findById(productDetailId.getColorId()).getName());
                     productDetailError.setSizeName(sizeService.findById(productDetailId.getSizeId()).getName());
-                    productDetailError
-                            .setMaterialName(materialService.findById(productDetailId.getMaterialId()).getName());
 
                     productDetailErrors.add(productDetailError);
                 }

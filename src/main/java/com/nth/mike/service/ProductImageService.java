@@ -8,11 +8,8 @@ import com.nth.mike.entity.ProductImage;
 public interface ProductImageService {
     List<ProductImage> findByProduct(Product product);
 
-    ProductImage findByUrlImage(String url);
-
     ProductImage save(ProductImage productImage);
 
-    Long deleteById(Long id);
+    String deleteById(String id);
 
-    Long deleteByUrlImage(String urlImage);
 }

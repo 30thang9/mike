@@ -11,7 +11,6 @@ public class PurchaseDetailRequest {
     private Long productId;
     private Long colorId;
     private Long sizeId;
-    private Long materialId;
     private Integer quantity;
     private Double paymentPrice;
 }

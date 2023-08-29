@@ -131,39 +131,40 @@
                 <!-- Customer Sidebar-->
                 <div class="col-xl-3 col-lg-4 order-1 order-lg-2 mb-5">
                     <div class="customer-sidebar card border-0">
-                        <div class="customer-profile"><a class="d-inline-block" href="#"><img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
+                        <div class="customer-profile"><a class="d-inline-block" href="#">
+                            <img class="img-fluid rounded-circle customer-image shadow" src="https://d19m59y37dris4.cloudfront.net/sell/2-0-1/img/photo/kyle-loftus-589739-unsplash-avatar.jpg" alt=""></a>
                             <h5 th:text="${session.user.fullName}"></h5>
                             <p class="text-muted text-sm mb-0">Ostrava, Czech Republic</p>
                         </div>
                         <nav class="list-group customer-nav">
                             <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/order}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#paper-bag-1"> </use>
-                      </svg>Orders
-                    </span>
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#paper-bag-1"> </use>
+                                    </svg>Orders
+                                </span>
                                 <div class="badge rounded-pill bg-dark fw-normal px-3">5</div>
                             </a>
-                            <a class="active list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#male-user-1"> </use>
-                      </svg>Profile
-                    </span>
+                            <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/profile}">
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#male-user-1"> </use>
+                                    </svg>Profile
+                                </span>
                             </a>
                             <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/user-profile/address}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#navigation-map-1"> </use>
-                      </svg>Addresses
-                    </span>
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#navigation-map-1"> </use>
+                                    </svg>Addresses
+                                </span>
                             </a>
                             <a class="list-group-item d-flex justify-content-between align-items-center text-decoration-none" th:href="@{/mike/auth/logout}">
-                    <span>
-                      <svg class="svg-icon svg-icon-heavy me-2">
-                        <use xlink:href="#exit-1"> </use>
-                      </svg>Log out
-                    </span>
+                                <span>
+                                    <svg class="svg-icon svg-icon-heavy me-2">
+                                        <use xlink:href="#exit-1"> </use>
+                                    </svg>Log out
+                                </span>
                             </a>
                         </nav>
                     </div>

@@ -21,30 +21,14 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public ProductImage findByUrlImage(String url) {
-        return productImageRepo.findByUrlImage(url);
-    }
-
-    @Override
     public ProductImage save(ProductImage productImage) {
         return productImageRepo.save(productImage);
     }
 
     @Override
-    public Long deleteById(Long id) {
+    public String deleteById(String id) {
         try {
             productImageRepo.deleteById(id);
-            return id;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Long deleteByUrlImage(String urlImage) {
-        try {
-            Long id = productImageRepo.findByUrlImage(urlImage).getId();
-            productImageRepo.deleteByUrlImage(urlImage);
             return id;
         } catch (Exception e) {
             throw new RuntimeException(e);

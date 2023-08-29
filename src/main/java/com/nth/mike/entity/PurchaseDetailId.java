@@ -24,9 +24,4 @@ public class PurchaseDetailId implements Serializable {
 
     @Column(name = "sizeId")
     private Long sizeId;
-
-    @Column(name = "materialId")
-    private Long materialId;
-
-    // Constructors, Equals, and HashCode
 }

@@ -15,15 +15,14 @@ public class PurchaseDetail {
     private PurchaseDetailId id;
 
     @ManyToOne
-    @JoinColumn(name = "purchaseId", referencedColumnName = "id",insertable = false, updatable = false)
+    @JoinColumn(name = "purchaseId", referencedColumnName = "id", insertable = false, updatable = false)
     private Purchase purchase;
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "productId", referencedColumnName = "productId",insertable = false, updatable = false),
-            @JoinColumn(name = "colorId", referencedColumnName = "colorId",insertable = false, updatable = false),
-            @JoinColumn(name = "sizeId", referencedColumnName = "sizeId",insertable = false, updatable = false),
-            @JoinColumn(name = "materialId", referencedColumnName = "materialId",insertable = false, updatable = false)
+            @JoinColumn(name = "productId", referencedColumnName = "productId", insertable = false, updatable = false),
+            @JoinColumn(name = "colorId", referencedColumnName = "colorId", insertable = false, updatable = false),
+            @JoinColumn(name = "sizeId", referencedColumnName = "sizeId", insertable = false, updatable = false),
     })
     private ProductDetail productDetail;
 
@@ -36,4 +35,3 @@ public class PurchaseDetail {
     // Constructors, Getters, and Setters
 
 }
-

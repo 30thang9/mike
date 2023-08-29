@@ -13,20 +13,13 @@
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/typeahead-js/typeahead.css}" />
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/flatpickr/flatpickr.css}" />
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css}" />
-
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/dropzone/dropzone.css}" />
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/carousel-ui/owl.carousel.min.css}"/>
+        <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/carousel-ui/owl.theme.default.min.css}"/>
         <!--/ Vendors CSS -->
 
         <!-- Page CSS -->
         <link rel="stylesheet" th:href="@{/admin/assets/vendor/css/pages/app-invoice.css}" />
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-        integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
-        integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
     </th:block>
 </head>
 <body>
@@ -192,7 +185,6 @@
                             <tr>
                                 <th class="text-nowrap">Color</th>
                                 <th class="text-nowrap">Size</th>
-                                <th class="text-nowrap">Material</th>
                                 <th class="text-nowrap">Import Price</th>
                                 <th class="text-nowrap">Export Price</th>
                                 <th class="text-nowrap">Quantity</th>
@@ -202,7 +194,6 @@
                             <tr th:each = "productDetail : ${productDetails}">
                                 <td class="text-nowrap" th:text = "${productDetail.color.name}"></td>
                                 <td class="text-nowrap" th:text = "${productDetail.size.name}"></td>
-                                <td class="text-nowrap" th:text = "${productDetail.material.name}"></td>
                                 <td th:text = "${productDetail.importPrice}"></td>
                                 <td th:text = "${productDetail.exportPrice}"></td>
                                 <td th:text = "${productDetail.quantity}"></td>
@@ -235,6 +226,18 @@
                         <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
                             data-bs-toggle="modal" data-bs-target="#editListImages">Edit List Images
                         </button>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#deleteListImages">Delete List Images
+                        </button>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
+                            data-bs-toggle="modal" data-bs-target="#addProductDetail">Add Product Detail
+                        </button>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" 
+                            data-bs-toggle="modal" data-bs-target="#editProductDetail">Edit Product Detail
+                        </button>
+                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3"
+                                data-bs-toggle="modal" data-bs-target="#deleteProductDetail">Delete Product Detail
+                        </button>
                         <a th:href="@{/mike/admin/product/edit/{productId}(productId=${products.id})}"
                            class="btn btn-label-secondary d-grid w-100 mb-3">
                             Edit Product
@@ -260,14 +263,14 @@
                         <form id="addListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
                               th:action="@{/mike/api/product/product-image/add}" method="post">
                             <div class="col-12 wrapper-dropzone-valid-custom">
-                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                                <label class="form-label" for="bs-validation-addList-productImage">Upload Avatar</label>
                                 <div class="dropzone needsclick dropzone-multiple dropzone-add-list_product_image" th:data-product-id = "${products.id}">
                                     <div class="dz-message needsclick">
                                         Drop files here or click to upload
                                         <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
                                     </div>
                                     <div class="fallback">
-                                        <input class="form-control" id="bs-validation-list-productImage" name="file" type="file" multiple required/>
+                                        <input class="form-control" id="bs-validation-addList-productImage" name="file" type="file" multiple required/>
                                     </div>
                                 </div>
 
@@ -295,17 +298,19 @@
                             <h3 class="address-title">Edit List Images</h3>
                             <p class="address-subtitle">Edit new potential list Images</p>
                         </div>
+                        <div id="message-valid-editImage"></div>
                         <form id="editListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
                               th:action="@{/mike/api/product/product-image/edit/} + ${products.id}" method="put">
                             <div class="col-12 wrapper-dropzone-valid-custom">
-                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
-                                <div class="dropzone needsclick dropzone-multiple dropzone-edit-list_product_image" th:data-product-id = "${products.id}">
+                                <label class="form-label" for="bs-validation-editList-productImage">Upload Avatar</label>
+                                <div class="dropzone needsclick dropzone-multiple dropzone-edit-list_product_image"
+                                     th:data-product-id = "${products.id}" data-size-image = "">
                                     <div class="dz-message needsclick">
                                         Drop files here or click to upload
                                         <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
                                     </div>
                                     <div class="fallback">
-                                        <input class="form-control" id="bs-validation-list-productImage" name="file" type="file" multiple required/>
+                                        <input class="form-control" id="bs-validation-editList-productImage" name="file" type="file" multiple required/>
                                     </div>
                                 </div>
 
@@ -316,6 +321,418 @@
                             <div class="col-12 text-center">
                                 <button type="button" id="reset-edit-image" class="btn btn-label-secondary me-sm-3 me-1 mb-3">Reset Image</button>
                                 <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Edit </button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteListImages" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Delete Images</h3>
+                            <p class="address-subtitle">Delete Images</p>
+                        </div>
+                        <div id="message-valid-deleteImage"></div>
+                        <form id="deleteListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
+                              th:action="@{/mike/api/product/product-image/delete/} + ${products.id}" method="delete">
+                            <div class="col-12 wrapper-dropzone-valid-custom">
+                                <label class="form-label" for="bs-validation-deleteList-productImage">Delete Images</label>
+                                <div class="dropzone needsclick dropzone-multiple" id="dropzone-list-delete"
+                                     th:data-product-id = "${products.id}" data-size-image = "">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-deleteList-productImage" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload images.</div>
+                            </div>
+
+                            <div class="col-12 wrapper-dropzone-valid-custom d-none">
+                                <label class="form-label" for="bs-validation-deleteListTemp-productImage">Delete Images</label>
+                                <div class="dropzone needsclick dropzone-multiple" id="dropzone-list-delete-temp"
+                                     th:data-product-id = "${products.id}" data-size-image = "">
+                                    <div class="dz-message needsclick">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input class="form-control" id="bs-validation-deleteListTemp-productImage" name="file" type="file" multiple required/>
+                                    </div>
+                                </div>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please select a file to upload images.</div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="button" id="reset-delete-image" class="btn btn-label-secondary me-sm-3 me-1 mb-3">Reset Image</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Delete </button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addProductDetail" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Add Product Detail</h3>
+                            <p class="address-subtitle">Add new potential product detail</p>
+                        </div>
+                        <div id="message-add-valid-price"></div>
+                        <form id="addProductDetailForm" class="row g-3" novalidate
+                              th:action="@{/mike/api/product/product-detail/add}" method="put">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center" th:each="color : ${colors}" th:text="${color.name}"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td></td>
+                                            <td th:each="color : ${colors}" >
+                                                <div class="d-flex justify-content-center align-items-center wrapper-add-check-all">
+                                                    <div class="form-check form-check-warning mb-0">
+                                                        <input type="checkbox" class="form-check-input border-warning input-add-check-all" th:value="${color.id}">
+                                                    </div>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                                                                data-bs-auto-close="outside" aria-expanded="false" id="dropdownMenuAddClickableInside">
+                                                            <i class="bx bxs-edit text-warning"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuAddClickableInside">
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-add-iPrice_all_' + color.id}">Set all import Price
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <input type="number" class="form-control"
+                                                                               th:id="${'bs-validation-add-iPrice_all_' + color.id}"
+                                                                               placeholder="0.0" name="importPrice" min="0.0" step="0.1"
+                                                                               pattern="^\d+(\.\d+)?$" required>
+                                                                        <div class="valid-feedback"> Looks good! </div>
+                                                                        <div class="invalid-feedback"> Please enter a valid import price. </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                                                    th:id="${'btn_ofAdd_applyIPrice_all_' + color.id}">Apply
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-add-ePrice_all_' + color.id}">Set all export Price
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <input type="number" class="form-control"
+                                                                               th:id="${'bs-validation-add-ePrice_all_' + color.id}"
+                                                                               placeholder="0.0" name="exportPrice" min="0.0" step="0.1"
+                                                                               pattern="^\d+(\.\d+)?$" required />
+                                                                        <div class="valid-feedback"> Looks good! </div>
+                                                                        <div class="invalid-feedback"> Please enter a valid export price. </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                                                    th:id="${'btn_ofAdd_applyEPrice_all_' + color.id}">Apply
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr th:each="size : ${sizes}">
+                                            <td th:text="${size.name}"></td>
+                                            <td th:each="color : ${colors}" >
+                                                <div class="d-flex justify-content-center align-items-center wrapper-add-attribute">
+                                                    <div class="form-check form-check-success mb-0">
+                                                        <input type="checkbox"
+                                                            th:data-color-id="${color.id}" 
+                                                            th:class="(${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}) ? 'form-check-input' : 'form-check-input add-attribute-input'"
+                                                            th:value="${size.id + '-' + color.id}"
+                                                            th:checked="${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}"
+                                                            th:disabled="${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}">
+                                                    </div>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow icon-toggle" data-bs-toggle="dropdown">
+                                                            <i th:class="(${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}) ? 'bx bxs-edit text-success' : 'bx bxs-edit'"
+                                                            th:style="(${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}) ? 'opacity:0.5;' : ''">
+                                                            </i>
+                                                        </button>
+                                                        <div th:unless="${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}" 
+                                                            class="dropdown-menu">
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-add-iPrice_' + size.id + '-' + color.id}">Import Price
+                                                                </label>
+                                                                <input type="number" class="form-control" 
+                                                                    th:id="${'bs-validation-add-iPrice_' + size.id + '-' + color.id}"
+                                                                    placeholder="0.0" name="importPrice" min="0.0" step="0.1"
+                                                                    pattern="^\d+(\.\d+)?$" required>
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please enter a valid import price. </div>
+                                                            </div>
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-add-ePrice_' + size.id + '-' + color.id}">Export Price
+                                                                </label>
+                                                                <input type="number" class="form-control" 
+                                                                    th:id="${'bs-validation-add-ePrice_' + size.id + '-' + color.id}"
+                                                                    placeholder="0.0" name="exportPrice" min="0.0" step="0.1"
+                                                                    pattern="^\d+(\.\d+)?$" required />
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please enter a valid export price. </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Add </button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editProductDetail" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Edit Product Detail</h3>
+                            <p class="address-subtitle">You can only edit the product price.</p>
+                        </div>
+                        <div id="message-edit-valid-price"></div>
+                        <form id="editProductDetailForm" class="row g-3" novalidate
+                              th:action="@{/mike/api/product/product-detail/edit}" method="put">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center" th:each="color : ${setColors}" th:text="${color.name}"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td></td>
+                                            <td th:each="color : ${setColors}" >
+                                                <div class="d-flex justify-content-center align-items-center wrapper-edit-check-all">
+                                                    <!--<div class="form-check form-check-warning mb-0">
+                                                        <input type="checkbox" class="form-check-input border-warning input-edit-check-all" th:value="${color.id}">
+                                                    </div>-->
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                                                                data-bs-auto-close="outside" aria-expanded="false" id="dropdownMenuEditClickableInside">
+                                                            <i class="bx bxs-edit text-warning"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuEditClickableInside">
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label"
+                                                                    th:for="${'bs-validation-edit-iPrice_all_' + color.id}">Set all import Price
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <input type="number" class="form-control"
+                                                                               th:id="${'bs-validation-edit-iPrice_all_' + color.id}"
+                                                                               placeholder="0.0" name="importPrice" min="0.0" step="0.1"
+                                                                               pattern="^\d+(\.\d+)?$" required>
+                                                                        <div class="valid-feedback"> Looks good! </div>
+                                                                        <div class="invalid-feedback"> Please enter a valid import price. </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                                                    th:id="${'btn_ofEdit_applyIPrice_all_' + color.id}">Apply
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-edit-ePrice_all_' + color.id}">Set all export Price
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <input type="number" class="form-control"
+                                                                               th:id="${'bs-validation-edit-ePrice_all_' + color.id}"
+                                                                               placeholder="0.0" name="exportPrice" min="0.0" step="0.1"
+                                                                               pattern="^\d+(\.\d+)?$" required />
+                                                                        <div class="valid-feedback"> Looks good! </div>
+                                                                        <div class="invalid-feedback"> Please enter a valid export price. </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                                                                            <button type="button" class="btn btn-primary btn-sm"
+                                                                                    th:id="${'btn_ofEdit_applyEPrice_all_' + color.id}">Apply
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr th:each="size : ${setSizes}">
+                                            <td th:text="${size.name}"></td>
+                                            <td th:each="color : ${setColors}" >
+                                                <div class="d-flex justify-content-center align-items-center wrapper-edit-attribute"
+                                                    th:if="${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}">
+                                                    <div class="form-check form-check-success mb-0">
+                                                        <input type="checkbox"
+                                                            th:data-color-id="${color.id}" 
+                                                            class="form-check-input edit-attribute-input"
+                                                            th:value="${size.id + '-' + color.id}"
+                                                            checked disabled>
+                                                    </div>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow icon-toggle" data-bs-toggle="dropdown">
+                                                            <!--<i th:class="(${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}) ? 'bx bxs-edit text-success' : 'bx bxs-edit'">
+                                                            </i>-->
+                                                            <i th:each="iDetail : ${productDetails}" 
+                                                                th:if="${iDetail.color.id == color.id and iDetail.size.id == size.id}"
+                                                                th:class="${(iDetail.importPrice != null and iDetail.exportPrice != null) ? 'bx bxs-edit text-success' : 'bx bxs-edit text-danger' }">
+                                                            </i>
+                                                        </button>
+                                                        <div class="dropdown-menu"> 
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-edit-iPrice_' + size.id + '-' + color.id}">Import Price
+                                                                </label>
+                                                                <input type="number" class="form-control" 
+                                                                    th:id="${'bs-validation-edit-iPrice_' + size.id + '-' + color.id}"
+                                                                    placeholder="0.0" name="importPrice" min="0.0" step="0.1"
+                                                                    th:each="iDetail : ${productDetails}" 
+                                                                    th:if="${iDetail.color.id == color.id and iDetail.size.id == size.id}"
+                                                                    th:value="${iDetail.importPrice}"
+                                                                    pattern="^\d+(\.\d+)?$" required>
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please enter a valid import price. </div>
+                                                            </div>
+                                                            <div class="dropdown-item col-12">
+                                                                <label class="form-label" 
+                                                                    th:for="${'bs-validation-edit-ePrice_' + size.id + '-' + color.id}">Export Price
+                                                                </label>
+                                                                <input type="number" class="form-control" 
+                                                                    th:id="${'bs-validation-edit-ePrice_' + size.id + '-' + color.id}"
+                                                                    placeholder="0.0" name="exportPrice" min="0.0" step="0.1"
+                                                                    th:each="eDetail : ${productDetails}" 
+                                                                    th:if="${eDetail.color.id == color.id and eDetail.size.id == size.id}"
+                                                                    th:value="${eDetail.exportPrice}"
+                                                                    pattern="^\d+(\.\d+)?$" required />
+                                                                <div class="valid-feedback"> Looks good! </div>
+                                                                <div class="invalid-feedback"> Please enter a valid export price. </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Edit </button>
+                                <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
+                                        aria-label="Close"> Cancel </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteProductDetail" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="address-title">Delete Product Detail</h3>
+                            <p class="address-subtitle">You can only delete the product not invoice.</p>
+                        </div>
+                        <div id="message-delete-valid-price"></div>
+                        <form id="deleteProductDetailForm" class="row g-3" novalidate
+                              th:action="@{/mike/api/product/product-detail/delete}" method="delete">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-center" th:each="color : ${setColors}" th:text="${color.name}"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td></td>
+                                            <td th:each="color : ${setColors}" >
+                                                <div class="d-flex justify-content-center align-items-center wrapper-delete-check-all">
+                                                    <div class="form-check form-check-warning mb-0">
+                                                        <input type="checkbox" class="form-check-input border-warning input-delete-check-all" th:value="${color.id}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr th:each="size : ${setSizes}">
+                                        <td th:text="${size.name}"></td>
+                                        <td th:each="color : ${setColors}" >
+                                            <div class="d-flex justify-content-center align-items-center wrapper-delete-attribute"
+                                                 th:if="${#lists.contains(productDetails.![size.id + '-' + color.id], size.id + '-' + color.id)}">
+                                                <div class="form-check form-check-success mb-0">
+                                                    <input type="checkbox"
+                                                           th:data-color-id="${color.id}"
+                                                           class="form-check-input delete-attribute-input"
+                                                           th:value="${size.id + '-' + color.id}">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Delete </button>
                                 <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
                                         aria-label="Close"> Cancel </button>
                             </div>
@@ -338,241 +755,13 @@
     <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js}"></script>
     <script th:src="@{/admin/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js}"></script>
     <script th:src="@{/admin/assets/vendor/libs/dropzone/dropzone.js}"></script>
-    <!-- Page JS -->
-    <script th:src="@{/admin/assets/js/offcanvas-add-payment.js}"></script>
-    <script th:src="@{/admin/assets/js/offcanvas-send-invoice.js}"></script>
+    <script th:src="@{/admin/assets/vendor/libs/carousel-ui/owl.carousel.min.js}"></script>
 
+    <!-- Page JS -->
     <script th:src="@{/admin/assets/js/form-validation.js}"></script>
     <script th:src="@{/admin/assets/js/forms-file-upload.js}"></script>
     <script th:src="@{/admin/assets/js/forms-validation-file-upload-custom.js}"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
-        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
-        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.owl-carousel').owlCarousel({
-                loop: true,
-                margin: 0,
-                nav: false,
-                dots: true,
-                smartSpeed:450,
-                responsive: {
-                    0: {
-                        items: 1
-                    }
-                }
-            });
-            $('.owl-carousel').css('position', 'relative');
-            $('.owl-dots').css('position', 'absolute');
-            $('.owl-dots').css('bottom', '0px');
-            $('.owl-dots').css('left', '50%');
-            $('.owl-dots').css('transform', 'translate(-50%, -50%)');
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var myForm = document.getElementById('addListImagesForm');
-
-            myForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                var dropzoneElement = myForm.querySelector('.dropzone.dropzone-multiple.dropzone-add-list_product_image');
-                var files = dropzoneElement.dropzone.files;
-                console.log(files.length);
-                var productId = $(dropzoneElement).data('product-id');
-                console.log(productId);
-                if (files && files.length > 0 && myForm.checkValidity()) {
-                    var formData = new FormData();
-                    formData.append('productId', productId);
-
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-                        formData.append('listImages', file, file.name);
-                    }
-
-                    console.log(formData);
-                    var url = myForm.getAttribute('action');
-
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                          showModal("Edit success!", true);
-                        },
-                        error: function(xhr, status, error) {
-                          var errorMessage = "Edit error: " + error;
-                          showModal(errorMessage, false);
-                        }
-                      });
-                }
-            });
-
-            function showModal(message, isSuccess) {
-                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
-                var modalBody = $("<div class='modal-body'></div>").text(message);
-                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
-                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
-                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
-                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
-                var modal = $("<div class='modal fade'></div>").append(modalDialog);
-
-                closeButton.on("click", function() {
-                if(isSuccess){
-                    location.reload();
-                }
-                modal.modal("hide");
-                });
-
-                modal.on("hidden.bs.modal", function() {
-                if(isSuccess){
-                    location.reload();
-                }
-                modal.remove();
-                });
-
-                $("body").append(modal);
-                modal.modal("show");
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var myForm = document.getElementById('editListImagesForm');
-
-            myForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                var dropzoneElement = myForm.querySelector('.dropzone.dropzone-multiple.dropzone-edit-list_product_image');
-                var files = dropzoneElement.dropzone.files;
-                console.log(files.length);
-                if (files && files.length > 0 && myForm.checkValidity()) {
-                    var formData = new FormData();
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-                        if (file.status === 'success') {
-                            formData.append('listImages', file, file.name);
-                        }
-                    }
-                    var url = myForm.getAttribute('action');
-
-                    $.ajax({
-                        url: url,
-                        type: 'PUT',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                          showModal("Edit success!", true);
-                        },
-                        error: function(xhr, status, error) {
-                          var errorMessage = "Edit error: " + error;
-                          showModal(errorMessage, false);
-                        }
-                    });
-                }
-            });
-
-            function showModal(message, isSuccess) {
-                var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
-                var modalBody = $("<div class='modal-body'></div>").text(message);
-                var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
-                var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
-                var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
-                var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
-                var modal = $("<div class='modal fade'></div>").append(modalDialog);
-
-                closeButton.on("click", function() {
-                if(isSuccess){
-                    location.reload();
-                }
-                modal.modal("hide");
-                });
-
-                modal.on("hidden.bs.modal", function() {
-                if(isSuccess){
-                    location.reload();
-                }
-                modal.remove();
-                });
-
-                $("body").append(modal);
-                modal.modal("show");
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var dropzoneElement = $(".dropzone.dropzone-edit-list_product_image");
-            var dropzone = Dropzone.forElement(dropzoneElement[0]);
-            var productId = $(dropzoneElement).data('product-id');
-            var url = "/mike/api/product/product-single/" + productId;
-          
-            // Hàm để thêm file vào Dropzone từ một đường dẫn hình ảnh
-            function addFileToDropzone(fileName) {
-              var fileUrl = "/images/product/" + fileName;
-              fetch(fileUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                  // Tạo một đối tượng file mới với blob nhận được và đặt tên file
-                  var file = new File([blob], fileName, { type: blob.type });
-                  // Thêm file vào Dropzone
-                  dropzone.addFile(file);
-                })
-                .catch(error => {
-                  // Xử lý bất kỳ lỗi nào xảy ra trong quá trình fetch
-                  console.log('Error fetching file:', error);
-                });
-            }
-          
-            // Hàm để tải lại danh sách hình ảnh và cập nhật Dropzone
-            function reloadAndRefreshDropzone() {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                    console.log(response);
-                    var productImage = response.productImage;
-                    console.log(productImage);
-            
-                    // Xóa toàn bộ file hiện tại khỏi Dropzone
-                    dropzone.removeAllFiles();
-            
-                    // Thêm lại các file mới từ danh sách hình ảnh
-                    for (var i = 0; i < productImage.length; i++) {
-                        var fileName = productImage[i].urlImage;
-                        addFileToDropzone(fileName);
-                    }
-            
-                    // Cập nhật số lượng tối đa của file trong Dropzone
-                    dropzone.options.maxFiles = productImage.length;
-                    },
-                    error: function(xhr, status, error) {
-                    console.log(error);
-                    }
-                });
-            }
-          
-            // Gọi AJAX lần đầu để cập nhật Dropzone ban đầu
-            reloadAndRefreshDropzone();
-          
-            // Sự kiện click để tải lại danh sách hình ảnh và cập nhật Dropzone
-            $('#reset-edit-image').on('click', function(){
-              reloadAndRefreshDropzone();
-            });
-          });
-
-    </script>
+    <script th:src="@{/admin/assets/js/product/product-detail-handler.js}"></script>
 </th:block>
 </body>
 </html>

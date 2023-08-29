@@ -1,7 +1,6 @@
 package com.nth.mike.model.cart;
 
 import com.nth.mike.entity.*;
-import com.nth.mike.service.OrderDetailService;
 
 public class CartItemMapper {
     public static CartItem toCartItem(OrderDetail od) {
@@ -20,7 +19,6 @@ public class CartItemMapper {
         orderId.setProductId(pdi.getProductId());
         orderId.setSizeId(pdi.getSizeId());
         orderId.setColorId(pdi.getColorId());
-        orderId.setMaterialId(pdi.getMaterialId());
         return orderId;
     }
 }

@@ -1,13 +1,19 @@
 package com.nth.mike.controller.api.auth;
 
+import com.nth.mike.constant.StatusConstant;
 import com.nth.mike.entity.Account;
 import com.nth.mike.entity.AccountStatus;
 import com.nth.mike.entity.RoleName;
 import com.nth.mike.model.dto.user.UserDTO;
+import com.nth.mike.model.request.user.AddUserRequest;
+import com.nth.mike.model.request.user.ChangePassRequest;
+import com.nth.mike.model.response.shared.BasicResponse;
 import com.nth.mike.model.response.shared.TokenResponse;
 import com.nth.mike.service.SendMailService;
 import com.nth.mike.service.UserService;
 import com.nth.mike.utils.HandleUserUtils;
+import com.nth.mike.utils.PasswordEncoderUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/mike/api/user")
@@ -30,6 +38,9 @@ public class UserApiController {
     @Autowired
     private SendMailService sendMailService;
 
+    @Autowired
+    private PasswordEncoderUtils passwordEncoderUtils;
+
     @Value("${spring.createToken.resetCode.secret}")
     private String secretResetCode;
 
@@ -42,11 +53,11 @@ public class UserApiController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addUser(@RequestBody Map<String, String> request) {
-        String fullName = request.get("fullName");
-        String username = request.get("username");
-        String password = request.get("password");
-        String confirmPassword = request.get("confirm_password");
+    public ResponseEntity<?> addUser(@RequestBody @Valid AddUserRequest request) {
+        String fullName = request.getFullName();
+        String username = request.getUsername();
+        String password = request.getPassword();
+        String confirmPassword = request.getConfirmPassword();
 
         if (fullName.isBlank() || username.isBlank() || password.isBlank() || !password.equals(confirmPassword)
                 || !isStrongPassword(password)) {
@@ -184,6 +195,31 @@ public class UserApiController {
         userService.saveAccount(account);
 
         return ResponseEntity.ok("User verify successful");
+    }
+
+    @PostMapping("/change-pass")
+    public ResponseEntity<?> changePass(@RequestBody @Valid ChangePassRequest request) {
+        Account account = userService.findAccountByUserName(request.getUsername());
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new BasicResponse(StatusConstant.ERROR, "Password and confirm password do not matches"));
+        }
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BasicResponse(StatusConstant.ERROR, "Account not found"));
+        }
+        if (!passwordEncoderUtils.isOldPasswordValid(account.getPassword(), request.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new BasicResponse(StatusConstant.ERROR, "Password is incorrect"));
+        }
+        try {
+            userService.changePassword(request.getUsername(), request.getNewPassword());
+            return ResponseEntity.ok("User change successful");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BasicResponse(StatusConstant.ERROR, "Change password failed"));
+        }
     }
 
     private boolean isStrongPassword(String password) {

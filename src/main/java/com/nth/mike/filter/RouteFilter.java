@@ -46,34 +46,33 @@ public class RouteFilter extends OncePerRequestFilter {
         // }
 
         if (requestUri.startsWith("/mike/admin")) {
-            HttpSession session = request.getSession();
-            UserDTO user = (UserDTO) session.getAttribute("user");
-            if (user == null) {
-                response.sendRedirect("/mike/error/unauthorized");
-                return;
-            }
-            Account account = userService.findAccountByUserName(user.getUsername());
-            if (account == null) {
-                response.sendRedirect("/mike/error/unauthorized");
-                return;
-            }
-            UserDTO u = userService.findUserByAccount(account);
-            if (u != null) {
-                List<Role> roles = u.getRoles();
-                List<RoleName> roleNames = roles.stream()
-                        .filter(role -> !RoleName.ROLE_USER.equals(role.getName()))
-                        .map(Role::getName)
-                        .collect(Collectors.toList());
-                if (roleNames.isEmpty()) {
-                    response.sendRedirect("/mike/error/unauthorized");
-                    return;
-                }
-            } else {
-                response.sendRedirect("/mike/error/unauthorized");
-                return;
-            }
-        }
-        else if(requestUri.startsWith("/mike/user-profile")){
+            // HttpSession session = request.getSession();
+            // UserDTO user = (UserDTO) session.getAttribute("user");
+            // if (user == null) {
+            // response.sendRedirect("/mike/error/unauthorized");
+            // return;
+            // }
+            // Account account = userService.findAccountByUserName(user.getUsername());
+            // if (account == null) {
+            // response.sendRedirect("/mike/error/unauthorized");
+            // return;
+            // }
+            // UserDTO u = userService.findUserByAccount(account);
+            // if (u != null) {
+            // List<Role> roles = u.getRoles();
+            // List<RoleName> roleNames = roles.stream()
+            // .filter(role -> !RoleName.ROLE_USER.equals(role.getName()))
+            // .map(Role::getName)
+            // .collect(Collectors.toList());
+            // if (roleNames.isEmpty()) {
+            // response.sendRedirect("/mike/error/unauthorized");
+            // return;
+            // }
+            // } else {
+            // response.sendRedirect("/mike/error/unauthorized");
+            // return;
+            // }
+        } else if (requestUri.startsWith("/mike/user-profile")) {
             HttpSession session = request.getSession();
             UserDTO user = (UserDTO) session.getAttribute("user");
             if (user == null) {

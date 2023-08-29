@@ -2,10 +2,20 @@ package com.nth.mike.controller;
 
 import com.nth.mike.constant.EntityConstant;
 import com.nth.mike.entity.BestSellerStatus;
+import com.nth.mike.entity.Color;
 import com.nth.mike.entity.DiscountStatus;
 import com.nth.mike.entity.HotStatus;
+import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductStatus;
+import com.nth.mike.entity.Size;
 import com.nth.mike.service.*;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +42,6 @@ public class AdminController {
     private ColorService colorService;
     @Autowired
     private SizeService sizeService;
-    @Autowired
-    private MaterialService materialService;
     @Autowired
     private ProductImageService productImageService;
     @Autowired
@@ -84,6 +92,14 @@ public class AdminController {
         model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
         model.addAttribute(EntityConstant.PRODUCTIMAGES,
                 productImageService.findByProduct(productService.findById(id)));
+        model.addAttribute(EntityConstant.COLORS, colorService.findAll());
+        model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
+        model.addAttribute("setColors",
+                getColorListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
+        model.addAttribute("setSizes",
+                getSizeListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
+        System.out.println("Set Size: " +
+                getSizeListNotDuplicates(productDetailService.findByProduct(productService.findById(id))).toString());
         return "views/admin/product-detail";
     }
 
@@ -96,7 +112,6 @@ public class AdminController {
         model.addAttribute(EntityConstant.EMPLOYEES, employeeService.findAll());
         model.addAttribute(EntityConstant.COLORS, colorService.findAll());
         model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
-        model.addAttribute(EntityConstant.MATERIALS, materialService.findAll());
         return "views/admin/invoicePurchase-add";
     }
 
@@ -109,7 +124,6 @@ public class AdminController {
         model.addAttribute(EntityConstant.EMPLOYEES, employeeService.findAll());
         model.addAttribute(EntityConstant.COLORS, colorService.findAll());
         model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
-        model.addAttribute(EntityConstant.MATERIALS, materialService.findAll());
         model.addAttribute(EntityConstant.PURCHASES, purchaseService.findById(Long.parseLong(purchaseId)));
         model.addAttribute(EntityConstant.PURCHASEDETAILS,
                 purchaseDetailService.findByPurchase(purchaseService.findById(Long.parseLong(purchaseId))));
@@ -125,5 +139,29 @@ public class AdminController {
     public String getTest(Model model) {
         model.addAttribute(EntityConstant.PRODUCTS, productService.findAll());
         return "views/admin/test";
+    }
+
+    private List<Color> getColorListNotDuplicates(List<ProductDetail> productDetails) {
+        Set<Color> colorList = new HashSet<>();
+        for (ProductDetail productDetail : productDetails) {
+            colorList.add(productDetail.getColor());
+        }
+
+        List<Color> sortedColors = colorList.stream()
+                .sorted(Comparator.comparingLong(c -> c.getId()))
+                .toList();
+
+        return sortedColors;
+    }
+
+    private List<Size> getSizeListNotDuplicates(List<ProductDetail> productDetails) {
+        Set<Size> sizeList = new HashSet<>();
+        for (ProductDetail productDetail : productDetails) {
+            sizeList.add(productDetail.getSize());
+        }
+        List<Size> sortedSizes = sizeList.stream()
+                .sorted(Comparator.comparingLong(c -> c.getId()))
+                .toList();
+        return sortedSizes;
     }
 }

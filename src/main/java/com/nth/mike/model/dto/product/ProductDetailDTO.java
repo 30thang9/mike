@@ -10,14 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDetailDTO {
     private Color color;
-
     private Size size;
-
-    private Material material;
-
     private Double importPrice;
-
     private Double exportPrice;
-
     private Integer quantity;
 }

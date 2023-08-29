@@ -32,7 +32,15 @@ function initializeDropzoneMulti(dropzoneClass, previewTemplate) {
       previewTemplate: previewTemplate,
       parallelUploads: 1,
       maxFilesize: 5,
-      addRemoveLinks: true
+      addRemoveLinks: true,
+      init: function () {
+        this.on("addedfile", function (file) {
+//          if (this.files.length > this.options.maxFiles) {
+//            var removedFile = this.files.pop();
+//            this.removeFile(removedFile);
+//          }
+        });
+      }
     });
   });
 }

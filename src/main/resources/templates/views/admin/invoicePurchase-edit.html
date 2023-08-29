@@ -301,7 +301,7 @@
                                                                 <select class="form-select item-details mb-2 select2 form-select-lg pd-product select-product"
                                                                         data-allow-clear="true" required
                                                                         name="product"
-                                                                        th:data-purchase-detail ="${purchaseDetail.id.productId + '-' + purchaseDetail.id.colorId + '-' + purchaseDetail.id.sizeId + '-' + purchaseDetail.id.materialId + '-' + purchaseDetail.quantity + '-' + purchaseDetail.paymentPrice}">
+                                                                        th:data-purchase-detail ="${purchaseDetail.id.productId + '-' + purchaseDetail.id.colorId + '-' + purchaseDetail.id.sizeId + '-' + purchaseDetail.quantity + '-' + purchaseDetail.paymentPrice}">
                                                                     <option value="">Select value</option>
                                                                     <option th:each="item : ${products}" th:value="${item.id}"
                                                                             th:text="${item.name}" th:selected="${purchaseDetail.productDetail.product.id == item.id}">
@@ -366,8 +366,8 @@
                             <div class="col-lg-3 col-12 invoice-actions">
                                 <div class="card mb-4">
                                     <div class="card-body">
-                                        <button type="button" class="btn btn-label-primary d-grid w-100 mb-3" data-bs-toggle="modal" data-bs-target="#addNewProduct">Add new
-                                            product</button>
+                                        <a th:href="@{/mike/admin/product/add}"
+                                           class="btn btn-label-primary d-grid w-100 mb-3">Add new product</a>
                                         <a th:href="@{/mike/admin/product/color/add}"
                                            class="btn btn-label-primary d-grid w-100 mb-3">Add new color</a>
                                         <a th:href="@{/mike/admin/product/size/add}"
@@ -441,85 +441,6 @@
         </div>
         <!--/ Add New Supplier Modal -->
 
-        <!-- Add New Product Modal -->
-        <div class="modal fade" id="addNewProduct" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
-                <div class="modal-content p-3 p-md-5">
-                    <div class="modal-body">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="text-center mb-4">
-                            <h3 class="address-title">Add New Product</h3>
-                            <p class="address-subtitle">Add new potential Product</p>
-                        </div>
-                        <form id="addNewProductForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
-                              th:action="@{/mike/api/product/add}" th:object="${product}" method="post">
-
-                            <div class="col-12">
-                                <label class="form-label" for="bs-validation-name">Name</label>
-                                <input type="text" class="form-control" id="bs-validation-name"
-                                       placeholder="John Doe" name="name" required />
-                                <div class="valid-feedback"> Looks good! </div>
-                                <div class="invalid-feedback"> Please enter your name. </div>
-                            </div>
-
-                            <div class="col-12 wrapper-select-valid-custom">
-                                <label for="bs-validation-ocate" class="form-label">Object Category</label>
-                                <select id="bs-validation-ocate" class="select2 form-select form-select-lg"
-                                        data-allow-clear="true" name="objectCategory" required>
-                                    <option value="">Select value</option>
-                                    <option th:each="item : ${objectCates}" th:value="${item.id}" th:text="${item.name}"></option>
-                                </select>
-                                <div class="valid-feedback"> Looks good! </div>
-                                <div class="invalid-feedback"> Please select your object category</div>
-                            </div>
-
-                            <div class="col-12 wrapper-select-valid-custom">
-                                <label for="bs-validation-pcate" class="form-label">Product Category</label>
-                                <select id="bs-validation-pcate" class="select2 form-select form-select-lg"
-                                        data-allow-clear="true" name="productCategory" required>
-                                    <option value="">Select value</option>
-                                    <option th:each="item : ${productCates}" th:value="${item.id}" th:text="${item.name}"></option>
-                                </select>
-                                <div class="valid-feedback"> Looks good! </div>
-                                <div class="invalid-feedback"> Please select your product category</div>
-                            </div>
-
-                            <div class="col-12">
-                                <label class="form-label" for="bs-validation-descriptions">Descriptions</label>
-                                <textarea class="form-control" id="bs-validation-descriptions" rows="3"
-                                          name="descriptions" required></textarea>
-                                <div class="valid-feedback"> Looks good! </div>
-                                <div class="invalid-feedback"> Please enter your descriptions. </div>
-                            </div>
-
-                            <div class="col-12 wrapper-dropzone-valid-custom">
-                                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
-                                <div class="dropzone needsclick dropzone-single">
-                                    <div class="dz-message needsclick">
-                                        Drop files here or click to upload
-                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
-                                    </div>
-                                    <div class="fallback">
-                                        <input class="form-control" id="bs-validation-urlAvatar" name="file" type="file" multiple required/>
-                                    </div>
-                                </div>
-
-                                <div class="valid-feedback">Looks good!</div>
-                                <div class="invalid-feedback">Please select a file to upload avatar.</div>
-                            </div>
-
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
-                                        aria-label="Close">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ Add New Product Modal -->
-
     </div>
     <!-- / Content -->
 </th:block>
@@ -582,7 +503,6 @@
                 var products = $('.pd-product', this).filter(':visible');
                 var sizes = $('.pd-size', this).filter(':visible');
                 var colors = $('.pd-color', this).filter(':visible');
-                var materials = $('.pd-material', this).filter(':visible');
                 var quantities = $('.pd-quantity', this).filter(':visible');
                 var paymentPrices = $('.pd-paymentPrice', this).filter(':visible');
 
@@ -593,13 +513,11 @@
                     var productName = $(products[i]).find('option:selected').text();
                     var sizeName = $(sizes[i]).find('option:selected').text();
                     var colorName = $(colors[i]).find('option:selected').text();
-                    var materialName = $(materials[i]).find('option:selected').text();
 
                     var combinationList = $("<ul class='list-group'></ul>");
                     combinationList.append("<li class='list-group-item'>Product: " + productName + "</li>");
                     combinationList.append("<li class='list-group-item'>Size: " + sizeName + "</li>");
                     combinationList.append("<li class='list-group-item'>Color: " + colorName + "</li>");
-                    combinationList.append("<li class='list-group-item'>Material: " + materialName + "</li>");
 
                     var combinationMessage = "Duplicate combination found: ";
                     combinationMessage += combinationList.prop('outerHTML');
@@ -628,11 +546,10 @@
                     var product = $(products[i]).val();
                     var size = $(sizes[i]).val();
                     var color = $(colors[i]).val();
-                    var material = $(materials[i]).val();
                     var quantity = $(quantities[i]).val();
                     var paymentPrice = $(paymentPrices[i]).val();
 
-                    if (!product || !size || !color || !material || !quantity || !paymentPrice) {
+                    if (!product || !size || !color || !quantity || !paymentPrice) {
                         var errorMessage = "Please enter or select all fields in invoice purchase details";
                         showModal(errorMessage, false);
                         return;
@@ -642,7 +559,6 @@
                         productId: product,
                         sizeId: size,
                         colorId: color,
-                        materialId: material,
                         quantity: quantity,
                         paymentPrice: paymentPrice
                     };
@@ -782,25 +698,6 @@
                                     <div class="valid-feedback"> Looks good! </div>
                                     <div class="invalid-feedback"> Please select your color</div>
                                 </div>
-                                <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-material">
-                                    <p class="mb-2 mt-2 ">Material</p>
-                                    <select class="form-select item-details mb-2 select2 select-material form-select-lg pd-material"
-                                            data-allow-clear="true"
-                                            name="material" required>
-                                        <option value="">Select value</option>
-                                        ${productDetail.map((detail, index) => {
-                                            if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
-                                              unique.add(detail.material.name); // Add the size to the Set
-                                              return `
-                                                <option value="${detail.material.id}">${detail.material.name}</option>
-                                              `;
-                                            }
-                                            return ''; // Return an empty string for duplicate sizes
-                                        }).join('')}
-                                    </select>
-                                    <div class="valid-feedback"> Looks good! </div>
-                                    <div class="invalid-feedback"> Please select your material</div>
-                                </div>
                                 <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-quantity">
                                     <p class="mb-2 mt-2 ">Quantity</p>
                                     <input type="number" class="form-control pd-quantity"
@@ -830,7 +727,6 @@
                             // Append the newly created element to the appropriate wrapper
                             wrapperItem.find('.wrapper-size').remove();
                             wrapperItem.find('.wrapper-color').remove();
-                            wrapperItem.find('.wrapper-material').remove();
                             wrapperItem.find('.wrapper-quantity').remove();
                             wrapperItem.find('.wrapper-price').remove();
                             wrapperItem.find('.wrapper-discount').remove();
@@ -843,10 +739,6 @@
                                 placeholder: "Select value",
                                 allowClear: true
                             });
-                            wrapperItem.find('.select2.select-material').select2({
-                                placeholder: "Select value",
-                                allowClear: true
-                            });
                         },
                         error: function(xhr, status, error) {
                             console.log(error);
@@ -856,7 +748,6 @@
                     var wrapperItem = $(this).closest('.wrapper-item');
                     wrapperItem.find('.wrapper-size').remove();
                     wrapperItem.find('.wrapper-color').remove();
-                    wrapperItem.find('.wrapper-material').remove();
                     wrapperItem.find('.wrapper-quantity').remove();
                     wrapperItem.find('.wrapper-price').remove();
                     wrapperItem.find('.wrapper-discount').remove();
@@ -873,18 +764,17 @@
             $product.each(function() {
                 var purchaseDetailData = $(this).data('purchase-detail');
                 var purchaseDetailDataSplit = purchaseDetailData.replace(" ","").split('-');
-                if(purchaseDetailDataSplit.length == 6){
+                if(purchaseDetailDataSplit.length === 5){
                     var productId = purchaseDetailDataSplit[0];
                     var colorId = purchaseDetailDataSplit[1];
                     var sizeId = purchaseDetailDataSplit[2];
-                    var materialId = purchaseDetailDataSplit[3];
-                    var quantity = purchaseDetailDataSplit[4];
-                    var price = purchaseDetailDataSplit[5];
+                    var quantity = purchaseDetailDataSplit[3];
+                    var price = purchaseDetailDataSplit[4];
                     var wrapperItem = $(this).closest('.wrapper-item');
-                    callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem);
+                    callPurchaseDetail(productId, colorId, sizeId, quantity, price, wrapperItem);
                 }
             });
-            function callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem) {
+            function callPurchaseDetail(productId, colorId, sizeId, quantity, price, wrapperItem) {
                 var url = "/mike/api/product/product-single/" + productId;
                 $.ajax({
                     url: url,
@@ -932,25 +822,6 @@
                                 <div class="valid-feedback"> Looks good! </div>
                                 <div class="invalid-feedback"> Please select your color</div>
                             </div>
-                            <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-select-valid-custom wrapper-material">
-                                <p class="mb-2 mt-2 ">Material</p>
-                                <select class="form-select item-details mb-2 select2 select-material form-select-lg pd-material"
-                                        data-allow-clear="true"
-                                        name="material" required>
-                                    <option value="">Select value</option>
-                                    ${productDetail.map((detail, index) => {
-                                        if (!unique.has(detail.material.name)) { // Check if the size is not already in the Set
-                                          unique.add(detail.material.name); // Add the size to the Set
-                                          return `
-                                            <option ${detail.material.id == materialId ? 'selected' :''} value="${detail.material.id}">${detail.material.name}</option>
-                                          `;
-                                        }
-                                        return ''; // Return an empty string for duplicate sizes
-                                    }).join('')}
-                                </select>
-                                <div class="valid-feedback"> Looks good! </div>
-                                <div class="invalid-feedback"> Please select your material</div>
-                            </div>
                             <div class="col-md-6 col-12 mb-md-0 mb-3 ps-md-0 mb-2 wrapper-quantity">
                                 <p class="mb-2 mt-2 ">Quantity</p>
                                 <input type="number" class="form-control pd-quantity"
@@ -980,7 +851,6 @@
                         // Append the newly created element to the appropriate wrapper
                         wrapperItem.find('.wrapper-size').remove();
                         wrapperItem.find('.wrapper-color').remove();
-                        wrapperItem.find('.wrapper-material').remove();
                         wrapperItem.find('.wrapper-quantity').remove();
                         wrapperItem.find('.wrapper-price').remove();
                         wrapperItem.find('.wrapper-discount').remove();
@@ -990,10 +860,6 @@
                             allowClear: true
                         });
                         wrapperItem.find('.select2.select-color').select2({
-                            placeholder: "Select value",
-                            allowClear: true
-                        });
-                        wrapperItem.find('.select2.select-material').select2({
                             placeholder: "Select value",
                             allowClear: true
                         });
@@ -1012,18 +878,15 @@
                     }
                     var purchaseDetailData = $(this).data('purchase-detail');
                     var purchaseDetailDataSplit = purchaseDetailData.replace(" ","").split('-');
-                    if(purchaseDetailDataSplit.length == 6){
+                    if(purchaseDetailDataSplit.length === 5){
                         var productId = purchaseDetailDataSplit[0];
                         var colorId = purchaseDetailDataSplit[1];
                         var sizeId = purchaseDetailDataSplit[2];
-                        var materialId = purchaseDetailDataSplit[3];
-                        var quantity = purchaseDetailDataSplit[4];
-                        var price = purchaseDetailDataSplit[5];
+                        var quantity = purchaseDetailDataSplit[3];
+                        var price = purchaseDetailDataSplit[4];
                         var wrapperItem = $(this).closest('.wrapper-item');
-                        callPurchaseDetail(productId, colorId, sizeId, materialId, quantity, price, wrapperItem);
+                        callPurchaseDetail(productId, colorId, sizeId, quantity, price, wrapperItem);
                     }
-                    console.log(purchaseDetailData);
-                    console.log("1");
                 });
             });
         });

@@ -8,7 +8,6 @@ public class ProductDetailMapper {
         ProductDetailDTO pdd = new ProductDetailDTO();
         pdd.setColor(pd.getColor());
         pdd.setSize(pd.getSize());
-        pdd.setMaterial(pd.getMaterial());
         pdd.setImportPrice(pd.getImportPrice());
         pdd.setExportPrice(pd.getExportPrice());
         pdd.setQuantity(pd.getQuantity());

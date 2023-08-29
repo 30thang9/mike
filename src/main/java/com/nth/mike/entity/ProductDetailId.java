@@ -20,8 +20,5 @@ public class ProductDetailId implements Serializable {
     private Long colorId;
     @Column(name = "sizeId")
     private Long sizeId;
-    @Column(name = "materialId")
-    private Long materialId;
 
 }
-

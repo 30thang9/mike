@@ -1,10 +1,8 @@
 package com.nth.mike.model.cart;
 
-import com.nth.mike.entity.OrderDetail;
-import com.nth.mike.entity.Product;
 import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductDetailId;
-import com.nth.mike.service.*;
+import com.nth.mike.model.mapper.product.ProductDetailMapper;
 
 public class ItemMapper {
     public static Item toItem(ProductDetail pd) {
@@ -19,18 +17,18 @@ public class ItemMapper {
         item.setBestSellerStatus(pd.getProduct().getBestSellerStatus());
         item.setDiscountStatus(pd.getProduct().getDiscountStatus());
         item.setDiscountPercent(pd.getProduct().getDiscountPercent());
-        item.setImportPrice(pd.getImportPrice());
-        item.setExportPrice(pd.getExportPrice());
-        item.setQuantity(pd.getQuantity());
+        // item.setImportPrice(pd.getImportPrice());
+        // item.setExportPrice(pd.getExportPrice());
+        // item.setQuantity(pd.getQuantity());
+        item.setItemDetail(ProductDetailMapper.toProductDetailDTO(pd));
         return item;
     }
 
-    public static ProductDetailId toProductDetailId(Item item){
+    public static ProductDetailId toProductDetailId(Item item) {
         ProductDetailId productDetailId = new ProductDetailId();
         productDetailId.setProductId(item.getId().getProductId());
         productDetailId.setColorId(item.getId().getColorId());
         productDetailId.setSizeId(item.getId().getSizeId());
-        productDetailId.setMaterialId(item.getId().getMaterialId());
         return productDetailId;
     }
 }

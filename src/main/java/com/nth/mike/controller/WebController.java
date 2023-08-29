@@ -29,8 +29,6 @@ public class WebController {
     ColorService colorService;
     @Autowired
     SizeService sizeService;
-    @Autowired
-    MaterialService materialService;
 
     @GetMapping({ "", "/home" })
     public String home() {
@@ -44,7 +42,6 @@ public class WebController {
         model.addAttribute(EntityConstant.EMPLOYEES, employeeService.findAll());
         model.addAttribute(EntityConstant.COLORS, colorService.findAll());
         model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
-        model.addAttribute(EntityConstant.MATERIALS, materialService.findAll());
         return "views/web/shop";
     }
 

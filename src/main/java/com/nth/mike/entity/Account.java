@@ -29,6 +29,7 @@ public class Account {
     @Column(name = "accountStatus", nullable = false, columnDefinition = "ENUM('PENDING', 'ACTIVE', 'INACTIVE', 'LOCKED') DEFAULT 'PENDING'")
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus = AccountStatus.PENDING;
+
     @Column(name = "fullName", columnDefinition = "NVARCHAR(255) NULL")
     private String fullName;
 

@@ -103,6 +103,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public Account findAccountById(Long id) {
+        return accountRepo.findById(id).orElse(null);
+    }
+
+    @Override
     public List<Account> findAllAccounts() {
         return accountRepo.findAll();
     }

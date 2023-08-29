@@ -1,24 +1,23 @@
-package com.nth.mike.entity;
+package com.nth.mike.entity.other;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 
 @Entity
-@Table(name = "materials")
+@Table(name = "district")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Material {
+public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private Long id;
-
-    @Column(name="name",nullable = false)
+    @Column(name = "name")
     private String name;
-
-    // Getters and setters
+    @ManyToOne
+    @JoinColumn(name = "cityId", referencedColumnName = "id")
+    private City city;
 }

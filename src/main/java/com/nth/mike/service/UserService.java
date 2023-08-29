@@ -10,7 +10,6 @@ import com.nth.mike.model.other.AuthenProvider;
 import java.util.List;
 
 public interface UserService {
-    // Account saveAccount(Account account);
     Account saveAccount(Account account);
 
     Account saveAccountHashPass(Account account);
@@ -22,6 +21,8 @@ public interface UserService {
     AccountRole addRoleToUser(String username, String roleName);
 
     Account findAccountByUserName(String username);
+
+    Account findAccountById(Long id);
 
     List<Account> findAllAccounts();
 

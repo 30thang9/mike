@@ -95,7 +95,6 @@ public class ProductServiceImpl implements ProductService {
             for (Product p : productList) {
                 List<ProductDetail> productDetailList = productDetailRepo.findByProduct(p);
                 List<ProductImage> productImageList = productImageRepo.findByProduct(p);
-                System.out.println(productImageList.toString());
                 list.add(ProductFullDetailMapper.toProductFullDetailDTO(p, productDetailList, productImageList));
             }
             pfd.setListProduct(list);
