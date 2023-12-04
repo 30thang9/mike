@@ -23,8 +23,8 @@ public class Product {
     @Column(name = "descriptions", columnDefinition = "TEXT")
     private String descriptions;
 
-    @Column(name = "urlAvatar", nullable = false)
-    private String urlAvatar;
+    @Column(name = "avatar", nullable = false)
+    private String avatar;
 
     @ManyToOne
     @JoinColumn(name = "oCateId", referencedColumnName = "id")
@@ -35,8 +35,8 @@ public class Product {
     private ProductCategory productCategory;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "productStatus", nullable = false, columnDefinition = "ENUM('COMING_SOON', 'AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED', 'HIDDEN') DEFAULT 'AVAILABLE'")
-    private ProductStatus productStatus = ProductStatus.AVAILABLE;
+    @Column(name = "productStatus", nullable = false, columnDefinition = "ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+    private ProductStatus productStatus = ProductStatus.ACTIVE;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "hotStatus", nullable = false, columnDefinition = "ENUM('ACTIVE', 'INACTIVE') DEFAULT 'INACTIVE'")
@@ -46,12 +46,8 @@ public class Product {
     @Column(name = "bestSellerStatus", nullable = false, columnDefinition = "ENUM('ACTIVE', 'INACTIVE') DEFAULT 'INACTIVE'")
     private BestSellerStatus bestSellerStatus = BestSellerStatus.INACTIVE;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "discountStatus", nullable = false, columnDefinition = "ENUM('ACTIVE', 'INACTIVE') DEFAULT 'INACTIVE'")
-    private DiscountStatus discountStatus = DiscountStatus.INACTIVE;
+    @ManyToOne
+    @JoinColumn(name = "sizeImageId", referencedColumnName = "id")
+    private SizeImage sizeImage;
 
-    @Column(name = "discountPercent", nullable = false, columnDefinition = "double default 0.0")
-    private Double discountPercent = 0.0;
-
-    // constructors, getters and setters
 }

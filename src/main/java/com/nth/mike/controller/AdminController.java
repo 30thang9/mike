@@ -1,13 +1,11 @@
 package com.nth.mike.controller;
 
 import com.nth.mike.constant.EntityConstant;
-import com.nth.mike.entity.BestSellerStatus;
-import com.nth.mike.entity.Color;
-import com.nth.mike.entity.DiscountStatus;
-import com.nth.mike.entity.HotStatus;
-import com.nth.mike.entity.ProductDetail;
-import com.nth.mike.entity.ProductStatus;
-import com.nth.mike.entity.Size;
+import com.nth.mike.entity.*;
+import com.nth.mike.model.dto.product.ProductDetailDTO;
+import com.nth.mike.model.dto.product.ProductDetailListSizeDTO;
+import com.nth.mike.model.dto.product.ProductFullDetailDTO;
+import com.nth.mike.model.mapper.product.ProductDetailListSizeMapper;
 import com.nth.mike.service.*;
 
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,9 +34,9 @@ public class AdminController {
     @Autowired
     private ObjectCategoryService ocs;
     @Autowired
-    private SupplierService supplierService;
+    private SizeImageService sizeImageService;
     @Autowired
-    private EmployeeService employeeService;
+    private UserService userService;
     @Autowired
     private ColorService colorService;
     @Autowired
@@ -61,9 +60,13 @@ public class AdminController {
 
     @GetMapping({ "/product/add" })
     public String getProductAdd(Model model) {
-        model.addAttribute(EntityConstant.PRODUCTS, productService.findAll());
+        // model.addAttribute(EntityConstant.PRODUCTS, productService.findAll());
         model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
         model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
+        model.addAttribute(EntityConstant.SIZEIMAGES, sizeImageService.findAll());
+        model.addAttribute(EntityConstant.COLORS, colorService.findAll());
+        model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
+        model.addAttribute(EntityConstant.PRODUCTDETAILSTATUS, ProductDetailStatus.values());
         model.addAttribute(EntityConstant.PRODUCTSTATUS, ProductStatus.values());
         model.addAttribute(EntityConstant.DISCOUNTSTATUS, DiscountStatus.values());
         model.addAttribute(EntityConstant.BESTSELLERSTATUS, BestSellerStatus.values());
@@ -73,43 +76,81 @@ public class AdminController {
 
     @GetMapping({ "/product/edit/{id}" })
     public String getProductEdit(@PathVariable Long id, Model model) {
-        model.addAttribute(EntityConstant.PRODUCTS, productService.findById(id));
+        ProductFullDetailDTO productFullDetailDTO = productService
+                .findProductFullDetailByProduct(productService.findById(id));
+        model.addAttribute(EntityConstant.PRODUCTS, productFullDetailDTO.getProduct());
         model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
         model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
+        model.addAttribute(EntityConstant.SIZEIMAGES, sizeImageService.findAll());
+        model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
+        model.addAttribute(EntityConstant.PRODUCTDETAILSTATUS, ProductDetailStatus.values());
         model.addAttribute(EntityConstant.PRODUCTSTATUS, ProductStatus.values());
         model.addAttribute(EntityConstant.DISCOUNTSTATUS, DiscountStatus.values());
         model.addAttribute(EntityConstant.BESTSELLERSTATUS, BestSellerStatus.values());
         model.addAttribute(EntityConstant.HOTSTATUS, HotStatus.values());
+
+        List<Color> colors = colorService.findAll();
+        List<Color> colors2 = new ArrayList<>();
+        Set<Color> uniqueColors = new HashSet<>();
+        List<ProductDetailDTO> uniqueProductDetails = new ArrayList<>();
+
+        for (ProductDetailDTO productDetailDTO : productFullDetailDTO.getProductDetail()) {
+            if (!uniqueColors.contains(productDetailDTO.getColor())) {
+                uniqueColors.add(productDetailDTO.getColor());
+                uniqueProductDetails.add(productDetailDTO);
+            }
+        }
+
+        List<ProductDetailListSizeDTO> productDetails = new ArrayList<>();
+
+        for (ProductDetailDTO productDetailDTO : uniqueProductDetails) {
+            List<ProductDetailDTO> productDetailDTOs = productFullDetailDTO.getProductDetail()
+                    .stream()
+                    .filter(dto -> dto.getColor().equals(productDetailDTO.getColor()))
+                    .collect(Collectors.toList());
+
+            productDetails
+                    .add(ProductDetailListSizeMapper.toProductDetailListSizeDTOFromProductDetailDTO(productDetailDTOs));
+        }
+
+        for (Color c : colors) {
+            if (!uniqueColors.contains(c)) {
+                colors2.add(c);
+            }
+        }
+
+        model.addAttribute(EntityConstant.COLORS, colors2);
+
+        model.addAttribute(EntityConstant.PRODUCTDETAILS, productDetails);
+
         return "views/admin/product-edit";
     }
 
-    @GetMapping({ "/product/detail/{id}" })
-    public String getProductDetail(@PathVariable Long id, Model model) {
-        model.addAttribute(EntityConstant.PRODUCTS, productService.findById(id));
-        model.addAttribute(EntityConstant.PRODUCTDETAILS,
-                productDetailService.findByProduct(productService.findById(id)));
-        model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
-        model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
-        model.addAttribute(EntityConstant.PRODUCTIMAGES,
-                productImageService.findByProduct(productService.findById(id)));
-        model.addAttribute(EntityConstant.COLORS, colorService.findAll());
-        model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
-        model.addAttribute("setColors",
-                getColorListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
-        model.addAttribute("setSizes",
-                getSizeListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
-        System.out.println("Set Size: " +
-                getSizeListNotDuplicates(productDetailService.findByProduct(productService.findById(id))).toString());
-        return "views/admin/product-detail";
-    }
+    // @GetMapping({ "/product/detail/{id}" })
+    // public String getProductDetail(@PathVariable Long id, Model model) {
+    // model.addAttribute(EntityConstant.PRODUCTS, productService.findById(id));
+    // model.addAttribute(EntityConstant.PRODUCTDETAILS,
+    // productDetailService.findByProduct(productService.findById(id)));
+    // model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
+    // model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
+    // model.addAttribute(EntityConstant.COLORS, colorService.findAll());
+    // model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
+    // model.addAttribute("setColors",
+    // getColorListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
+    // model.addAttribute("setSizes",
+    // getSizeListNotDuplicates(productDetailService.findByProduct(productService.findById(id))));
+    // return "views/admin/product-detail";
+    // }
 
     @GetMapping({ "/invoice-purchase/add" })
     public String getInvoicePurchaseAdd(Model model) {
         model.addAttribute(EntityConstant.PRODUCTS, productService.findAll());
         model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
         model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
-        model.addAttribute(EntityConstant.SUPPLIERS, supplierService.findAll());
-        model.addAttribute(EntityConstant.EMPLOYEES, employeeService.findAll());
+        model.addAttribute(EntityConstant.SUPPLIERS,
+                userService.findAccountByRole(userService.findRoleByName(RoleName.ROLE_USER)));
+        model.addAttribute(EntityConstant.EMPLOYEES,
+                userService.findAccountByRole(userService.findRoleByName(RoleName.ROLE_ADMIN_INVENTORY)));
         model.addAttribute(EntityConstant.COLORS, colorService.findAll());
         model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
         return "views/admin/invoicePurchase-add";
@@ -120,8 +161,10 @@ public class AdminController {
         model.addAttribute(EntityConstant.PRODUCTS, productService.findAll());
         model.addAttribute(EntityConstant.PRODUCTCATES, pcs.findAll());
         model.addAttribute(EntityConstant.OBJECTCATES, ocs.findAll());
-        model.addAttribute(EntityConstant.SUPPLIERS, supplierService.findAll());
-        model.addAttribute(EntityConstant.EMPLOYEES, employeeService.findAll());
+        model.addAttribute(EntityConstant.SUPPLIERS,
+                userService.findAccountByRole(userService.findRoleByName(RoleName.ROLE_USER)));
+        model.addAttribute(EntityConstant.EMPLOYEES,
+                userService.findAccountByRole(userService.findRoleByName(RoleName.ROLE_ADMIN_INVENTORY)));
         model.addAttribute(EntityConstant.COLORS, colorService.findAll());
         model.addAttribute(EntityConstant.SIZES, sizeService.findAll());
         model.addAttribute(EntityConstant.PURCHASES, purchaseService.findById(Long.parseLong(purchaseId)));

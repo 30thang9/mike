@@ -1,69 +1,53 @@
-function validateSelect(selectInput, selectSelect2, statusIsInvalidFeedback, statusIsValidFeedback) {
-  var selectValue = selectInput.val();
-  var isInvalid = selectValue === "";
+function handleValidateSelect2(input) {
+    const spanSibling = input.siblings('span.select2.select2-container');
+    const parent = input.closest('div');
+    const validFeedback = parent.siblings('.valid-feedback');
+    const invalidFeedback = parent.siblings('.invalid-feedback');
+    const spanSelectionType = spanSibling.find('.selection').eq(0).find('.select2-selection').eq(0);
+    let isValid = false;
 
-  statusIsInvalidFeedback.toggleClass('d-block', isInvalid);
-  statusIsValidFeedback.toggleClass('d-block', !isInvalid);
-  selectSelect2.toggleClass('is-invalid', isInvalid);
-  selectSelect2.toggleClass('is-valid', !isInvalid);
+    if (spanSelectionType.hasClass('select2-selection--multiple')) {
+        isValid = spanSelectionType.find('.select2-selection__choice').length > 0;
+    } else if (spanSelectionType.hasClass('select2-selection--single')) {
+        isValid = input.val();
+    }
+    if(!input.hasClass('prevent-validate')){
+        if (!isValid) {
+            spanSibling.addClass('is-invalid');
+            spanSibling.removeClass('is-valid');
+            invalidFeedback.addClass('d-block');
+            validFeedback.removeClass('d-block');
+        } else {
+            spanSibling.addClass('is-valid');
+            spanSibling.removeClass('is-invalid');
+            validFeedback.addClass('d-block');
+            invalidFeedback.removeClass('d-block');
+        }
+    }
 }
 
 function attachSelectEvents(selectInput) {
   var form = selectInput.closest('form');
-  var wrapper = selectInput.closest('.wrapper-select-valid-custom');
-  var selectSelect2 = wrapper.find('.select2');
-  var statusIsInvalidFeedback = wrapper.find('.invalid-feedback');
-  var statusIsValidFeedback = wrapper.find('.valid-feedback');
   var formSubmitted = false;
 
   selectInput.change(function() {
     if (formSubmitted) {
-      validateSelect(selectInput, selectSelect2, statusIsInvalidFeedback, statusIsValidFeedback);
+      handleValidateSelect2(selectInput);
     }
   });
 
   form.submit(function(event) {
-    validateSelect(selectInput, selectSelect2, statusIsInvalidFeedback, statusIsValidFeedback);
-    formSubmitted = true; // Set the flag to true
+    handleValidateSelect2(selectInput);
+    formSubmitted = true;
     if (!form[0].checkValidity()) {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault();
     }
   });
 }
 
 
 $(document).ready(function() {
-  $('select').each(function() {
+  $('select.select2').each(function() {
     attachSelectEvents($(this));
   });
 });
-//
-//$(document).on('DOMNodeInserted', function() {
-//  var isSubmitted = false;
-//  $('.repeater-wrapper').find('.select2').each(function() {
-//    var $element = $(this);
-//    if ($element.hasClass('is-valid') || $element.hasClass('is-invalid')) {
-//      isSubmitted = true;
-//      return false; // Exit the loop
-//    }
-//  });
-//
-//  if (isSubmitted) {
-//    $('.repeater-wrapper').find('.select2').filter("select").each(function() {
-//      var $element = $(this);
-//      var select2 = $element.closest('.wrapper-select-valid-custom').find('.select2');
-//      var statusIsInvalidFeedback = $element.closest('.wrapper-select-valid-custom').find('.invalid-feedback');
-//      var statusIsValidFeedback = $element.closest('.wrapper-select-valid-custom').find('.valid-feedback');
-//      var isInvalid = $element.val() === "";
-//      select2.toggleClass('is-invalid', isInvalid);
-//      select2.toggleClass('is-valid', !isInvalid);
-//      statusIsInvalidFeedback.toggleClass('d-block', isInvalid);
-//      statusIsValidFeedback.toggleClass('d-block', !isInvalid);
-//    });
-//  }
-//
-//  $('select').each(function() {
-//    attachSelectEvents($(this));
-//  });
-//});
-

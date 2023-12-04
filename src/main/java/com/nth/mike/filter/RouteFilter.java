@@ -67,6 +67,7 @@ public class RouteFilter extends OncePerRequestFilter {
             // if (roleNames.isEmpty()) {
             // response.sendRedirect("/mike/error/unauthorized");
             // return;
+            //
             // }
             // } else {
             // response.sendRedirect("/mike/error/unauthorized");

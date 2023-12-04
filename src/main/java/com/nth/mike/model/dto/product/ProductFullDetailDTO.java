@@ -16,7 +16,8 @@ import java.util.List;
 public class ProductFullDetailDTO {
     private Product product;
     private List<ProductDetailDTO> productDetail;
-    private List<String> productImage;
+    private Double avgRating;
+    private Long countEvaluation;
     private Double minPrice;
     private Double maxPrice;
 }

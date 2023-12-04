@@ -2,6 +2,7 @@ package com.nth.mike.model.mapper.product;
 
 import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductDetailId;
+import com.nth.mike.model.request.product.ProductDetailAddRequest;
 import com.nth.mike.model.request.product.ProductDetailRequest;
 import com.nth.mike.service.ColorService;
 import com.nth.mike.service.ProductService;
@@ -9,7 +10,7 @@ import com.nth.mike.service.SizeService;
 
 public class ProductDetailRequestMapper {
     public static ProductDetail toProductDetail(ProductDetailRequest pdr, ProductService ps, ColorService cs,
-            SizeService ss) {
+                                                SizeService ss) {
         ProductDetail pd = new ProductDetail();
         ProductDetailId id = toProductDetailId(pdr);
         pd.setId(id);
@@ -18,6 +19,8 @@ public class ProductDetailRequestMapper {
         pd.setSize(ss.findById(id.getSizeId()));
         pd.setImportPrice(pdr.getImportPrice());
         pd.setExportPrice(pdr.getExportPrice());
+        pd.setDiscountPercent(pdr.getDiscountPercent());
+        pd.setProductDetailStatus(pdr.getProductDetailStatus());
         return pd;
     }
 

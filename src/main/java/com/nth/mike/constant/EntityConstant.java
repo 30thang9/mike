@@ -20,4 +20,7 @@ public class EntityConstant {
     public static final String DISTRICTS = "districts";
     public static final String WARDS = "wards";
     public static final String SHIPPINGADDRESS = "shippingAddress";
+    public static final String DELIVERY = "deliveries";
+    public static final String SIZEIMAGES = "sizeImages";
+    public static final String PRODUCTDETAILSTATUS = "productDetailStatus";
 }

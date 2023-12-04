@@ -8,7 +8,7 @@ public class CartItemMapper {
         Item item = ItemMapper.toItem(pd);
         CartItem ci = new CartItem();
         ci.setItem(item);
-        ci.setPrice(od.getOrderPrice());
+        ci.setPrice(od.getPaymentPrice());
         ci.setQuantity(od.getQuantity());
         return ci;
     }
@@ -20,5 +20,16 @@ public class CartItemMapper {
         orderId.setSizeId(pdi.getSizeId());
         orderId.setColorId(pdi.getColorId());
         return orderId;
+    }
+
+    public static OrderDetail toOrderDetail(Order order,CartItem cartItem,ProductDetail pd) {
+        OrderDetail orderDetail = new OrderDetail();
+        OrderDetailId id = toOrderDetailId(order, cartItem.getItem().getId());
+        orderDetail.setId(id);
+        orderDetail.setOrder(order);
+        orderDetail.setProductDetail(pd);
+        orderDetail.setQuantity(cartItem.getQuantity());
+        orderDetail.setPaymentPrice(cartItem.getPrice());
+        return orderDetail;
     }
 }

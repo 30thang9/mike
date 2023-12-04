@@ -1,6 +1,11 @@
 package com.nth.mike.entity;
 
 public enum OrderStatus {
-    PURCHASED,
-    NOT_PURCHASED
+    ORDER,
+    HANDLE_PAYMENT,
+    PENDING,
+    UNPAID,
+    PREPAY,
+    PAID,
+    CANCELLED
 }

@@ -2,6 +2,7 @@ package com.nth.mike.service;
 
 import com.nth.mike.entity.Color;
 import com.nth.mike.entity.Product;
+import com.nth.mike.entity.ProductDetail;
 import com.nth.mike.entity.ProductStatus;
 import com.nth.mike.model.dto.product.ProductFilterDTO;
 import com.nth.mike.model.dto.product.ProductFullDetailDTO;
@@ -29,9 +30,11 @@ public interface ProductService {
 
     ProductFilterDTO findBySearch(ProductSearchRequest filter);
 
-    List<ProductFullDetailDTO> findAllProductFullDetail();
-
+    // List<ProductFullDetailDTO> findAllProductFullDetail();
+    //
     ProductFullDetailDTO findProductFullDetailByProduct(Product product);
 
     ProductFullDetailDTO findProductFullDetailByProductColor(Product product, Color color);
+
+    ProductFullDetailDTO findProductFullDetailByProductDetail(ProductDetail productDetail);
 }

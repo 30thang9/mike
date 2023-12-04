@@ -56,13 +56,13 @@ $(function () {
             {
                 targets: 2,
                 render: function (a, e, t, s) {
-                    return t.supplier.name;
+                    return t.supplier.fullName;
                 }
             },
             {
                 targets: 3,
                 render: function (a, e, t, s) {
-                    return t.employee.name;
+                    return t.employee.fullName;
                 }
             },
             {
@@ -329,7 +329,7 @@ $(function () {
                     });
                 var unique = new Set();
                 e.data().unique().sort().each(function (a, e) {
-                    var name = a.name;
+                    var name = a.fullName;
                     if (!unique.has(name)) {
                         unique.add(name);
                         t.append('<option value="' + name + '" class="text-capitalize">' + name + '</option>');
@@ -345,7 +345,7 @@ $(function () {
                     });
                 var unique = new Set();
                 e.data().unique().sort().each(function (a, e) {
-                    var name = a.name;
+                    var name = a.fullName;
                     if (!unique.has(name)) {
                         unique.add(name);
                         t.append('<option value="' + name + '" class="text-capitalize">' + name + '</option>');

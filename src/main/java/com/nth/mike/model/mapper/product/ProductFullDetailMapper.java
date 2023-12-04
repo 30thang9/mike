@@ -15,7 +15,6 @@ public class ProductFullDetailMapper {
                 ProductFullDetailDTO pfdd = new ProductFullDetailDTO();
                 pfdd.setProduct(product);
 
-                // Sử dụng Comparator để tìm giá trị tối thiểu và tối đa của exportPrice
                 Double minPrice = productDetail.stream()
                                 .map(ProductDetail::getExportPrice)
                                 .min(Comparator.comparingDouble(Double::doubleValue))
@@ -37,12 +36,10 @@ public class ProductFullDetailMapper {
                 return pfdd;
         }
 
-        public static ProductFullDetailDTO toProductFullDetailDTO(Product product, List<ProductDetail> productDetail,
-                        List<ProductImage> productImage) {
-                ProductFullDetailDTO pfdd = new ProductFullDetailDTO();
+        public static ProductFullDetailDTO toProductFullDetailDTO(Product product, List<ProductDetail> productDetail,Double avgRating,Long countEvaluation) {
+                 ProductFullDetailDTO pfdd = new ProductFullDetailDTO();
                 pfdd.setProduct(product);
 
-                // Sử dụng Comparator để tìm giá trị tối thiểu và tối đa của exportPrice
                 Double minPrice = productDetail.stream()
                                 .map(ProductDetail::getExportPrice)
                                 .min(Comparator.comparingDouble(Double::doubleValue))
@@ -57,18 +54,12 @@ public class ProductFullDetailMapper {
                                 .map(ProductDetailMapper::toProductDetailDTO)
                                 .collect(Collectors.toList());
 
-                // List<ProductImageDTO> listImage = productImage.stream()
-                // .map(ProductImageMapper::toProductImageDTO)
-                // .collect(Collectors.toList());
-
-                List<String> listImage = productImage.stream()
-                                .map(ProductImage::getUrlImage).collect(Collectors.toList());
-
                 pfdd.setMinPrice(minPrice);
                 pfdd.setMaxPrice(maxPrice);
                 pfdd.setProductDetail(list);
-                pfdd.setProductImage(listImage);
-
+                pfdd.setAvgRating(avgRating);
+                pfdd.setCountEvaluation(countEvaluation);
+                
                 return pfdd;
         }
 

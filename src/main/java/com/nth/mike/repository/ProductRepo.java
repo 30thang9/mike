@@ -16,10 +16,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.productCategory = :productCategory")
     List<Product> findProductByProductCategory(ProductCategory productCategory);
 
-    @Query("SELECT p FROM Product p WHERE p.productStatus != :status")
+    @Query("SELECT p FROM Product p WHERE p.productStatus = :status")
     List<Product> findByProductStatus(ProductStatus status);
-
-    @Query("SELECT p FROM Product p WHERE p.id = :id AND p.productStatus != 'HIDDEN'")
-    Product findByIdVisibleProduct(Long id);
-
 }

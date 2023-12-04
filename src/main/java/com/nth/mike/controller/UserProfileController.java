@@ -1,10 +1,13 @@
 package com.nth.mike.controller;
 
 import com.nth.mike.constant.EntityConstant;
+import com.nth.mike.model.dto.user.UserDTO;
 import com.nth.mike.service.AreaAddressService;
-import com.nth.mike.service.SaleDetailService;
-import com.nth.mike.service.SaleService;
+import com.nth.mike.service.OrderService;
 import com.nth.mike.service.ShippingAddressService;
+import com.nth.mike.service.UserService;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mike/user-profile")
 public class UserProfileController {
     @Autowired
-    private SaleService saleService;
-    @Autowired
-    private SaleDetailService saleDetailService;
+    private OrderService orderService;
     @Autowired
     private AreaAddressService areaAddressService;
+    @Autowired
+    private ShippingAddressService shippingAddressService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/profile")
     public String profile() {
@@ -35,12 +40,16 @@ public class UserProfileController {
 
     @GetMapping("/order-detail/{id}")
     public String profile(@PathVariable String id, Model model) {
-
         return "views/web/profile/order-detail";
     }
 
     @GetMapping("/address")
-    public String address(Model model) {
+    public String address(HttpSession session, Model model) {
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("shippingAddress",
+                    shippingAddressService.findByAccount(userService.findAccountByUserName(user.getUsername())));
+        }
         model.addAttribute(EntityConstant.CITY, areaAddressService.findAllCity());
         return "views/web/profile/address";
     }

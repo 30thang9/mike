@@ -16373,7 +16373,11 @@ fieldset:disabled .btn {
 }
 
 .detail-carousel .ribbon+.ribbon+.ribbon {
-  top: 145px;
+  top: 140px;
+}
+
+.detail-carousel .ribbon+.ribbon+.ribbon+.ribbon {
+  top: 200px;
 }
 
 .detail-option-heading {
@@ -16978,7 +16982,11 @@ a.accordion-link:focus {
 }
 
 .quickview .ribbon+.ribbon+.ribbon {
-  top: 145px;
+  top: 130px;
+}
+
+.quickview .ribbon+.ribbon+.ribbon+.ribbon {
+  top: 180px;
 }
 
 /* Quickview Modal Media Query -------------------------- */

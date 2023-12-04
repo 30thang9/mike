@@ -64,8 +64,8 @@
 
   <ul class="menu-inner py-1">
     <!-- Dashboards -->
-    <li class="menu-item active open">
-      <a th:href="@{/mike/admin/home}" class="menu-link">
+    <li class="menu-item">
+      <a th:href="@{/mike/admin/home}" class="menu-link" data-route="home">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Dashboards">Dashboards</div>
       </a>
@@ -76,7 +76,7 @@
       <span class="menu-header-text">Apps &amp; Pages</span>
     </li>
     <li class="menu-item">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
+      <a href="javascript:void(0);" class="menu-link menu-toggle" data-route="product">
         <i class="menu-icon tf-icons bx bxl-product-hunt"></i>
         <div data-i18n="Product">Products</div>
       </a>
@@ -84,12 +84,12 @@
       <ul class="menu-sub">
 
         <li class="menu-item">
-          <a th:href="@{/mike/admin/product/list}" class="menu-link">
+          <a th:href="@{/mike/admin/product/list}" class="menu-link" data-route="list">
             <div data-i18n="List">List</div>
           </a>
         </li>
         <li class="menu-item">
-          <a th:href="@{/mike/admin/product/add}" class="menu-link">
+          <a th:href="@{/mike/admin/product/add}" class="menu-link" data-route="add">
             <div data-i18n="Add">Add</div>
           </a>
         </li>

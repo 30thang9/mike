@@ -19,22 +19,17 @@ public class Purchase {
 
     @ManyToOne
     @JoinColumn(name = "supplierId", referencedColumnName = "id")
-    private Supplier supplier;
-
+    private Account supplier;
     @ManyToOne
     @JoinColumn(name = "employeeId", referencedColumnName = "id")
-    private Employee employee;
-
+    private Account employee;
     @Column(name = "paymentMethod", nullable = false, columnDefinition = "ENUM('CASH', 'CREDIT_CARD', 'PAYPAL', 'OTHER')")
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
-
     @Column(name = "purchaseDate")
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
-
     @Column(name = "totalAmount")
     private Double totalAmount;
 
-    // Constructors, Getters, and Setters
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductPagingDTO {
     private List<Product> listProduct;
-    private Integer pageCount;
-    private Integer pageNumber;
+    private Integer totalPage;
+    private Integer currentPage;
+    private Integer totalProduct;
 }

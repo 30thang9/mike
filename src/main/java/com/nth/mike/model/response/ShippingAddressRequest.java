@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,11 +19,11 @@ public class ShippingAddressRequest {
     @NotNull
     private String email;
     @NotNull
-    private Long cityId;
+    private String city;
     @NotNull
-    private Long districtId;
+    private String district;
     @NotNull
-    private Long wardId;
+    private String ward;
     @NotNull
     private String street;
     @NotNull

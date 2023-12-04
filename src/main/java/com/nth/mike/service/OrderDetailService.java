@@ -7,14 +7,11 @@ import com.nth.mike.entity.OrderDetailId;
 import java.util.List;
 
 public interface OrderDetailService {
-
-    List<OrderDetail> findAll();
-
     List<OrderDetail> findByOrder(Order order);
-
-    OrderDetail findById(OrderDetailId id);
 
     OrderDetail save(OrderDetail orderDetail);
 
-    OrderDetailId deleteById(OrderDetailId id);
+    OrderDetail findById(OrderDetailId orderDetailId);
+
+    OrderDetailId deleteById(OrderDetailId orderDetailId);
 }

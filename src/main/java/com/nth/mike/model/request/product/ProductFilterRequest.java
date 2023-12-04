@@ -23,7 +23,7 @@ public class ProductFilterRequest {
     private Pagination pagination;
 
     public ProductFilterRequest() {
-        this.sort = new SortProduct(); // Đặt giá trị mặc định cho sort
+        this.sort = new SortProduct();
         this.pagination = new Pagination();
     }
 }

@@ -49,7 +49,7 @@ public class UserApiController {
 
     @GetMapping("/list")
     public ResponseEntity<List<UserDTO>> getUser() {
-        return ResponseEntity.ok(userService.findAllUsers());
+        return ResponseEntity.ok(userService.findAllUser());
     }
 
     @PostMapping("/add")
@@ -70,7 +70,7 @@ public class UserApiController {
             account.setUsername(username);
             account.setPassword(password);
             userService.saveAccountHashPass(account);
-            userService.addRoleToUser(account.getUsername(), RoleName.ROLE_USER.name());
+            userService.addRoleToUser(account.getUsername(), RoleName.ROLE_USER);
 
             String resetCode;
             do {

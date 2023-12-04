@@ -15,10 +15,13 @@ import java.io.Serializable;
 public class OrderDetailId implements Serializable {
     @Column(name = "orderId")
     private Long orderId;
+
     @Column(name = "productId")
     private Long productId;
+
     @Column(name = "colorId")
     private Long colorId;
+
     @Column(name = "sizeId")
     private Long sizeId;
 }

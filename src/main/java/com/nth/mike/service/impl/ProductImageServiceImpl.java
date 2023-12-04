@@ -2,6 +2,7 @@ package com.nth.mike.service.impl;
 
 import java.util.List;
 
+import com.nth.mike.entity.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,10 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Autowired
     private ProductImageRepo productImageRepo;
 
-    @Override
-    public List<ProductImage> findByProduct(Product product) {
-        return productImageRepo.findByProduct(product);
-    }
+//    @Override
+//    public List<ProductImage> findByProductDetail(ProductDetail productDetail) {
+//        return productImageRepo.findByProductDetail(productDetail);
+//    }
 
     @Override
     public ProductImage save(ProductImage productImage) {
@@ -26,13 +27,18 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public String deleteById(String id) {
+    public Long deleteById(Long id) {
         try {
             productImageRepo.deleteById(id);
             return id;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void saveAll(Iterable<ProductImage> productImages) {
+        productImageRepo.saveAll(productImages);
     }
 
 }

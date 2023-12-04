@@ -13,11 +13,8 @@ import java.util.List;
 
 @Component
 public class PurchaseSaveMapper {
-
     @Autowired
-    private SupplierService supplierService;
-    @Autowired
-    private EmployeeService employeeService;
+    private UserService userService;
     @Autowired
     private ProductDetailService productDetailService;
     @Autowired
@@ -30,8 +27,8 @@ public class PurchaseSaveMapper {
     public Purchase toPurchase(PurchaseSaveRequest psr) {
         try {
             Purchase purchase = new Purchase();
-            purchase.setSupplier(supplierService.findById(psr.getPurchase().getSupplierId()));
-            purchase.setEmployee(employeeService.findById(psr.getPurchase().getEmployeeId()));
+            purchase.setSupplier(userService.findAccountById(psr.getPurchase().getSupplierId()));
+            purchase.setEmployee(userService.findAccountById(psr.getPurchase().getEmployeeId()));
             purchase.setPaymentMethod(psr.getPurchase().getPaymentMethod());
             purchase.setPurchaseDate(psr.getPurchase().getPurchaseDate());
             purchase.setTotalAmount(psr.getPurchase().getTotalPrice());

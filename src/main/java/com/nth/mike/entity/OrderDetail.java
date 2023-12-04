@@ -28,8 +28,9 @@ public class OrderDetail {
 
     @Column(name = "quantity")
     private Integer quantity;
-    @Column(name = "orderPrice")
-    private Double orderPrice;
 
-    // Getters and setters
+    @Column(name = "paymentPrice")
+    private Double paymentPrice;
+
+    // Constructors, Getters, and Setters
 }

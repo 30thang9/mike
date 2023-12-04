@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
     @Autowired
-    ProductDetailRepo pdr;
+    private ProductDetailRepo pdr;
 
     @Override
     public List<ProductDetail> findAll() {
@@ -40,6 +40,11 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void saveAll(List<ProductDetail> productDetailsSave) {
+        pdr.saveAll(productDetailsSave);
     }
 
     @Override

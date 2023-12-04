@@ -9,17 +9,12 @@ public class ItemMapper {
         Item item = new Item();
         item.setId(pd.getId());
         item.setName(pd.getProduct().getName());
-        item.setUrlAvatar(pd.getProduct().getUrlAvatar());
+        item.setAvatar(pd.getProduct().getAvatar());
         item.setObjectCategory(pd.getProduct().getObjectCategory());
         item.setProductCategory(pd.getProduct().getProductCategory());
         item.setProductStatus(pd.getProduct().getProductStatus());
         item.setHotStatus(pd.getProduct().getHotStatus());
         item.setBestSellerStatus(pd.getProduct().getBestSellerStatus());
-        item.setDiscountStatus(pd.getProduct().getDiscountStatus());
-        item.setDiscountPercent(pd.getProduct().getDiscountPercent());
-        // item.setImportPrice(pd.getImportPrice());
-        // item.setExportPrice(pd.getExportPrice());
-        // item.setQuantity(pd.getQuantity());
         item.setItemDetail(ProductDetailMapper.toProductDetailDTO(pd));
         return item;
     }

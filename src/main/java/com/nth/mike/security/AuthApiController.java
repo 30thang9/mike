@@ -24,7 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,17 +80,20 @@ public class AuthApiController {
             HttpSession session = request.getSession();
             session.setAttribute("user", userDTO);
             Account account = userService.findAccountByUserName(userDTO.getUsername());
-            Order order = orderService.findByAccount(account);
-            List<OrderDetail> orderDetails = orderDetailService.findByOrder(order);
-            CartOrder cart = new CartOrder();
-            List<CartItem> cartItems = new ArrayList<>();
-            if (!orderDetails.isEmpty()) {
-                for (OrderDetail od : orderDetails) {
-                    cartItems.add(CartItemMapper.toCartItem(od));
+            Order order = orderService.findByCustomer(account);
+            if (order != null) {
+                List<OrderDetail> orderDetails = orderDetailService.findByOrder(order);
+                CartOrder cart = new CartOrder();
+                List<CartItem> cartItems = new ArrayList<>();
+                if (!orderDetails.isEmpty()) {
+                    for (OrderDetail od : orderDetails) {
+                        cartItems.add(CartItemMapper.toCartItem(od));
+                    }
                 }
+                cart.setId(order.getId());
+                cart.setCart(cartItems);
+                session.setAttribute("cart", cart);
             }
-            cart.setCart(cartItems);
-            session.setAttribute("cart", cart);
             return ResponseEntity.ok(new UserTokenResponse(userDTO, accessToken, refreshToken));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

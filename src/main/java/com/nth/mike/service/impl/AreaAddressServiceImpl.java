@@ -45,12 +45,22 @@ public class AreaAddressServiceImpl implements AreaAddressService {
     }
 
     @Override
+    public List<District> findAllDistrict() {
+        return districtRepo.findAll();
+    }
+
+    @Override
     public List<District> findDistrictByCity(City city) {
         return districtRepo.findByCity(city);
     }
     @Override
     public District findDistrictById(Long id) {
         return districtRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Ward> findAllWard() {
+        return wardRepo.findAll();
     }
 
     @Override

@@ -8,6 +8,7 @@
     <!-- Link CSS ở đây -->
     <th:block layout:fragment="css_head">
         <title> User Address | Mike </title>
+        <link rel="stylesheet" th:href="@{/web/assets/vendor/sweetalert2/sweetalert2.css}" />
     </th:block>
 </head>
 <body>
@@ -38,42 +39,31 @@
                                 <h6 class="text-uppercase mb-0">Shipping address </h6>
                             </div>
                             <div class="block-body">
-
-                            </div>
-                            <!-- /Shipping Address-->
-                        </div>
-                        <div class="mb-4 text-center">
-                            <div class="row text-start mb-3 px-1" id="wrapper-shipping-address" th:data-username="${session.user.username}">
-                                <div class="col-12 col-md-6 p-2" data-id="1">
-                                    <div class="border border-secondary rounded p-2 cursor-pointer">
-                                        <a href="javascript:void(0);" class="text-decoration-none text-dark">
-                                            <h5>Nguyễn Hướng <span class="fw-normal"> | 0123456789</span></h5>
-                                            <span>huongtn@gmail.com</span>
-                                            <br>
-                                            <span class="mt-2">Đồng Du, Bình Lục, Hà Nam</span>
-                                            <br>
-                                            <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
-                                        </a>
+                                <div class="mb-4 text-center">
+                                    <div class="row text-start mb-3 px-1" id="wrapper-shipping-address" th:data-username="${session.user.username}">
+                                        <div class="col-12 col-md-6 p-2" data-id="1"
+                                            th:each="sa : ${shippingAddress}">
+                                            <div class="border border-secondary rounded p-2 cursor-pointer">
+                                                <a href="javascript:void(0);" class="text-decoration-none text-dark d-flex flex-column">
+                                                    <h5 th:text="${sa.fullName}">
+                                                        <span class="fw-normal"
+                                                            th:text="${' | ' + sa.phoneNumber}">
+                                                        </span>
+                                                    </h5>
+                                                    <span th:text="${sa.phoneNumber}"></span>
+                                                    <span class="mt-2"
+                                                        th:text="${sa.street + ' | ' + sa.ward + ' | ' + sa.district + ' | ' + sa.c + ' | ' + sa.city}"></span>
+                                                    <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6 p-2" data-id="1">
-                                    <div class="border border-secondary rounded p-2 cursor-pointer">
-                                        <a href="javascript:void(0);" class="text-decoration-none text-dark">
-                                            <h5>Nguyễn Hướng <span class="fw-normal"> | 0123456789</span></h5>
-                                            <span>huongtn@gmail.com</span>
-                                            <br>
-                                            <span class="mt-2">Đồng Du, Bình Lục, Hà Nam</span>
-                                            <br>
-                                            <span class="mt-2 btn btn-outline-dark btn-sm opacity-75">Default</span>
-                                        </a>
-                                    </div>
+                                    <button type="button" class="btn btn-outline-dark"
+                                            data-bs-toggle="modal" data-bs-target="#addShippingAddress">
+                                        <i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add New Address
+                                    </button>
                                 </div>
                             </div>
-                            <button class="btn btn-outline-dark" type="submit"><i class="far fa-save me-2"></i>Save changes</button>
-                            <button type="button" class="btn btn-outline-dark"
-                                    data-bs-toggle="modal" data-bs-target="#addShippingAddress">
-                                <i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add New Address
-                            </button>
                         </div>
                     </form>
                 </div>
@@ -138,7 +128,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="fullName_shipping">Full Name</label>
-                                        <input class="form-control" type="text" name="fullName_shipping" placeholder="John" id="fullname_shipping">
+                                        <input class="form-control" type="text" name="fullName_shipping" placeholder="John" id="fullName_shipping">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="email_shipping">Email Number</label>
@@ -146,7 +136,7 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="phoneNumber_shipping">Phone Number</label>
-                                        <input class="form-control" type="text" name="phoneNumber_shipping" placeholder="Phone Number" id="phonenumber_shipping">
+                                        <input class="form-control" type="text" name="phoneNumber_shipping" placeholder="Phone Number" id="phoneNumber_shipping">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="city_shipping">City</label>
@@ -158,13 +148,13 @@
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="district_shipping">District</label>
                                         <select class="form-control" name="district_shipping" id="district_shipping">
-                                            <option value="">Please choose city</option>
+                                            <option value="">Choose district</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label class="form-label" for="ward_shipping">Ward</label>
                                         <select class="form-control" name="ward_shipping" id="ward_shipping">
-                                            <option value="">Please choose city & district</option>
+                                            <option value="">Choose ward</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
@@ -193,7 +183,7 @@
 
 
 <th:block layout:fragment="js_foot">
-
+    <script th:src="@{/web/assets/vendor/sweetalert2/sweetalert2.js}"></script>
     <script>
         $(document).ready(function() {
             var $citySelect = $('#city_shipping');
@@ -295,19 +285,43 @@
                 var fullNameVal = $(this).find('#fullName_shipping').val();
                 var phoneNumberVal = $(this).find('#phoneNumber_shipping').val();
                 var emailVal = $(this).find('#email_shipping').val();
-                var cityVal = $(this).find('#city_shipping').val();
-                var districtVal = $(this).find('#district_shipping').val();
-                var wardVal = $(this).find('#ward_shipping').val();
+                var cityVal = $(this).find('#city_shipping').text();
+                var districtVal = $(this).find('#district_shipping').text();
+                var wardVal = $(this).find('#ward_shipping').text();
                 var streetVal = $(this).find('#street_shipping').val();
-                var isDefault = $(this).find('#isDefault_shipping');
-
+                var isDefault = $(this).find('#isDefault_shipping').prop('checked');
+                var username = $('#usernameSub').text();
                 var $messageDiv = $(this).find('#message-errorAdd-shippingAddress');
 
-                if(fullNameVal && phoneNumberVal && emailVal && cityVal && districtVal && wardVal && streetVal){
-                    var url = "/mike/api/user-profile/shipping-address/add";
-                }else{
+                if(!username || !fullNameVal || !phoneNumberVal || !emailVal || 
+                    !cityVal || !districtVal || !wardVal || !streetVal){
                     var message = "You have not entered all the information";
                     showMessage($messageDiv,message);
+                }else{
+                    var url = "/mike/api/user/shipping-address/add";
+                    var formData = {
+                        username: username,
+                        fullName: fullNameVal,
+                        phoneNumber: phoneNumberVal,
+                        email: emailVal,
+                        city: cityVal,
+                        district: districtVal,
+                        ward: wardVal,
+                        street: streetVal,
+                        addressDefault:isDefault
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: "application/json",
+                        data:JSON.stringify(formData),
+                        success: function(data){
+                            showAlert("Add address is successfully!",true);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            showAlert("Add address is falsed!",false);
+                        }
+                    });
                 }
             });
 
@@ -317,6 +331,24 @@
                     <div class="alert alert-danger" role="alert">${message}</div>
                 `);
                 $msgWrapper.append(content);
+            }
+
+            function showAlert(message, isSuccess) {
+                Swal.fire({
+                    title: message,
+                    icon: isSuccess ? 'success' : 'error',
+                    timer: 1200,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    customClass: {
+                        timerProgressBar: isSuccess ? 'bg-success' : 'bg-danger'
+                    },
+                    willClose: () => {
+                        if (isSuccess) {
+                            location.reload();
+                        }
+                    }
+                });
             }
         });
     </script>

@@ -5,18 +5,18 @@ import java.util.List;
 
 import com.nth.mike.entity.ProductDetailId;
 
+import com.nth.mike.entity.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class CartOrder {
+    private Long id;
     private List<CartItem> cart;
-
     public CartOrder() {
         this.cart = new ArrayList<CartItem>();
     }
-
     public CartItem getCartItemById(ProductDetailId id) {
         for (CartItem cartItem : cart) {
             if (cartItem.getItem().getId().equals(id)) {
@@ -25,7 +25,6 @@ public class CartOrder {
         }
         return null;
     }
-
     public Integer getQuantityById(ProductDetailId id) {
         CartItem cartItem = getCartItemById(id);
         if (cartItem == null) {
@@ -60,6 +59,10 @@ public class CartOrder {
         }
     }
 
+    public void deleteAll() {
+        cart = new ArrayList<>();
+    }
+
     public Integer getTotalQuantity() {
         Integer totalQuantity = 0;
         for (CartItem cartItem : cart) {
@@ -84,4 +87,12 @@ public class CartOrder {
         return totalAmount;
     }
 
+    public Boolean isValidCartItem() {
+        for (CartItem cartItem : cart) {
+            if(!cartItem.isValidItem()){
+                return false;
+            }
+        }
+        return true;
+    }
 }

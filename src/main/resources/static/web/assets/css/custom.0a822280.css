@@ -1,1 +1,16 @@
 /* your styles go here */
+
+@media only screen and (min-width: 576px) {
+
+}
+
+@media only screen and (min-width: 768px) {
+    .w-md-85{
+        width:75% !important;
+    }
+}
+@media only screen and (min-width: 992px) {
+    .w-lg-75{
+        width:75% !important;
+    }
+}

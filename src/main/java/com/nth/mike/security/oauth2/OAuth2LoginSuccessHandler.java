@@ -1,8 +1,6 @@
 package com.nth.mike.security.oauth2;
 
-import com.nth.mike.entity.Account;
-import com.nth.mike.entity.Order;
-import com.nth.mike.entity.OrderDetail;
+import com.nth.mike.entity.*;
 import com.nth.mike.model.cart.CartItem;
 import com.nth.mike.model.cart.CartItemMapper;
 import com.nth.mike.model.cart.CartOrder;
@@ -23,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -36,8 +35,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
-        // super.onAuthenticationSuccess(request, response, authentication);
+                                        Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         HttpSession session = request.getSession();
         UserDTO user = UserDTO.builder()
@@ -46,17 +44,37 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 .build();
         session.setAttribute("user", user);
         Account account = userService.findAccountByUserName(user.getUsername());
-        Order order = orderService.findByAccount(account);
-        List<OrderDetail> orderDetails = orderDetailService.findByOrder(order);
-        CartOrder cart = new CartOrder();
-        List<CartItem> cartItems = new ArrayList<>();
-        if (!orderDetails.isEmpty()) {
-            for (OrderDetail od : orderDetails) {
-                cartItems.add(CartItemMapper.toCartItem(od));
+
+        if (account != null) {
+            List<Role> roles = userService.findRoleByAccount(account);
+            List<RoleName> roleNames = roles.stream()
+                    .filter(role -> !RoleName.ROLE_USER.equals(role.getName()))
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+
+            if (!roleNames.isEmpty()) {
+                response.sendRedirect("/mike/admin/home");
+                return;
+            }else{
+                Order order = orderService.findByCustomer(account);
+                if (order != null) {
+                    CartOrder cart = new CartOrder();
+                    List<OrderDetail> orderDetails = orderDetailService.findByOrder(order);
+                    List<CartItem> cartItems = new ArrayList<>();
+                    if (!orderDetails.isEmpty()) {
+                        for (OrderDetail od : orderDetails) {
+                            cartItems.add(CartItemMapper.toCartItem(od));
+                        }
+                    }
+                    cart.setId(order.getId());
+                    cart.setCart(cartItems);
+                    session.setAttribute("cart", cart);
+                }
+                response.sendRedirect("/mike/home");
+                return;
             }
         }
-        cart.setCart(cartItems);
-        session.setAttribute("cart", cart);
         response.sendRedirect("/mike/home");
+        return;
     }
 }

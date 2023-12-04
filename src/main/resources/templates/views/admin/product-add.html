@@ -9,6 +9,7 @@
   <th:block layout:fragment="css_head">
     <title> Product - Add | Mike </title>
     <!-- Vendors CSS -->
+    <link rel="stylesheet" th:href="@{/admin/assets/vendor/css/pages/quill-validate.css}" />
     <!-- Vendors CSS -->
     <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
     <link rel="stylesheet" th:href="@{/admin/assets/vendor/libs/bootstrap-select/bootstrap-select.css}" />
@@ -38,162 +39,380 @@
     <h4 class="fw-bold py-3 mb-4">
       <span class="text-muted fw-light">Product /</span> Add Product
     </h4>
-    <div class="row mb-4">
-      <!-- Bootstrap Validation -->
-      <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4">
-        <div class="card">
-          <h4 class="card-header fw-bold">Add Product</h4>
-          <div class="card-body">
-            <form id="myForm" class="needs-validation" novalidate enctype="multipart/form-data"
-                  th:action="@{/mike/api/product/add}" th:object="${product}" method="post">
-            <div class="row">
-              <div class="col-12 col-md-12 mb-3">
-                <label class="form-label" for="bs-validation-name">Name</label>
-                <input type="text" class="form-control" id="bs-validation-name"
-                       placeholder="John Doe" name="name" required />
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please enter your name. </div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-ocate" class="form-label">Object Category</label>
-                <select id="bs-validation-ocate" class="select2 form-select form-select-lg"
-                        data-allow-clear="true" name="objectCategory" required>
-                  <option value="">Select value</option>
-                  <option th:each="item : ${objectCates}" th:value="${item.id}" th:text="${item.name}"></option>
-                </select>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please select your object category</div>
-              </div>
-              <!--bat buoc co:wrapper-select-valid-custom,select2,select-validation-custom,valid-feedback-custom,invalid-feedback-custom-->
-
-              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-pcate" class="form-label">Product Category</label>
-                <select id="bs-validation-pcate" class="select2 form-select form-select-lg"
-                        data-allow-clear="true" name="productCategory" required>
-                  <option value="">Select value</option>
-                  <option th:each="item : ${productCates}" th:value="${item.id}" th:text="${item.name}"></option>
-                </select>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please select your product category</div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-pstatus" class="form-label">Product Status</label>
-                <select id="bs-validation-pstatus" class="select2 form-select form-select-lg"
-                        data-allow-clear="true" name="productStatus" required>
-                  <option value="">Select value</option>
-                  <option th:each="item : ${productStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'AVAILABLE'}"></option>
-                </select>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please select your product status.</div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-hot-status" class="form-label">Hot Status</label>
-                <select id="bs-validation-hot-status" class="select2 form-select form-select-lg"
-                        data-allow-clear="true" name="hotStatus" required>
-                  <option value="">Select value</option>
-                  <option th:each="item : ${hotStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
-                </select>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please select your hot status.</div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-bl-status" class="form-label">Best Seller Status</label>
-                <select id="bs-validation-bl-status" class="select2 form-select form-select-lg"
-                        data-allow-clear="true" name="bestSellerStatus" required>
-                  <option value="">Select value</option>
-                  <option th:each="item : ${bestSellerStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
-                </select>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please select your best seller status.</div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 mb-3 wrapper-select-valid-custom">
-                <label for="bs-validation-dstatus" class="form-label">Discount Status</label>
-                <select id="bs-validation-dstatus" class="select2 form-select form-select-lg" data-allow-clear="true"
-                      name="discountStatus" required>
-                    <option value="">Select value</option>
-                    <option th:each="item : ${discountStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
-                </select>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please select your discount status. </div>
-              </div>
-
-              <div class="col-12 col-sm-6 col-md-6 mb-3">
-                  <label class="form-label" for="bs-validation-dpercent">Discount Percent</label>
-                  <input type="number" class="form-control" id="bs-validation-dpercent"
-                        placeholder="0.0" name="discountPercent" th:value="0.0" min="0.0" max="100.0" step="0.1"
-                        pattern="^\d+(\.\d+)?$" required />
+    <form id="myForm" class="needs-validation" novalidate enctype="multipart/form-data"
+          th:action="@{/mike/api/product/add}" th:object="${product}" method="post">
+      <div class="row mb-4">
+        <!-- Bootstrap Validation -->
+        <div class="col-md-8 col-12">
+          <div class="card mb-4">
+            <h5 class="card-header fw-bold">Information</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-md-12 mb-3">
+                  <label class="form-label" for="bs-validation-name">Name</label>
+                  <input type="text" class="form-control" id="bs-validation-name"
+                         placeholder="John Doe" name="name" required />
                   <div class="valid-feedback"> Looks good! </div>
-                  <div class="invalid-feedback"> Please enter a valid discount percent(0.0-100.0). </div>
-              </div>
+                  <div class="invalid-feedback"> Please enter your name. </div>
+                </div>
 
-              <div class="col-12 col-md-12 mb-3">
-                <label class="form-label" for="bs-validation-descriptions">Descriptions</label>
-                <textarea class="form-control" id="bs-validation-descriptions" rows="3"
-                          name="descriptions" required></textarea>
-                <div class="valid-feedback"> Looks good! </div>
-                <div class="invalid-feedback"> Please enter your descriptions. </div>
-              </div>
-
-              <div class="col-12 col-md-12 mb-3 wrapper-dropzone-valid-custom">
-                <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
-                <div class="dropzone needsclick dropzone-single">
-                  <div class="dz-message needsclick">
-                    Drop files here or click to upload
-                    <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                <div class="col-12 col-md-12 mb-3">
+                  <label class="form-label">Descriptions</label>
+                  <div class="p-0 mt-1">
+                    <div id="full-editor" class="ql-full h-px-300">
+                      <!--text-->
+                    </div>
                   </div>
-                  <div class="fallback">
-                    <input class="form-control" id="bs-validation-urlAvatar" name="file" type="file" multiple required/>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please enter your descriptions. </div>
+                </div>
+
+                <div class="col-12 col-md-12 mb-3">
+                  <label class="form-label" for="bs-validation-urlAvatar">Upload Avatar</label>
+                  <div class="dropzone needsclick dropzone-single" data-name="avatar">
+                    <div class="dz-message needsclick">
+                      Drop files here or click to upload
+                      <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+                    </div>
+                    <div class="fallback">
+                      <input class="form-control" id="bs-validation-urlAvatar" name="file" type="file" multiple required/>
+                    </div>
+                  </div>
+
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Please select a file to upload avatar.</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="card mb-4">
+            <h5 class="card-header fw-bold">Variants</h5>
+            <div class="card-body">
+              <div class="d-flex justify-content-start align-items-center mb-3 gap-3 flex-wrap">
+
+                <div class="dropdown d-flex flex-column">
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="dropdown" aria-haspopup="true"
+                          aria-expanded="false" data-bs-auto-close="outside">Set size</button>
+                  <div class="dropdown-menu w-px-250 p-3" >
+                    <div class="dropdown-item p-2 pb-3">
+                      <label class="form-label ps-1" for="all-import-price">Set all size
+                      </label>
+                      <div class="row w-100 m-0">
+                        <div class="col-8 ps-1 pe-2">
+                          <select id="all-size" class="select2 form-select prevent-validate" multiple
+                                  data-placeholder="Select size"
+                                  data-name="all-size"
+                                  name="all-size">
+                            <option value="">Select Size</option>
+                            <option th:each="size : ${sizes}" th:value="${size.id}" th:text="${size.name}"></option>
+                          </select>
+                        </div>
+                        <div class="col-4 p-0">
+                          <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-all-size">Apply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown d-flex flex-column">
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false" data-bs-auto-close="outside">Set Price</button>
+                  <div class="dropdown-menu w-px-250 p-3">
+                    <div class="dropdown-item p-2 pb-3">
+                      <label class="form-label ps-1" for="all-import-price">Set all import Price
+                      </label>
+                      <div class="row w-100 m-0">
+                        <div class="col-8 ps-1 pe-2">
+                          <input type="number" class="form-control border-primary" id="all-import-price"
+                                 placeholder="0.0" min="0.0" step="0.1"
+                                 pattern="^\d+(\.\d+)?$">
+                        </div>
+                        <div class="col-4 p-0">
+                          <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-all-import-price">Apply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="dropdown-item p-2 pb-3">
+                      <label class="form-label ps-1" for="all-export-price">Set all export Price
+                      </label>
+                      <div class="row w-100 m-0">
+                        <div class="col-8 ps-1 pe-2">
+                          <input type="number" class="form-control border-primary" id="all-export-price"
+                                 placeholder="0.0" min="0.0" step="0.1"
+                                 pattern="^\d+(\.\d+)?$">
+                        </div>
+                        <div class="col-4 p-0">
+                          <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-all-export-price">Apply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown d-flex flex-column">
+                  <button class="btn btn-primary btn-sm" data-bs-toggle="dropdown" aria-haspopup="true"
+                          aria-expanded="false" data-bs-auto-close="outside">Set discount</button>
+                  <div class="dropdown-menu w-px-250 p-3" >
+                    <div class="dropdown-item p-2 pb-3">
+                      <label class="form-label ps-1" for="all-import-price">Set all discount
+                      </label>
+                      <div class="row w-100 m-0">
+                        <div class="col-8 ps-1 pe-2">
+                          <input type="number" class="form-control border-primary input-discount" id="all-discount"
+                                 placeholder="0.0" min="0.0" max="100.0" step="0.1"
+                                 pattern="^\d+(\.\d+)?$">
+                        </div>
+                        <div class="col-4 p-0">
+                          <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-all-discount">Apply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please select a file to upload avatar.</div>
               </div>
+              <div class="form-repeater">
+                <div data-repeater-list="group-a">
+                  <div class="repeater-wrapper mb-3" data-repeater-item>
+                    <div class="d-flex border rounded position-relative pe-0">
+                      <div class="row w-100 m-0 p-3">
+                        <div class="mb-3 mb-md-1 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-1">Color</label>
+                          <select id="form-repeater-1-1" class="select2 form-select"
+                                  data-allow-clear="true"
+                                  data-placeholder="Select Color"
+                                  data-name="color"
+                                  name="color" required>
+                            <option value="">Select Color</option>
+                            <option th:each="color : ${colors}" th:value="${color.id}" th:text="${color.name}"></option>
+                          </select>
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please select your color. </div>
+                        </div>
 
-              <div class="col-12 col-md-12 mb-3 mt-3">
-                <div class="d-grid d-md-flex">
-                  <button type="submit" class="btn btn-primary">Add</button>
+                        <div class="mb-3 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-2">Size</label>
+                          <select id="form-repeater-1-2" class="select2 form-select" multiple
+                                  data-placeholder="Select size"
+                                  data-name="size"
+                                  name="size" required>
+                            <option value="">Select Size</option>
+                            <option th:each="size : ${sizes}" th:value="${size.id}" th:text="${size.name}"></option>
+                          </select>
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please select your sizes. </div>
+                        </div>
+
+                        <div class="mb-3 mb-md-1 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-3">Import price</label>
+                          <input type="number" class="form-control" id="form-repeater-1-3"
+                                 placeholder="0.0" name="importPrice" min="0.0" step="0.1"
+                                 data-name="importPrice"
+                                 pattern="^\d+(\.\d+)?$" required />
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please enter a valid import price. </div>
+                        </div>
+
+                        <div class="mb-2 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-4">Export price</label>
+                          <input type="number" class="form-control" id="form-repeater-1-4"
+                                 placeholder="0.0" name="exportPrice" min="0.0" step="0.1"
+                                 data-name="exportPrice"
+                                 pattern="^\d+(\.\d+)?$" required />
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please enter a valid export price. </div>
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-5">Discount Percent</label>
+                          <input type="number" class="form-control input-discount" id="form-repeater-1-5"
+                                 placeholder="0.0" name="discountPercent" min="0.0" max="100.0" step="0.1"
+                                 data-name="discountPercent"
+                                 th:value="0.0"
+                                 pattern="^\d+(\.\d+)?$" required />
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please enter a valid discount percent(0.0-100.0). </div>
+                        </div>
+
+                        <div class="mb-3 col-12 col-md-6">
+                          <label class="form-label" for="form-repeater-1-6">Status</label>
+                          <select id="form-repeater-1-6" class="select2 form-select"
+                                  data-allow-clear="true"
+                                  data-placeholder="Select status"
+                                  data-name="productDetailStatus"
+                                  name="productDetailStatus" required>
+                            <option value="">Select status</option>
+                            <option th:each="item : ${productDetailStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'ACTIVE'}"></option>
+                          </select>
+                          <div class="valid-feedback"> Looks good! </div>
+                          <div class="invalid-feedback"> Please select your status. </div>
+                        </div>
+
+                      </div>
+                      <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                        <div class="dropdown dropstart">
+                          <i class="bx bx-x fs-4 text-muted cursor-pointer" data-bs-toggle="dropdown" aria-haspopup="true"
+                             aria-expanded="false" data-bs-auto-close="outside"></i>
+                          <div class="dropdown-menu dropdown-menu-end w-px-250 p-3" >
+                            <div class="alert-icon mt-2 d-flex justify-content-center">
+                              <i class='bx bx-error-circle text-warning' style='font-size:40px;'></i>
+                            </div>
+                            <h5 class="mt-2 mb-3 text-center">Are you sure?</h5>
+                            <div class="d-flex justify-content-center">
+                              <button type="button" class="btn btn-sm btn-primary mx-1" data-repeater-delete>Remove</button>
+                              <button type="button" class="btn btn-sm btn-label-secondary mx-1">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="">
+                          <button type="button" class="btn btn-sm rounded-pill btn-icon btn-label-primary mb-1 btn-modal-dropzone"
+                                  data-bs-toggle="modal" data-bs-target="#modal-repeater-1-1">
+                            <span class="tf-icons bx bx-plus"></span>
+                          </button>
+                          <div class="modal animate__animated animate__fadeInDown modal-dropzone" id="modal-repeater-1-1" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Add Images</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="dropzone needsclick dropzone-multiple" id="dropzone-basic-1-1">
+                                    <div class="dz-message needsclick my-5">
+                                      <p class="fs-4 note needsclick my-2">Drag and drop your image here</p>
+                                      <small class="text-muted d-block fs-6 my-2">or</small>
+                                      <span class="note needsclick btn bg-label-primary d-inline">Browse image</span>
+                                    </div>
+                                    <div class="fallback d-none">
+                                      <input name="file" type="file" />
+                                    </div>
+                                  </div>
+                                  <div class="valid-feedback">Looks good!</div>
+                                  <div class="invalid-feedback">Please select a file to upload images.</div>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="">
+                  <button type="button" class="btn btn-primary btn-sm" data-repeater-create>
+                    Add detail
+                  </button>
                 </div>
               </div>
             </div>
-            </form>
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="card mb-4">
+            <h5 class="card-header fw-bold">Category</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <label for="bs-validation-ocate" class="form-label">Object Category</label>
+                  <select id="bs-validation-ocate" class="select2 form-select"
+                          data-allow-clear="true" name="objectCategory"
+                          data-placeholder="Select value" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${objectCates}" th:value="${item.id}" th:text="${item.name}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your object category</div>
+                </div>
+
+                <div class="col-12 mb-3">
+                  <label for="bs-validation-pcate" class="form-label">Product Category</label>
+                  <select id="bs-validation-pcate" class="select2 form-select"
+                          data-allow-clear="true" name="productCategory" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${productCates}" th:value="${item.id}" th:text="${item.name}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your product category</div>
+                </div>
+
+                <div class="col-12 mb-3">
+                  <label for="bs-validation-size-img" class="form-label">Size Table Category</label>
+                  <select id="bs-validation-size-img" class="select2 form-select"
+                          data-allow-clear="true" name="sizeImage" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${sizeImages}" th:value="${item.id}" th:text="${item.name}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your size table category</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <h5 class="card-header fw-bold">Organize</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 mb-3 ">
+                  <label for="bs-validation-pstatus" class="form-label">Product Status</label>
+                  <select id="bs-validation-pstatus" class="select2 form-select"
+                          data-allow-clear="true" name="productStatus" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${productStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'ACTIVE'}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your product status.</div>
+                </div>
+
+                <div class="col-12 mb-3">
+                  <label for="bs-validation-hot-status" class="form-label">Hot Status</label>
+                  <select id="bs-validation-hot-status" class="select2 form-select"
+                          data-allow-clear="true" name="hotStatus" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${hotStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your hot status.</div>
+                </div>
+
+                <div class="col-12 mb-3">
+                  <label for="bs-validation-bl-status" class="form-label">Best Seller Status</label>
+                  <select id="bs-validation-bl-status" class="select2 form-select"
+                          data-allow-clear="true" name="bestSellerStatus" required>
+                    <option value="">Select value</option>
+                    <option th:each="item : ${bestSellerStatus}" th:value="${item}" th:text="${item}" th:selected="${item.name == 'INACTIVE'}"></option>
+                  </select>
+                  <div class="valid-feedback"> Looks good! </div>
+                  <div class="invalid-feedback"> Please select your best seller status.</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Bootstrap Validation -->
+        <div class="col-12 col-md-12 mb-3 mt-3">
+          <div class="d-grid w-md-50 d-md-flex">
+            <button type="submit" class="btn btn-primary">Add New Product</button>
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-md-4 col-12 invoice-actions">
-        <div class="card">
-          <div class="card-body">
-            <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="offcanvas"
-                    data-bs-target="#sendInvoiceOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                              class="bx bx-paper-plane bx-xs me-1"></i>Send Invoice</span>
-            </button>
-            <button class="btn btn-label-secondary d-grid w-100 mb-3">
-              Download
-            </button>
-            <a class="btn btn-label-secondary d-grid w-100 mb-3" target="_blank"
-               href="./app-invoice-print.html">
-              Print
-            </a>
-<!--            <a th:href="@{/mike/admin/product/edit/{productId}(productId=${products.id})}"-->
-<!--               class="btn btn-label-secondary d-grid w-100 mb-3">-->
-<!--              Edit Product-->
-<!--            </a>-->
-            <button class="btn btn-primary d-grid w-100" data-bs-toggle="offcanvas"
-                    data-bs-target="#addPaymentOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i
-                              class="bx bx-dollar bx-xs me-1"></i>Add Payment</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- /Bootstrap Validation -->
-    </div>
+    </form>
     <!-- /FormValidation -->
   </div>
   <!-- / Content -->
@@ -215,6 +434,7 @@
   <script th:src="@{/admin/assets/vendor/libs/bloodhound/bloodhound.js}"></script>
   <script th:src="@{/admin/assets/vendor/libs/quill/katex.js}"></script>
   <script th:src="@{/admin/assets/vendor/libs/quill/quill.js}"></script>
+  <script th:src="@{/admin/assets/vendor/libs/jquery-repeater/jquery-repeater.js}"></script>
 
   <!-- Page JS -->
   <script th:src="@{/admin/assets/js/form-validation.js}"></script>
@@ -222,78 +442,13 @@
   <script th:src="@{/admin/assets/js/forms-selects.js}"></script>
   <script th:src="@{/admin/assets/js/forms-tagify.js}"></script>
   <script th:src="@{/admin/assets/js/forms-typeahead.js}"></script>
-  <script th:src="@{/admin/assets/js/forms-editors.js}"></script>
+  <script th:src="@{/admin/assets/js/forms-generate-quill.js}"></script>
   <script th:src="@{/admin/assets/js/forms-validation-select2-custom.js}"></script>
   <script th:src="@{/admin/assets/js/forms-validation-file-upload-custom.js}"></script>
-
-  <script>
-
-    $(document).ready(function() {
-      var myForm = document.getElementById('myForm');
-
-      myForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        var dropzoneElement = myForm.querySelector('.dropzone-single');
-        var file = dropzoneElement.dropzone.files[0];
-
-        if (file && myForm.checkValidity()) {
-          var formData = new FormData(myForm);
-          formData.append('avatar', file, file.name);
-
-          var url = myForm.getAttribute('action');
-
-          var accessToken = localStorage.getItem('accessToken');
-
-          $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-              "Authorization": "Bearer " + accessToken
-            },
-            success: function(response) {
-              showModal("Add success!", true);
-            },
-            error: function(xhr, status, error) {
-              var errorMessage = "Add error: " + error;
-              showModal(errorMessage, false);
-            }
-          });
-        }
-      });
-
-      function showModal(message, isSuccess) {
-        var modalHeader = $("<div class='modal-header'></div>").append("<h5 class='modal-title'>" + (isSuccess ? "Success" : "Error") + "</h5>");
-        var modalBody = $("<div class='modal-body'></div>").text(message);
-        var closeButton = $("<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>");
-        var modalFooter = $("<div class='modal-footer'></div>").append(closeButton);
-        var modalContent = $("<div class='modal-content'></div>").append(modalHeader, modalBody, modalFooter);
-        var modalDialog = $("<div class='modal-dialog' role='document'></div>").append(modalContent);
-        var modal = $("<div class='modal fade'></div>").append(modalDialog);
-
-        modal.on("hidden.bs.modal", function() {
-          if(isSuccess){
-            location.reload();
-          }
-          modal.remove();
-        });
-
-        closeButton.on("click", function() {
-          if(isSuccess){
-            location.reload();
-          }
-          modal.modal("hide");
-        });
-
-        $("body").append(modal);
-        modal.modal("show");
-      }
-    });
-
-  </script>
+  <script th:src="@{/admin/assets/js/forms-validation-quill-custom.js}"></script>
+  <script th:src="@{/admin/assets/js/generate-repeater.js}"></script>
+  <script th:src="@{/admin/assets/js/product/set-all-price.js}"></script>
+  <script th:src="@{/admin/assets/js/product/product-add-submit.js}"></script>
 
 </th:block>
 </body>

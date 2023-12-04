@@ -17,4 +17,5 @@ public interface ProductDetailService {
 
     ProductDetailId deleteById(ProductDetailId id);
 
+    void saveAll(List<ProductDetail> productDetailsSave);
 }

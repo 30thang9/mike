@@ -12,9 +12,10 @@ public interface AreaAddressService {
 //    Ward saveWard(Ward Ward);
     City findCityById(Long id);
     List<City> findAllCity();
+    List<District> findAllDistrict();
     List<District> findDistrictByCity(City city);
 
     District findDistrictById(Long id);
-
+    List<Ward> findAllWard();
     List<Ward> findWardByDistrict(District district);
 }

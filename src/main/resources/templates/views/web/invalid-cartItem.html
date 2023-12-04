@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/web/layoutWeb"
+      layout:decorator="layouts/web/layoutWeb :: content, layouts/web/layoutWeb :: css_head, layouts/web/layoutWeb :: js_foot">
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> Invalid - Cart | Mike </title>
+        <link rel="stylesheet" th:href="@{/web/assets/vendor/sweetalert2/sweetalert2.css}" />
+        <link rel="stylesheet" th:href="@{/web/assets/css/pages/cart-detail.css}" />
+    </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <!-- Hero Section-->
+    <section class="hero">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Check valid cart</li>
+            </ol>
+            <!-- Hero Content-->
+            <div class="hero-content pb-5 text-center">
+                <h1 class="hero-heading">Check valid cart</h1>
+                <div class="row">
+                    <div class="col-xl-8 offset-xl-2"><p class="lead text-muted">This is a second variant of the cart page. It handles differently smaller viewports - items do not stay in the table but stack a bit more. Resize your browser window to see it in action.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section-->
+    <section>
+        <div class="container">
+            <div class="row mb-5 w-100 w-lg-75 mx-auto">
+                <div class="col-12">
+                    <div class="cart" th:if="${session.cart != null and session.cart.getTotalQuantity > 0 and session.cart.isValidCartItem == false}">
+                        <div class="cart-header text-center">
+                            <div class="row">
+                                <div class="col-md-5">Item</div>
+                                <div class="col-md-7 d-none d-md-block">
+                                    <div class="row">
+                                        <div class="col-md-3">Price</div>
+                                        <div class="col-md-4">Quantity</div>
+                                        <div class="col-md-3">Total</div>
+                                        <div class="col-md-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart-body">
+                            <!-- Product-->
+                            <div class="cart-item" th:each="cartItem :${session.cart.cart}" th:if="${cartItem.isValidItem == false}">
+                                <div class="row d-flex align-items-center text-start text-md-center">
+                                    <div class="col-12 col-md-5">
+                                        <a class="cart-remove close mt-3 d-md-none remove-cart-item" href="javascript:void(0)"
+                                            th:if="${cartItem.item.productStatus.name == 'OUT_OF_STOCK' or cartItem.item.itemDetail.quantity <= 0}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                        <a class="cart-remove close mt-3 d-md-none update-cart-item" href="javascript:void(0)"
+                                            th:if="${cartItem.quantity > cartItem.item.itemDetail.quantity}">
+                                            <i class="delete fa fa-redo-alt"></i>
+                                        </a>
+                                        <div class="d-flex align-items-center">
+                                            <a th:href="@{'/mike/collection/shop/product-detail/' + ${cartItem.item.id.productId}}">
+                                                <img class="cart-item-img" th:src="@{'/images/product/' + ${cartItem.item.avatar}}" alt="...">
+                                            </a>
+                                            <div class="cart-title text-start">
+                                                <a class="text-uppercase text-dark"
+                                                   th:href="@{'/mike/collection/shop/product-detail/' + ${cartItem.item.id.productId}}">
+                                                    <strong class="product-name" th:text="${cartItem.item.name}" th:data-product-id="${cartItem.item.id.productId}"></strong>
+                                                </a>
+                                                <br>
+                                                <span class="text-muted text-sm size-name" th:text="${'Size: ' + cartItem.item.itemDetail.size.name}"
+                                                      th:data-size-id="${cartItem.item.id.sizeId}"></span>
+                                                <br>
+                                                <span class="text-muted text-sm color-name" th:text="${'Color: ' + cartItem.item.itemDetail.color.name}"
+                                                      th:data-color-id="${cartItem.item.id.colorId}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-7 mt-4 mt-md-0">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-6 d-md-none text-muted">Price per item</div>
+                                                    <div class="col-6 col-md-12 text-end text-md-center cart-item-price" th:text="${#numbers.formatDecimal(cartItem.price,3,2).replace(',', '.')}"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row align-items-center">
+                                                    <div class="d-md-none col-7 col-sm-9 text-muted">Quantity</div>
+                                                    <div class="col-5 col-sm-3 col-md-12">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="text-muted text-sm me-2" th:text="${cartItem.quantity}"></span>
+                                                            <i class="fa fa-arrow-right"></i>
+                                                            <span class="text-muted text-sm ms-2 cart-item-limitQuantity" th:text="${cartItem.item.itemDetail.quantity}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-6 d-md-none text-muted">Total price </div>
+                                                    <div class="col-6 col-md-12 text-end text-md-center"
+                                                         th:text="${#numbers.formatDecimal(cartItem.getTotal,3,2).replace(',', '.')}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2 d-none d-md-block text-center">
+                                                <a class="cart-remove remove-cart-item" href="javascript:void(0)"
+                                                    th:if="${cartItem.item.productStatus.name == 'OUT_OF_STOCK' or cartItem.item.itemDetail.quantity <= 0}">
+                                                    <i class="delete fa fa-times"></i>
+                                                </a>
+                                                <a class="cart-remove update-cart-item" href="javascript:void(0)"
+                                                    th:if="${cartItem.quantity > cartItem.item.itemDetail.quantity and (cartItem.item.productStatus.name != 'OUT_OF_STOCK' and cartItem.item.itemDetail.quantity > 0)}">
+                                                    <i class="delete fa fa-redo-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart cart-height-empty" th:if="${session.cart != null and session.cart.getTotalQuantity > 0 and session.cart.isValidCartItem == true}">
+                        <h4 class="text-center text-muted">Cart is valid...</h4>
+                    </div>
+                    <div class="cart cart-height-empty" th:unless="${session.cart != null and session.cart.getTotalQuantity > 0}">
+                        <h4 class="text-center text-muted">Cart empty...</h4>
+                    </div>
+                    <div class="my-5 d-flex justify-content-between flex-column flex-lg-row">
+                        <a class="btn btn-link text-muted" th:href="@{/mike/cart/detail}">
+                            <i class="fa fa-chevron-left"></i> View Cart
+                        </a>
+                        <a class="btn btn-dark" th:href="@{/mike/cart/checkout-address}"
+                           th:if="${session.cart != null and session.cart.getTotalQuantity > 0 and session.cart.isValidCartItem == true}">
+                            Proceed to checkout
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+    <script th:src="@{/web/assets/js/pages/cart-invalid.handle.js}"></script>
+    <script th:src="@{/web/assets/vendor/sweetalert2/sweetalert2.js}"></script>
+</th:block>
+</body>
+</html>
+

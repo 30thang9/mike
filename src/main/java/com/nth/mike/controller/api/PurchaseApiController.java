@@ -2,6 +2,7 @@ package com.nth.mike.controller.api;
 
 import com.nth.mike.constant.StatusConstant;
 import com.nth.mike.entity.*;
+import com.nth.mike.model.dto.purchase.PurchaseDTO;
 import com.nth.mike.model.mapper.purchase.PurchaseSaveMapper;
 import com.nth.mike.model.request.purchase.PurchaseDetailRequest;
 import com.nth.mike.model.request.purchase.PurchaseRequest;
@@ -33,7 +34,7 @@ public class PurchaseApiController {
     private PurchaseSaveMapper purchaseSaveMapper;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Purchase>> getPurchases() {
+    public ResponseEntity<List<PurchaseDTO>> getPurchases() {
         return ResponseEntity.ok(purchaseService.findAll());
     }
 

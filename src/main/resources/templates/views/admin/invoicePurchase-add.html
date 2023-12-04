@@ -110,7 +110,7 @@
                                                     <select id="bs-validation-supplier" class="select2 form-select form-select-lg"
                                                             data-allow-clear="true" name="supplier" required>
                                                         <option value="">Select value</option>
-                                                        <option th:each="item : ${suppliers}" th:value="${item.id}" th:text="${item.name}"></option>
+                                                        <option th:each="item : ${suppliers}" th:value="${item.id}" th:text="${item.fullName}"></option>
                                                     </select>
                                                     <div class="valid-feedback"> Looks good! </div>
                                                     <div class="invalid-feedback"> Please select your supplier</div>
@@ -122,7 +122,7 @@
                                                     <select id="bs-validation-employee" class="select2 form-select form-select-lg"
                                                             data-allow-clear="true" name="employee" required>
                                                         <option value="">Select value</option>
-                                                        <option th:each="item : ${employees}" th:value="${item.id}" th:text="${item.name}"></option>
+                                                        <option th:each="item : ${employees}" th:value="${item.id}" th:text="${item.fullName}"></option>
                                                     </select>
                                                     <div class="valid-feedback"> Looks good! </div>
                                                     <div class="invalid-feedback"> Please select your employee</div>

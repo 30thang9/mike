@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/web/layoutWeb"
+      layout:decorator="layouts/web/layoutWeb :: content, layouts/web/layoutWeb :: css_head, layouts/web/layoutWeb :: js_foot">
+<head>
+  <meta charset="UTF-8">
+  <!-- Link CSS ở đây -->
+  <th:block layout:fragment="css_head">
+    <title> Checkout - Payment | Mike </title>
+    <link rel="stylesheet" th:href="@{/web/assets/vendor/sweetalert2/sweetalert2.css}" />
+  </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+  <!-- Hero Section-->
+  <section class="hero">
+    <div class="container">
+      <!-- Breadcrumbs -->
+      <ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Checkout Payment</li>
+      </ol>
+      <!-- Hero Content-->
+      <div class="hero-content pb-5 text-center">
+        <h1 class="hero-heading">Checkout Payment</h1>
+        <div class="row">
+          <div class="col-xl-8 offset-xl-2"><p class="lead text-muted">Please choose payment method.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Checkout-->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <ul class="custom-nav nav nav-pills mb-5">
+            <li class="nav-item w-25"><a class="nav-link text-sm" th:href="@{/mike/cart/checkout-address}">Address</a></li>
+            <li class="nav-item w-25"><a class="nav-link text-sm active" th:href="@{/mike/cart/checkout-payment}">Delivery & Payment</a></li>
+<!--            <li class="nav-item w-25"><a class="nav-link text-sm disabled" href="#">Payment Method </a></li>-->
+            <li class="nav-item w-25"><a class="nav-link text-sm disabled" href="#">Order Review</a></li>
+          </ul>
+          <div id="message-save-address"></div>
+          <form action="#" id="addShippingPayForm">
+            <div class="block mb-3">
+              <div class="block-header mb-2" id="headingTwo" role="tab">
+                <strong>
+                  <a class="accordion-link collapsed" data-bs-toggle="collapse" href="#collapseTwo"
+                     aria-expanded="false" aria-controls="collapseTwo">Payment Method
+                  </a>
+                </strong>
+              </div>
+              <div class="collapse" id="collapseTwo" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                  <div th:each="pay: ${payment_method}" class="block-body py-2 d-flex align-items-center">
+                    <input type="radio" name="payment" th:id="${'payment-method-' + pay.name}" th:value="${pay.name}">
+                    <label class="ms-3" th:for="${'payment-method-' + pay.name}">
+                      <strong class="d-block text-uppercase mb-2" th:text="${pay.name}"></strong>
+<!--                      <span class="text-muted text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>-->
+                    </label>
+                  </div>
+              </div>
+            </div>
+            <div class="block mb-3">
+              <div class="block-header mb-2" id="headingThree" role="tab">
+                <strong>
+                  <a class="accordion-link collapsed" data-bs-toggle="collapse" href="#collapseThree"
+                     aria-expanded="false" aria-controls="collapseThree">Delivery method</a>
+                </strong>
+              </div>
+              <div class="collapse" id="collapseThree" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                <div th:each="de: ${deliveries}" class="block-body py-2 d-flex align-items-center">
+                  <input type="radio" name="delivery" th:id="${'delivery-' + de.id}" th:value="${de.id}">
+                  <label class="ms-3" th:for="${'delivery-' + de.name}">
+                    <strong class="d-block text-uppercase mb-2" th:text="${de.name + '(' + de.money + ')'}"></strong>
+                  <!--<span class="text-muted text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>-->
+                  </label>
+                </div>
+<!--                 <div class="block-body py-2 d-flex align-items-center">-->
+<!--                  <input type="radio" name="delivery" id="delivery-method-2">-->
+<!--                  <label class="ms-3" for="delivery-method-2">-->
+<!--                    <strong class="d-block text-uppercase mb-2"> Credit Card</strong>-->
+<!--                    <span class="text-muted text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span>-->
+<!--                  </label>-->
+<!--                </div>-->
+              </div>
+            </div>
+            <div class="mb-5 d-flex justify-content-between flex-column flex-lg-row">
+              <a class="btn btn-link text-muted" th:href="@{/mike/cart/checkout-address}"> <i class="fa fa-angle-left me-2"></i>Back </a>
+              <a class="btn btn-dark" id="btn-overview" href="javascript:void(0)">Over Review<i class="fa fa-angle-right ms-2"></i></a>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-4">
+          <div class="block mb-5">
+            <div class="block-header">
+              <h6 class="text-uppercase mb-0">Order Summary</h6>
+            </div>
+            <div class="block-body bg-light pt-1">
+              <p class="text-sm">Shipping and additional costs are calculated based on values you have entered.</p>
+              <ul class="order-summary mb-0 list-unstyled">
+                <li class="order-summary-item">
+                  <span>Order Subtotal </span>
+                  <span th:text="${(session.cart != null and session.cart.getTotalQuantity > 0) ? #numbers.formatDecimal(session.cart.getTotalAmount,3,2).replace(',', '.') : '0.00'}"></span>
+                </li>
+                <li class="order-summary-item">
+                  <span>Shipping and handling</span>
+                  <span th:text="${deli != null ? deli.money : '0.00'}"></span>
+                </li>
+<!--                <li class="order-summary-item">-->
+<!--                  <span>Tax</span>-->
+<!--                  <span>0.00</span>-->
+<!--                </li>-->
+                <li class="order-summary-item border-0">
+                  <span>Total</span>
+                  <strong class="order-summary-total"
+                          th:text="${(session.cart != null and session.cart.getTotalQuantity > 0) ? #numbers.formatDecimal((session.cart.getTotalAmount + (deli != null ? deli.money : 0.00)),3,2).replace(',', '.') : '0.00'}"></strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+  <script th:src="@{/web/assets/vendor/sweetalert2/sweetalert2.js}"></script>
+  <script>
+        $(document).ready(function() {
+
+           $('#btn-overview').on('click', function () {
+          // Check if the payment and delivery options are selected
+          var paymentChecked = $('input[id^="payment-method-"]:checked').length > 0;
+          var deliveryChecked = $('input[id^="delivery-"]:checked').length > 0;
+
+          if (!paymentChecked || !deliveryChecked) {
+              var $messageWrap = $('#message-save-address');
+              showMessage($messageWrap, "Choose payment and delivery");
+              return;
+          }
+
+          // Extract selected payment method and delivery ID
+          var selectedPayment = $('input[id^="payment-method-"]:checked').val();
+          var selectedDelivery = $('input[id^="delivery-"]:checked').val();
+
+          var formData = {
+              payment_method: selectedPayment,
+              delivery_id: selectedDelivery
+          }
+
+          $.ajax({
+              url: '/mike/api/cart/checkout-payment',
+              type: 'POST',
+              data: JSON.stringify(formData),
+              contentType: 'application/json',
+              success: function (data) {
+                  window.location.href = "/mike/cart/checkout-final";
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                  console.log(errorThrown);
+                  showAlert("Checkout payment failed!", false);
+              }
+          });
+      });
+
+
+            function showMessage($msgWrapper, message) {
+                $msgWrapper.empty();
+                var content = $(`
+                    <div class="alert alert-danger" role="alert">${message}</div>
+                `);
+                $msgWrapper.append(content);
+            }
+
+            function showAlert(message, isSuccess) {
+                Swal.fire({
+                    title: message,
+                    icon: isSuccess ? 'success' : 'error',
+                    timer: 1200,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    customClass: {
+                        timerProgressBar: isSuccess ? 'bg-success' : 'bg-danger'
+                    },
+                    willClose: () => {
+                        if (isSuccess) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+</th:block>
+</body>
+</html>
+

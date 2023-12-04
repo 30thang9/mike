@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:replace="layouts/web/layoutWeb"
+      layout:decorator="layouts/web/layoutWeb :: content, layouts/web/layoutWeb :: css_head, layouts/web/layoutWeb :: js_foot">
+<head>
+    <meta charset="UTF-8">
+    <!-- Link CSS ở đây -->
+    <th:block layout:fragment="css_head">
+        <title> Checkout - Address | Mike </title>
+        <link rel="stylesheet" th:href="@{/web/assets/vendor/sweetalert2/sweetalert2.css}" />
+    </th:block>
+</head>
+<body>
+
+<!-- Gọi layout cha -->
+<th:block layout:fragment="content">
+    <!-- Hero Section-->
+    <section class="hero">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Checkout Address</li>
+            </ol>
+            <!-- Hero Content-->
+            <div class="hero-content pb-5 text-center">
+                <h1 class="hero-heading">Checkout Address</h1>
+                <div class="row">
+                    <div class="col-xl-8 offset-xl-2"><p class="lead text-muted">Please fill in your address.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Checkout-->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <ul class="custom-nav nav nav-pills mb-5">
+                        <li class="nav-item w-25"><a class="nav-link text-sm active" th:href="@{/mike/cart/checkout-address}">Address</a></li>
+                        <li class="nav-item w-25"><a class="nav-link text-sm disabled" href="">Delivery & Payment</a></li>
+<!--                        <li class="nav-item w-25"><a class="nav-link text-sm disabled" href="#">Payment Method </a></li>-->
+                        <li class="nav-item w-25"><a class="nav-link text-sm disabled" href="#">Order Review</a></li>
+                    </ul>
+                    <div id="message-save-address"></div>
+                    <form action="#" id="addShippingAddressForm">
+                        <div class="block">
+                            <div class="block-header">
+                                <h6 class="text-uppercase mb-0 text-center">Shipping address </h6>
+                            </div>
+                            <div class="block-body">
+                                <div id="message-errorAdd-shippingAddress"></div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="fullName_shipping">Full Name</label>
+                                        <input class="form-control" type="text" name="fullName_shipping" placeholder="John" id="fullName_shipping"
+                                            th:value="${session.addressSec != null ? session.addressSec.fullName : ''}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="email_shipping">Email Number</label>
+                                        <input class="form-control" type="text" name="email_shipping" placeholder="Email Number" id="email_shipping"
+                                            th:value="${session.addressSec != null ? session.addressSec.email : ''}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="phoneNumber_shipping">Phone Number</label>
+                                        <input class="form-control" type="text" name="phoneNumber_shipping" placeholder="Phone Number" id="phoneNumber_shipping"
+                                            th:value="${session.addressSec != null ? session.addressSec.phoneNumber : ''}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="city_shipping">City</label>
+                                        <select class="form-control" name="city_shipping" id="city_shipping">
+                                            <option value="">Choose city</option>
+                                            <option th:each="ci : ${city}" th:value="${ci.id}" th:text="${ci.name}"
+                                                th:selected="${session.addressSec != null and session.addressSec.cityId == ci.id}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="district_shipping">District</label>
+                                        <select class="form-control" name="district_shipping" id="district_shipping">
+                                            <option value="">Choose district</option>
+                                            <th:block th:if="session.addressSec != null and session.cart !=null">
+                                                <option th:each="dis : ${districts}" th:value="${dis.id}" th:text="${dis.name}"
+                                                th:selected="${session.addressSec != null and session.addressSec.districtId == dis.id}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="ward_shipping">Ward</label>
+                                        <select class="form-control" name="ward_shipping" id="ward_shipping">
+                                            <option value="">Choose ward</option>
+                                            <th:block th:if="session.addressSec != null and session.cart !=null">
+                                                <option th:each="wa : ${wards}" th:value="${wa.id}" th:text="${wa.name}"
+                                                th:selected="${session.addressSec != null and session.addressSec.wardId == wa.id}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label" for="street_shipping">Street</label>
+                                        <input class="form-control" type="text" name="street_shipping" placeholder="123 Main St." id="street_shipping"
+                                            th:value="${session.addressSec != null ? session.addressSec.street : ''}">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Shipping Address-->
+                        </div>
+                        <div class="mb-5 d-flex justify-content-between flex-column flex-lg-row">
+                            <a class="btn btn-link text-muted" th:href="@{/mike/cart/detail}"> <i class="fa fa-angle-left me-2"></i>Back </a>
+                            <a class="btn btn-dark" id="btn-delivery" href="javascript:void(0)">Choose payment & delivery<i class="fa fa-angle-right ms-2"></i></a>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-4">
+                    <div class="block mb-5">
+                        <div class="block-header">
+                            <h6 class="text-uppercase mb-0">Order Summary</h6>
+                        </div>
+                        <div class="block-body bg-light pt-1">
+                            <p class="text-sm">Shipping and additional costs are calculated based on values you have entered.</p>
+                            <ul class="order-summary mb-0 list-unstyled">
+                                <li class="order-summary-item">
+                                    <span>Order Subtotal </span>
+                                    <span th:text="${(session.cart != null and session.cart.getTotalQuantity > 0) ? #numbers.formatDecimal(session.cart.getTotalAmount,3,2).replace(',', '.') : '0.00'}"></span>
+                                </li>
+                                <li class="order-summary-item">
+                                    <span>Shipping and handling</span>
+                                    <span th:text="${deli != null ? deli.money : '0.00'}"></span>
+                                </li>
+<!--                                <li class="order-summary-item">-->
+<!--                                    <span>Tax</span>-->
+<!--                                    <span>0.00</span>-->
+<!--                                </li>-->
+                                <li class="order-summary-item border-0">
+                                    <span>Total</span>
+                                    <strong class="order-summary-total"
+                                            th:text="${(session.cart != null and session.cart.getTotalQuantity > 0) ? #numbers.formatDecimal((session.cart.getTotalAmount + (deli != null ? deli.money : 0.00)),3,2).replace(',', '.') : '0.00'}"></strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+
+<th:block layout:fragment="js_foot">
+    <script th:src="@{/web/assets/vendor/sweetalert2/sweetalert2.js}"></script>
+    <script>
+        $(document).ready(function() {
+            var $citySelect = $('#city_shipping');
+            var $districtSelect = $('#district_shipping');
+            var $wardSelect = $('#ward_shipping');
+
+            $citySelect.on('change', function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    var apiUrl = '/mike/api/area-address/district/' + cityId;
+                    callApi(apiUrl, $districtSelect, "district");
+                }
+                //else {
+                //    $districtSelect.empty();
+                //}
+            });
+
+            $districtSelect.on('change', function() {
+                var districtId = $(this).val();
+                if (districtId) {
+                    var apiUrl = '/mike/api/area-address/ward/' + districtId;
+                    callApi(apiUrl, $wardSelect, "ward");
+                }
+                //else {
+                //    $wardSelect.empty();
+                //}
+            });
+
+            function callApi(url, $select, text) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $select.empty();
+                        if (data && data.length > 0) {
+                            var textOp = "Choose " + text;
+                            var optionDefault = $('<option>').text(textOp).attr('value', '');
+                            $select.append(optionDefault);
+                            for (var i = 0; i < data.length; i++) {
+                                var option = $('<option>').text(data[i].name).attr('value', data[i].id);
+                                $select.append(option);
+                            }
+                        } else {
+                            var textOpn = "No " + text + " available";
+                            $select.append($('<option>').text(textOpn));
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            $('#btn-delivery').on('click',function(){
+                var fullName = $('#fullName_shipping').val();
+                var email = $('#email_shipping').val();
+                var phoneNumber = $('#phoneNumber_shipping').val();
+                var city = $('#city_shipping').val();
+                var district = $('#district_shipping').val();
+                var ward = $('#ward_shipping').val();
+                var street = $('#street_shipping').val();
+                if(!fullName || !email || !phoneNumber || !city || !district || !ward || !street){
+                    var $messageWrap = $('#message-save-address');
+                    showMessage($messageWrap,"Enter full field");
+                    return;
+                }
+
+                var cityName = $('#city_shipping option:selected').text();
+                var districtName = $('#district_shipping option:selected').text();
+                var wardName = $('#ward_shipping option:selected').text();
+                var address = street + " | " + wardName + " | " + districtName + " | " + cityName;
+                var formData =
+                {
+                    fullName:fullName,
+                    email:email,
+                    phoneNumber:phoneNumber,
+                    cityId:city,
+                    districtId:district,
+                    wardId:ward,
+                    address:address
+                }
+
+                $.ajax({
+                    url:'/mike/api/cart/checkout-address',
+                    type: 'POST',
+                    data:JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        window.location.href = "/mike/cart/checkout-payment";
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log(errorThrown);
+                        showAlert("Checkout address is falsed!",false);
+                    }
+                })
+
+
+            });
+
+            function showMessage($msgWrapper, message) {
+                $msgWrapper.empty();
+                var content = $(`
+                    <div class="alert alert-danger" role="alert">${message}</div>
+                `);
+                $msgWrapper.append(content);
+            }
+
+            function showAlert(message, isSuccess) {
+                Swal.fire({
+                    title: message,
+                    icon: isSuccess ? 'success' : 'error',
+                    timer: 1200,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    customClass: {
+                        timerProgressBar: isSuccess ? 'bg-success' : 'bg-danger'
+                    },
+                    willClose: () => {
+                        if (isSuccess) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+</th:block>
+</body>
+</html>
+

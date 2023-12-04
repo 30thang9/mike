@@ -23,7 +23,7 @@ function initializeDropzoneSingle(dropzoneClass, previewTemplate) {
   });
 }
 
-function initializeDropzoneMulti(dropzoneClass, previewTemplate) {
+function initializeDropzoneMultiple(dropzoneClass, previewTemplate) {
   var dropzones = document.querySelectorAll("." + dropzoneClass);
 
   Array.prototype.forEach.call(dropzones, function (dropzone) {
@@ -35,15 +35,68 @@ function initializeDropzoneMulti(dropzoneClass, previewTemplate) {
       addRemoveLinks: true,
       init: function () {
         this.on("addedfile", function (file) {
-//          if (this.files.length > this.options.maxFiles) {
-//            var removedFile = this.files.pop();
-//            this.removeFile(removedFile);
-//          }
+          //          if (this.files.length > this.options.maxFiles) {
+          //            var removedFile = this.files.pop();
+          //            this.removeFile(removedFile);
+          //          }
         });
       }
     });
   });
 }
+
+function initializeDropzoneSingleUpload(dropzoneClass, previewTemplate) {
+  var dropzones = document.querySelectorAll("." + dropzoneClass);
+
+  Array.prototype.forEach.call(dropzones, function (dropzone) {
+    var fileName = dropzone.dataset.imageName;
+    var imageUrlApi = "/mike/api/images/product/" + fileName;
+    console.log(imageUrlApi);
+
+    var myDropzone = new Dropzone(dropzone, {
+      url: "/upload",
+      previewTemplate: previewTemplate,
+      parallelUploads: 1,
+      maxFilesize: 5,
+      addRemoveLinks: true,
+      maxFiles: 1,
+      init: function () {
+
+        this.on("addedfile", function (file) {
+          if (this.files.length > 1) {
+            this.removeFile(this.files[0]);
+          }
+        });
+
+        addFileToDropzone(this, imageUrlApi, fileName);
+
+      }
+    });
+  });
+
+  function addFileToDropzone(dropzone, apiUrl, fileName) {
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file. HTTP status ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        // Convert the Blob to a File
+        var file = new File([blob], fileName, { type: blob.type });
+
+        // Add the file to Dropzone
+        dropzone.addFile(file);
+        console.log('File added successfully:', file);
+      })
+      .catch(error => {
+        console.error('Error fetching file from API:', error);
+      });
+  }
+
+}
+
 
 var previewTemplate = `<div class="dz-preview dz-file-preview">
   <div class="dz-details">
@@ -62,8 +115,11 @@ var previewTemplate = `<div class="dz-preview dz-file-preview">
   </div>
 </div>`;
 
-// Khởi tạo Dropzone cho các khối HTML có class "dropzone-single" và giới hạn tệp tin là 1
-initializeDropzoneSingle("dropzone-single", previewTemplate);
+$(document).ready(function () {
+  initializeDropzoneSingle("dropzone-single", previewTemplate);
 
-// Khởi tạo Dropzone cho các khối HTML có class "dropzone-multi" và không giới hạn số lượng tệp tin
-initializeDropzoneMulti("dropzone-multiple", previewTemplate);
+  initializeDropzoneMultiple("dropzone-multiple", previewTemplate);
+
+  initializeDropzoneSingleUpload("dropzone-single-upload", previewTemplate);
+
+});

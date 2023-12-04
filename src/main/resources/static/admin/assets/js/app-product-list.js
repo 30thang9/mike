@@ -21,11 +21,8 @@ $(function () {
             {
                 data: "name"
             },
-            //            {
-            //                data: "descriptions"
-            //            },
             {
-                data: "urlAvatar"
+                data: "avatar"
             },
             {
                 data: "objectCategory"
@@ -35,12 +32,6 @@ $(function () {
             },
             {
                 data: "productStatus"
-            },
-            {
-                data: "discountStatus"
-            },
-            {
-                data: "discountPercent"
             },
             {
                 data: "hotStatus"
@@ -79,7 +70,7 @@ $(function () {
                 responsivePriority: 4,
                 targets: 3,
                 render: function (a, e, t, s) {
-                    return '<img style="height:50px; object-fit:cover;" src="/images/product/' + t.urlAvatar + '" alt="Avatar" class="rounded-circle avatar-img">';
+                    return '<img style="height:50px; object-fit:cover;" src="/images/product/' + t.avatar + '" alt="avatar" class="rounded-circle avatar-img">';
                 }
             },
             {
@@ -99,27 +90,6 @@ $(function () {
                 render: function (a, e, t, s) {
                     var statusBadgeClass = "";
                     switch (t.productStatus) {
-                        case "AVAILABLE":
-                            statusBadgeClass = "bg-label-success";
-                            break;
-                        case "OUT_OF_STOCK":
-                            statusBadgeClass = "bg-label-warning";
-                            break;
-                        case "DISCONTINUED":
-                            statusBadgeClass = "bg-label-danger";
-                            break;
-                        case "HIDDEN":
-                            statusBadgeClass = "bg-label-secondary";
-                            break;
-                    }
-                    return '<span class="badge ' + statusBadgeClass + '">' + t.productStatus + '</span>';
-                }
-            },
-            {
-                targets: 7,
-                render: function (a, e, t, s) {
-                    var statusBadgeClass = "";
-                    switch (t.discountStatus) {
                         case "ACTIVE":
                             statusBadgeClass = "bg-label-success";
                             break;
@@ -127,17 +97,11 @@ $(function () {
                             statusBadgeClass = "bg-label-danger";
                             break;
                     }
-                    return '<span class="badge ' + statusBadgeClass + '">' + t.discountStatus + '</span>';
+                    return '<span class="badge ' + statusBadgeClass + '">' + t.productStatus + '</span>';
                 }
             },
             {
-                targets: 8,
-                render: function (a, e, t, s) {
-                    return t.discountPercent;
-                }
-            },
-            {
-                targets: 9,
+                targets: 7,
                 render: function (a, e, t, s) {
                     var statusBadgeClass = "";
                     switch (t.hotStatus) {
@@ -152,7 +116,7 @@ $(function () {
                 }
             },
             {
-                targets: 10,
+                targets: 8,
                 render: function (a, e, t, s) {
                     var statusBadgeClass = "";
                     switch (t.bestSellerStatus) {
@@ -181,52 +145,66 @@ $(function () {
             }
         ],
         order: [[1, "desc"]],
+        //        dom: `
+        //            <"row mt-4 mb-3 ms-2 me-3 d-md-none"
+        //                <"col-12 d-flex align-items-center justify-content-start px-3 gap-2"
+        //                    <"_title_">
+        //                >
+        //                <"col-12 d-flex align-items-center justify-content-start pe-3 gap-2"
+        //                    <"wrapper-btn-collapse">
+        //                >
+        //            >
+        //            <"wrapper_control"
+        //                <"_divider_ d-md-none">
+        //                <"row mt-0 mt-md-4 mb-3 ms-2 me-3"
+        //                    <"col-12 col-md-6 d-none d-md-flex align-items-center justify-content-start justify-content-md-start gap-2"
+        //                        <"_title_">
+        //                    >
+        //                    <"col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end flex-md-row pe-3 gap-md-2"
+        //                        <"dt-action-buttons text-xl-end text-lg-start text-md-end text-start mt-md-0 mt-3"B>
+        //                    >
+        //                >
+        //                <"row ms-2 me-3"
+        //                    <"col-12 col-md-2 d-flex align-items-center justify-content-start justify-content-md-start gap-2 pb-3 py-md-0" l>
+        //                    <"col-12 col-md-10 d-flex align-items-center justify-content-start justify-content-md-end flex-column flex-md-row pe-3 gap-md-2"
+        //                        <"wrapper_search d-flex align-items-center justify-content-start justify-content-md-end"f>
+        //                    >
+        //                    <"col-12 d-flex align-items-center justify-content-start"
+        //                        <"wrapper_select w-100 d-flex align-items-center justify-content-start justify-content-md-center flex-wrap flex-md-nowrap gap-3 mb-3"
+        //                            <"product_status mt-3">
+        //                            <"hot_status mt-3">
+        //                            <"best_seller_status mt-3">
+        //                        >
+        //                    >
+        //                >
+        //            >
+        //            t
+        //            <"row mx-2"
+        //                <"col-sm-12 col-md-6" i>
+        //                <"col-sm-12 col-md-6" p>
+        //            >
+        //            `,
+        //
         dom: `
-            <"row mt-4 mb-3 ms-2 me-3 d-md-none"
-                <"col-12 d-flex align-items-center justify-content-start px-3 gap-2"
-                    <"_title_">
-                >
-                <"col-12 d-flex align-items-center justify-content-start pe-3 gap-2"
-                    <"wrapper-btn-collapse">
-                >
+            <"card-header d-flex border-top rounded-0 flex-wrap py-md-0"
+            <"w-100 _title_">>
+            <"d-flex justify-content-between align-items-center row px-2"
+                <"col-sm-6 col-md-4 col-lg-3 mb-3 product_status">
+                <"col-sm-6 col-md-4 col-lg-3 mb-3 hot_status">
+                <"col-sm-6 col-md-4 col-lg-3 mb-3 best_seller_status">
             >
-            <"wrapper_control"
-                <"_divider_ d-md-none">
-                <"row mt-0 mt-md-4 mb-3 ms-2 me-3"
-                    <"col-12 col-md-6 d-none d-md-flex align-items-center justify-content-start justify-content-md-start gap-2"
-                        <"_title_">
-                    >
-                    <"col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end flex-md-row pe-3 gap-md-2"
-                        <"dt-action-buttons text-xl-end text-lg-start text-md-end text-start mt-md-0 mt-3"B>
-                    >
-                >
-                <"row ms-2 me-3"
-                    <"col-12 col-md-2 d-flex align-items-center justify-content-start justify-content-md-start gap-2 pb-3 py-md-0" l>
-                    <"col-12 col-md-10 d-flex align-items-center justify-content-start justify-content-md-end flex-column flex-md-row pe-3 gap-md-2"
-                        <"wrapper_search d-flex align-items-center justify-content-start justify-content-md-end"f>
-                    >
-                    <"col-12 d-flex align-items-center justify-content-start"
-                        <"wrapper_select w-100 d-flex align-items-center justify-content-start justify-content-md-center flex-wrap flex-md-nowrap gap-3 mb-3"
-                            <"product_status mt-3">
-                            <"discount_status mt-3">
-                            <"hot_status mt-3">
-                            <"best_seller_status mt-3">
-                        >
-                    >
+            <"card-header d-flex border-top rounded-0 flex-wrap pt-0 pb-3 py-md-0"
+                <"me-5 ms-n2 pe-5"f>
+                <"d-flex justify-content-start justify-content-md-end align-items-baseline"
+                    <"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center mb-0 pt-0"lB>
                 >
             >
             t
             <"row mx-2"
-                <"col-sm-12 col-md-6" i>
-                <"col-sm-12 col-md-6" p>
+                <"col-sm-12 col-md-6"i>
+                <"col-sm-12 col-md-6"p>
             >
             `,
-
-        //        dom: "<'row'<'col-6 d-flex align-items-center justify-content-start'><'col-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-3 gap-md-2'<'my-3'B>>>" +
-        //             "<'row w-100'<'col-6 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start gap-2'l><'col-6 col-md-6 d-flex align-items-center justify-content-end flex-column flex-md-row pe-3 gap-md-2'f<'product_status'><'discount_status'>>>" +
-        //             "<'row'<'col-12't>>" +
-        //             "<'row'<'col-12'p>>",
-
 
         language: {
             sLengthMenu: "_MENU_",
@@ -237,7 +215,7 @@ $(function () {
         lengthMenu: [5, 10, 25, 50, 75, 100],
         buttons: [{
             extend: "collection",
-            className: "btn btn-label-primary dropdown-toggle me-3",
+            className: "btn btn-label-primary dropdown-toggle",
             text: '<i class="bx bx-export me-sm-1"></i> <span class="d-none d-sm-inline-block">Export</span>',
             buttons: [{
                 extend: "print",
@@ -364,84 +342,114 @@ $(function () {
             }
         },
         initComplete: function () {
-            $('<h4 class="fw-bold">List Product</h4>').appendTo("._title_");
-            $('<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#wrapperCollapse" aria-expanded="false" aria-controls="wrapperCollapse"><i class="bx bx-collapse-vertical"></i></button>').appendTo(".wrapper-btn-collapse");
-            $('<hr class="my-0">').appendTo("._divider_");
-
-            if ($(window).width() < 768) { // 768px là giới hạn cho kích thước md
-                $(".wrapper_control").addClass("collapse");
-                $(".wrapper_control").attr("id", "wrapperCollapse");
-                $(".wrapper_search input").addClass("mx-0");
-                $(".wrapper_search").addClass("w-100");
-                $(".wrapper_select").addClass("w-100");
-            } else {
-                $(".wrapper_control").removeClass("collapse");
-                $(".wrapper_control").removeAttr("id", "wrapperCollapse");
-                $(".wrapper_search input").removeClass("mx-0");
-                $(".wrapper_search").removeClass("w-100");
-                $(".wrapper_select").removeClass("w-100");
-            }
-
-            $(window).on("resize", function () {
-                var windowWidth = $(window).width();
-                if (windowWidth < 768) { // 768px là giới hạn cho kích thước md
-                    $(".wrapper_control").addClass("collapse");
-                    $(".wrapper_control").attr("id", "wrapperCollapse");
-                    $(".wrapper_search input").addClass("mx-0");
-                    $(".wrapper_search").addClass("w-100");
-                    $(".wrapper_select").addClass("w-100");
-                } else {
-                    $(".wrapper_control").removeClass("collapse");
-                    $(".wrapper_control").removeAttr("id", "wrapperCollapse");
-                    $(".wrapper_search input").removeClass("mx-0");
-                    $(".wrapper_search").removeClass("w-100");
-                    $(".wrapper_select").removeClass("w-100");
-                }
-            });
+            $('<h4 class="m-0 my-md-4">Filter</h4>').appendTo("._title_");
+            //            $('<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#wrapperCollapse" aria-expanded="false" aria-controls="wrapperCollapse"><i class="bx bx-collapse-vertical"></i></button>').appendTo(".wrapper-btn-collapse");
+            //            $('<hr class="my-0">').appendTo("._divider_");
+            //
+            //            if ($(window).width() < 768) { // 768px là giới hạn cho kích thước md
+            //                $(".wrapper_control").addClass("collapse");
+            //                $(".wrapper_control").attr("id", "wrapperCollapse");
+            //                $(".wrapper_search input").addClass("mx-0");
+            //                $(".wrapper_search").addClass("w-100");
+            //                $(".wrapper_select").addClass("w-100");
+            //            } else {
+            //                $(".wrapper_control").removeClass("collapse");
+            //                $(".wrapper_control").removeAttr("id", "wrapperCollapse");
+            //                $(".wrapper_search input").removeClass("mx-0");
+            //                $(".wrapper_search").removeClass("w-100");
+            //                $(".wrapper_select").removeClass("w-100");
+            //            }
+            //
+            //            $(window).on("resize", function () {
+            //                var windowWidth = $(window).width();
+            //                if (windowWidth < 768) {
+            //                    $(".wrapper_control").addClass("collapse");
+            //                    $(".wrapper_control").attr("id", "wrapperCollapse");
+            //                    $(".wrapper_search input").addClass("mx-0");
+            //                    $(".wrapper_search").addClass("w-100");
+            //                    $(".wrapper_select").addClass("w-100");
+            //                } else {
+            //                    $(".wrapper_control").removeClass("collapse");
+            //                    $(".wrapper_control").removeAttr("id", "wrapperCollapse");
+            //                    $(".wrapper_search input").removeClass("mx-0");
+            //                    $(".wrapper_search").removeClass("w-100");
+            //                    $(".wrapper_select").removeClass("w-100");
+            //                }
+            //            });
+            //
+            //            this.api().columns(6).every(function () {
+            //                var e = this
+            //                    , t = $('<select id="ProductStatus" class="form-select"><option value=""> Product Status </option></select>').appendTo(".product_status").on("change", function () {
+            //                        var a = $.fn.dataTable.util.escapeRegex($(this).val());
+            //                        e.search(a ? "^" + a + "$" : "", !0, !1).draw()
+            //                    });
+            //                e.data().unique().sort().each(function (a, e) {
+            //                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+            //                })
+            //            });
+            //
+            //            this.api().columns(7).every(function () {
+            //                var e = this
+            //                    , t = $('<select id="HotStatus" class="form-select"><option value=""> Hot Status </option></select>').appendTo(".hot_status").on("change", function () {
+            //                        var a = $.fn.dataTable.util.escapeRegex($(this).val());
+            //                        e.search(a ? "^" + a + "$" : "", !0, !1).draw()
+            //                    });
+            //                e.data().unique().sort().each(function (a, e) {
+            //                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+            //                })
+            //            });
+            //
+            //            this.api().columns(8).every(function () {
+            //                var e = this
+            //                    , t = $('<select id="BestSellertStatus" class="form-select"><option value=""> Best Seller Status </option></select>').appendTo(".best_seller_status").on("change", function () {
+            //                        var a = $.fn.dataTable.util.escapeRegex($(this).val());
+            //                        e.search(a ? "^" + a + "$" : "", !0, !1).draw()
+            //                    });
+            //                e.data().unique().sort().each(function (a, e) {
+            //                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+            //                })
+            //            });
 
             this.api().columns(6).every(function () {
                 var e = this
-                    , t = $('<select id="ProductStatus" class="form-select"><option value=""> Product Status </option></select>').appendTo(".product_status").on("change", function () {
+                    , t = $('<select id="ProductStatus" class="form-select select2" data-allow-clear="true" data-placeholder="Product Status"><option value=""> Product Status </option></select>').appendTo(".product_status").on("change", function () {
                         var a = $.fn.dataTable.util.escapeRegex($(this).val());
                         e.search(a ? "^" + a + "$" : "", !0, !1).draw()
                     });
                 e.data().unique().sort().each(function (a, e) {
-                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+                    t.append('<option value="' + a + '">' + a + "</option>")
                 })
             });
 
             this.api().columns(7).every(function () {
                 var e = this
-                    , t = $('<select id="DiscountStatus" class="form-select"><option value=""> Discount Status </option></select>').appendTo(".discount_status").on("change", function () {
+                    , t = $('<select id="HotStatus" class="form-select select2" data-allow-clear="true" data-placeholder="Hot Status"><option value=""> Hot Status </option></select>').appendTo(".hot_status").on("change", function () {
                         var a = $.fn.dataTable.util.escapeRegex($(this).val());
                         e.search(a ? "^" + a + "$" : "", !0, !1).draw()
                     });
                 e.data().unique().sort().each(function (a, e) {
-                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+                    t.append('<option value="' + a + '">' + a + "</option>")
                 })
             });
 
-            this.api().columns(9).every(function () {
+            this.api().columns(8).every(function () {
                 var e = this
-                    , t = $('<select id="HotStatus" class="form-select"><option value=""> Hot Status </option></select>').appendTo(".hot_status").on("change", function () {
+                    , t = $('<select id="BestSellerStatus" class="form-select select2" data-allow-clear="true" data-placeholder="Best Seller Status"><option value=""> Best Seller Status </option></select>').appendTo(".best_seller_status").on("change", function () {
                         var a = $.fn.dataTable.util.escapeRegex($(this).val());
                         e.search(a ? "^" + a + "$" : "", !0, !1).draw()
                     });
                 e.data().unique().sort().each(function (a, e) {
-                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
+                    t.append('<option value="' + a + '">' + a + "</option>")
                 })
             });
 
-            this.api().columns(10).every(function () {
-                var e = this
-                    , t = $('<select id="BestSellertStatus" class="form-select"><option value=""> Best Seller Status </option></select>').appendTo(".best_seller_status").on("change", function () {
-                        var a = $.fn.dataTable.util.escapeRegex($(this).val());
-                        e.search(a ? "^" + a + "$" : "", !0, !1).draw()
-                    });
-                e.data().unique().sort().each(function (a, e) {
-                    t.append('<option value="' + a + '" class="text-capitalize">' + a + "</option>")
-                })
+            $('select.form-select.select2').each(function () {
+                $(this).wrap('<div class="position-relative"></div>').select2({
+                    placeholder: "Select value",
+                    dropdownParent: $(this).parent()
+                });
             });
+
         }
     })),
         e.on("draw.dt", function () {
@@ -454,9 +462,15 @@ $(function () {
         //        $(".product-list-table tbody").on("click", ".delete-record", function () {
         //            a.row($(this).parents("tr")).remove().draw()
         //        }),
+        $(".dataTables_length").addClass("mt-0 mt-md-3 me-3"),
+        $(".dt-buttons > .btn-group > button").removeClass("btn-secondary"),
+        $(".dt-action-buttons .dt-buttons").addClass("d-flex gap-3 flex-wrap"),
+        $(".product-list-table tbody").on("click", ".delete-record", function () {
+            a.row($(this).parents("tr")).remove().draw()
+        }),
         setTimeout(() => {
             $(".dataTables_filter .form-control").removeClass("form-control-sm"),
                 $(".dataTables_length .form-select").removeClass("form-select-sm")
-        }
-            , 300)
+        }, 300)
+
 });

@@ -9,6 +9,8 @@
     <th:block layout:fragment="css_head">
         <title> Product - Detail | Mike </title>
         <link rel="stylesheet" th:href="@{/web/assets/css/product-disabled.css}" />
+        <link rel="stylesheet" th:href="@{/web/assets/vendor/sweetalert2/sweetalert2.css}" />
+
     </th:block>
 </head>
 <body>
@@ -193,24 +195,24 @@
         <div class="container">
             <ul class="nav nav-tabs flex-column flex-sm-row" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link detail-nav-link active" data-bs-toggle="tab" 
-                        href="#description" role="tab">Description
+                    <a class="nav-link detail-nav-link active" data-bs-toggle="tab"
+                       href="#description" role="tab">Description
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link detail-nav-link" data-bs-toggle="tab" 
-                        href="#additional-information" role="tab">Additional Information
+                    <a class="nav-link detail-nav-link" data-bs-toggle="tab"
+                       href="#additional-information" role="tab">Additional Information
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link detail-nav-link" data-bs-toggle="tab" 
-                        href="#reviews" role="tab">Reviews
+                    <a class="nav-link detail-nav-link" data-bs-toggle="tab"
+                       href="#reviews" role="tab">Reviews
                     </a>
                 </li>
             </ul>
             <div class="tab-content py-4">
-                <div class="tab-pane active px-3" id="description" role="tabpanel">
-                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                <div class="tab-pane active px-3" id="description" role="tabpanel" th:utext="${products.descriptions}">
+                    {% comment %} <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                         incididunt ut labore et dolore magna aliqua. LOLUt enim ad minim veniam, quis nostrud exercitation ullamco
                         laboris nisi ut aliquip ex ea commodo consequat. LOLDuis aute irure dolor in reprehenderit in voluptate
                         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
@@ -219,8 +221,9 @@
                         incididunt ut labore et dolore magna aliqua. LOLUt enim ad minim veniam, quis nostrud exercitation ullamco
                         laboris nisi ut aliquip ex ea commodo consequat. LOLDuis aute irure dolor in reprehenderit in voluptate
                         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                        culpa qui officia deserunt mollit anim id est laborum.</p>
-                </div>
+                        culpa qui officia deserunt mollit anim id est laborum.</p> {% endcomment %}
+                
+                    </div>
                 <div class="tab-pane" id="additional-information" role="tabpanel">
                     <div class="row">
                         <div class="col-lg-6">
@@ -415,8 +418,8 @@
                     <div class="product">
                         <div class="product-image">
                             <img class="img-fluid"
-                                th:src="@{/web/assets/img/product/kyle-loftus-590881-unsplash.jpg}"
-                                alt="product" />
+                                 th:src="@{/web/assets/img/product/kyle-loftus-590881-unsplash.jpg}"
+                                 alt="product" />
                             <div class="product-hover-overlay"><a class="product-hover-overlay-link" href="detail.html"></a>
                                 <div class="product-hover-overlay-buttons"><a class="btn btn-dark btn-buy" href="detail.html"><i
                                         class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
@@ -437,8 +440,8 @@
                         <div class="product-image">
                             <div class="ribbon ribbon-primary">Sale</div>
                             <img class="img-fluid"
-                              th:src="@{/web/assets/img/product/kyle-loftus-596319-unsplash.jpg}"
-                              alt="product" />
+                                 th:src="@{/web/assets/img/product/kyle-loftus-596319-unsplash.jpg}"
+                                 alt="product" />
                             <div class="product-hover-overlay"><a class="product-hover-overlay-link" href="detail.html"></a>
                                 <div class="product-hover-overlay-buttons"><a class="btn btn-dark btn-buy" href="detail.html"><i
                                         class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
@@ -458,8 +461,8 @@
                     <div class="product">
                         <div class="product-image">
                             <img class="img-fluid"
-                                th:src="@{/web/assets/img/product/ethan-haddox-484912-unsplash.jpg}"
-                                alt="product" />
+                                 th:src="@{/web/assets/img/product/ethan-haddox-484912-unsplash.jpg}"
+                                 alt="product" />
                             <div class="product-hover-overlay"><a class="product-hover-overlay-link" href="detail.html"></a>
                                 <div class="product-hover-overlay-buttons"><a class="btn btn-dark btn-buy" href="detail.html"><i
                                         class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
@@ -479,8 +482,8 @@
                     <div class="product">
                         <div class="product-image">
                             <img class="img-fluid"
-                                th:src="@{/web/assets/img/product/serrah-galos-494231-unsplash.jpg}"
-                                alt="product" />
+                                 th:src="@{/web/assets/img/product/serrah-galos-494231-unsplash.jpg}"
+                                 alt="product" />
                             <div class="product-hover-overlay"><a class="product-hover-overlay-link" href="detail.html"></a>
                                 <div class="product-hover-overlay-buttons"><a class="btn btn-dark btn-buy" href="detail.html"><i
                                         class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
@@ -500,8 +503,8 @@
                     <div class="product">
                         <div class="product-image">
                             <img class="img-fluid"
-                                th:src="@{/web/assets/img/product/averie-woodard-319832-unsplash.jpg}"
-                                alt="product" />
+                                 th:src="@{/web/assets/img/product/averie-woodard-319832-unsplash.jpg}"
+                                 alt="product" />
                             <div class="product-hover-overlay"><a class="product-hover-overlay-link" href="detail.html"></a>
                                 <div class="product-hover-overlay-buttons"><a class="btn btn-dark btn-buy" href="detail.html"><i
                                         class="fa-search fa"></i><span class="btn-buy-label ms-2">View</span></a>
@@ -523,6 +526,8 @@
 
 
 <th:block layout:fragment="js_foot">
+    <script th:src="@{/web/assets/vendor/sweetalert2/sweetalert2.js}"></script>
+
     <script>
         $(document).ready(function() {
             var href =  window.location.href;
@@ -535,9 +540,6 @@
                 success: function(data) {
                     var product = data.product;
                     var productDetail = data.productDetail;
-                    var productImage = data.productImage;
-                    var minPrice = data.minPrice;
-                    var maxPrice = data.maxPrice;
                     var unique = new Set();
                     var unique1 = new Set();
                     var $productDetailWrapper = $('.product-details').eq(0);
@@ -545,7 +547,7 @@
                     $(`
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-7 pt-4 order-1 order-lg-1">
+                            <div class="col-lg-6 pt-4 order-1 order-lg-1">
                                 <div class="row">
                                     <div class="d-lg-none">
                                         <ul class="breadcrumb undefined">
@@ -557,63 +559,71 @@
                                         </ul>
                                         <h1 class="mb-4">${product.name}</h1>
                                     </div>
-                                    <div class="d-none d-md-block col-md-2 pe-0">
+                                    <div class="d-none d-md-block col-md-2 pe-0 div-left">
                                         <div class="owl-thumbs" data-slider-id="1">
-                                            <button class="owl-thumb-item detail-thumb-item mb-3">
-                                                <img class="img-fluid"
-                                                   src="/images/product/${product.urlAvatar}"
-                                                   alt="Modern Jacket 0">
-                                            </button>
-                                            ${productImage.map((image, index) => {
-                                                if (!unique.has(image)) {
-                                                  unique.add(image);
-                                                  return `
+                                            ${
+                                                (productDetail?.[0]?.images || []).length === 0
+                                                ? `
                                                     <button class="owl-thumb-item detail-thumb-item mb-3">
                                                         <img class="img-fluid"
-                                                        src="/images/product/${image}"
-                                                        alt="Modern Jacket 1">
+                                                           src="/images/product/${product.avatar}"
+                                                           alt="Modern Jacket 0">
                                                     </button>
-                                                  `;
-                                                }
-                                                return ''; // Return an empty string for duplicate sizes
-                                            }).join('')}
+                                                `
+                                                : (productDetail?.[0]?.images || []).map((image, index) => {
+                                                    if (!unique.has(image)) {
+                                                        unique.add(image);
+                                                        return `
+                                                            <button class="owl-thumb-item detail-thumb-item mb-3">
+                                                                <img class="img-fluid"
+                                                                src="/images/product/${image}"
+                                                                alt="Modern Jacket 1">
+                                                            </button>
+                                                        `;
+                                                    }
+                                                    return '';
+                                                }).join('')
+                                            }
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-10 detail-carousel">
+                                    <div class="col-12 col-md-10 detail-carousel div-right">
                                         ${product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
                                         ${product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
-                                        ${product.productStatus === 'OUT_OF_STOCK' ? '<div class="ribbon ribbon-secondary">Sold out</div>' : ''}
-                                        ${product.discountStatus === 'ACTIVE' ? '<div class="ribbon ribbon-danger">Sale</div>' : ''}
                                         <div class="owl-carousel detail-slider owl-theme owl-dots-modern" data-slider-id="1">
-                                            <div class="item">
-                                                <a class="glightbox" href="/images/product/${product.urlAvatar}"
-                                                     data-title="Modern Jacket 1 - Caption text" data-gallery="product-gallery">
-                                                    <img class="img-fluid"
-                                                         src="/images/product/${product.urlAvatar}"
-                                                         alt="Modern Jacket 1">
-                                                </a>
-                                            </div>
-                                            ${productImage.map((image, index) => {
-                                                if (!unique1.has(image)) {
-                                                  unique1.add(image);
-                                                  return `
+                                            ${
+                                                (productDetail?.[0]?.images || []).length === 0
+                                                ? `
                                                     <div class="item">
-                                                        <a class="glightbox" href="/images/product/${image}"
-                                                        data-title="Modern Jacket 2 - Caption text" data-gallery="product-gallery">
+                                                        <a class="glightbox product-image" href="/images/product/${product.avatar}"
+                                                            data-title="Modern Jacket 1 - Caption text" data-gallery="product-gallery">
                                                             <img class="img-fluid"
-                                                                src="/images/product/${image}"
-                                                                alt="Modern Jacket 2">
+                                                                src="/images/product/${product.avatar}"
+                                                                alt="Modern Jacket 1">
                                                         </a>
                                                     </div>
-                                                  `;
-                                                }
-                                                return '';
-                                            }).join('')}
+                                                `
+                                                : (productDetail?.[0]?.images || []).map((image, index) => {
+                                                    if (!unique1.has(image)) {
+                                                        unique1.add(image);
+                                                        return `
+                                                            <div class="item">
+                                                                <a class="glightbox product-image" href="/images/product/${image}"
+                                                                data-title="Modern Jacket 2 - Caption text" data-gallery="product-gallery">
+                                                                    <img class="img-fluid"
+                                                                        src="/images/product/${image}"
+                                                                        alt="Modern Jacket 2">
+                                                                </a>
+                                                            </div>
+                                                        `;
+                                                    }
+                                                    return '';
+                                                }).join('')
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 ps-lg-4 order-2 order-lg-2">
+                            <div class="col-lg-6 ps-lg-4 order-2 order-lg-2">
                                 <div class="d-none d-lg-block">
                                     <ul class="breadcrumb undefined">
                                         <li class="breadcrumb-item"><a href="/mike/home">Home</a></li>
@@ -624,10 +634,19 @@
                                 </div>
                                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4 mt-3 mt-lg-0">
                                     <ul class="list-inline mb-2 mb-sm-0">
-                                        <li class="list-inline-item h4 fw-light mb-0">$65.00</li>
-                                        <li class="list-inline-item text-muted fw-light">
-                                            <del>$90.00</del>
-                                        </li>
+                                        ${productDetail?.[0]?.discountPercent > 0.0
+                                            ? `<li class="list-inline-item h4 fw-light mb-0">
+                                                ${(productDetail[0].exportPrice - productDetail[0].exportPrice * productDetail[0].discountPercent / 100).toFixed(2)}
+                                               </li>
+                                               <li class="list-inline-item text-muted fw-light">
+                                                <del>
+                                                  ${(productDetail[0].exportPrice).toFixed(2)}
+                                                </del>
+                                               </li>`
+                                            : `<li class="list-inline-item h4 fw-light mb-0">
+                                                ${(productDetail[0].exportPrice).toFixed(2)}
+                                               </li>`
+                                        }
                                     </ul>
                                     <div class="d-flex align-items-center">
                                         <ul class="list-inline me-2 mb-0">
@@ -641,6 +660,15 @@
                                 </div>
                                 <p class="mb-4 text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                                     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>
+                                <p class="mb-4"><span class="text-muted text-danger" id="quantity-supply"></span></p>
+                                <div class="wrapper-size-image mb-3">
+                                    <div class="image-container">
+                                        <a class="glightbox table-size-image text-decoration-underline text-dark" href="/images/sizetable/${product.sizeImage.image}"
+                                             data-title="Size product" data-gallery="size-gallery">
+                                            Size table
+                                        </a>
+                                    </div>
+                                </div>
                                 <form action="#">
                                     <div class="row">
                                         <div class="col-12 detail-option mb-3">
@@ -650,10 +678,10 @@
                                                     if (!unique.has(detail.color.name)) { // Check if the size is not already in the Set
                                                         unique.add(detail.color.name); // Add the size to the Set
                                                         return `
-                                                            <li class="list-inline-item ${product.productStatus == 'OUT_OF_STOCK' ? 'soldout' : ''}">
-                                                                <label class="btn-colour" for="colour_${detail.color.id}" 
+                                                            <li class="list-inline-item">
+                                                                <label class="btn-colour" for="colour_${detail.color.id}"
                                                                     style="background-color: ${detail.color.colorHex}"></label>
-                                                                <input class="input-invisible input-color-product" type="radio" 
+                                                                <input class="input-invisible input-color-product" type="radio"
                                                                     name="color" value="${detail.color.id}" id="colour_${detail.color.id}"
                                                                     required>
                                                             </li>
@@ -669,10 +697,10 @@
                                                 if (!unique.has(detail.size.name)) { // Check if the size is not already in the Set
                                                     unique.add(detail.size.name); // Add the size to the Set
                                                     return `
-                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label ${product.productStatus == 'OUT_OF_STOCK' ? 'soldout' : ''}" 
+                                                        <label class="btn btn-sm btn-outline-secondary detail-option-btn-label"
                                                             for="size_${detail.size.id}"> ${detail.size.name}
-                                                            <input class="input-invisible input-size-product" type="radio" 
-                                                                name="size" value="${detail.size.id}" 
+                                                            <input class="input-invisible input-size-product" type="radio"
+                                                                name="size" value="${detail.size.id}"
                                                                 id="size_${detail.size.id}" required>
                                                         </label>
                                                     `;
@@ -682,7 +710,7 @@
                                         </div>
                                         <div class="col-12 col-lg-6 detail-option mb-5">
                                             <label class="detail-option-heading fw-bold">Items <span>(required)</span></label>
-                                            <input class="form-control detail-quantity" name="items" type="number" 
+                                            <input class="form-control detail-quantity" name="items" type="number"
                                                 min="1" step="1" value="1" pattern="[0-9]+">
                                         </div>
                                     </div>
@@ -704,34 +732,44 @@
 
                     var $owlCarousel = $('.owl-carousel');
                     $owlCarousel.owlCarousel({
-                        loop: true, // Lặp lại carousel
-                        dots: false, // Hiển thị các chấm chỉ số
-                        nav: false, // Ẩn các nút next/prev
+                        loop: true,
+                        dots: false,
+                        nav: false,
                         responsive: {
                             0: {
                                 items: 1
                             },
                         },
                         thumbs: true,
-                        // When only using images in your slide (like the demo) use this option to dynamicly create thumbnails without using the attribute data-thumb.
                         thumbImage: false,
-                        // Enable this if you have pre-rendered thumbnails in your html instead of letting this plugin generate them. This is recommended as it will prevent FOUC
                         thumbsPrerendered: true,
-                        // Class that will be used on the thumbnail container
                         thumbContainerClass: 'owl-thumbs',
-                        // Class that will be used on the thumbnail item's
                         thumbItemClass: 'owl-thumb-item'
                     });
+
                     // Cập nhật carousel
                     $owlCarousel.trigger('refresh.owl.carousel');
 
-                    const lightbox = GLightbox({
-                        selector: '.glightbox',
-                        // Các tùy chọn khác nếu cần
+                    var lightbox = GLightbox({
+                        selector: '.glightbox.product-image',
                     });
+
+                    var lightboxSize = GLightbox({
+                        selector: '.glightbox.table-size-image',
+                        touchNavigation: false,
+                        loop: false,
+                        autoplay: false,
+                        closeButton: true,
+                        zoomable: true,
+                    });
+
                 },
                 error: function(xhr, status, error) {
 
+                },
+                complete: function(){
+                    $(".product-details").eq(0).find('.input-color-product').eq(0).prop('checked', true);
+                    $(".product-details").eq(0).find('.input-color-product').eq(0).trigger('change');
                 }
             });
 
@@ -743,7 +781,7 @@
                   $(this).closest('label').removeClass('active');
                 }
             });
-          
+
             $(".product-details").eq(0).on('change', '.input-color-product', function(){
                 $(this).closest('.colours-wrapper').find('label.btn-colour').not($(this).prevAll('label.btn-colour:first')).removeClass('active');
                 if ($(this).prop('checked')) {
@@ -759,14 +797,14 @@
         $(document).ready(function() {
             $('.product-details').on('submit', 'form', function(e) {
                 e.preventDefault();
-              
+
                 var href = window.location.href;
                 var productId = href.substring(href.lastIndexOf('/') + 1);
                 var sizeId = $(this).find('input.input-size-product').filter(':checked').val().trim();
                 var colorId = $(this).find('input.input-color-product').filter(':checked').val().trim();
                 var quantity = $(this).find('input.detail-quantity').val().trim();
                 var price = 250000;
-              
+
                 var formData =
                 {
                     id:
@@ -778,105 +816,108 @@
                     quantity: quantity,
                     price: price
                 }
-              
+
                 var url = "/mike/api/cart/add";
                 $.ajax({
-                  url: url,
-                  type: 'POST',
-                  data: JSON.stringify(formData),
-                  //processData: false,
-                  //contentType: false,
-                  contentType: 'application/json',
-                  success: function(data) {
-                    console.log(data);
-                    //window.location.reload();
-                    var cart = data.cart;
-                    var totalAmount = data.totalAmount;
-                    var totalQuantity = data.totalQuantity;
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        updateCart(data);
+                        showAlert("Add to cart is successful!",true)
+                        $(".product-details").eq(0).find('.input-color-product').eq(0).prop('checked', true);
+                        $(".product-details").eq(0).find('.input-color-product').eq(0).trigger('change');
+                        $(".product-details").eq(0).find('input.detail-quantity').eq(0).val('1');
+                    },
+                        error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        showAlert("Add to cart is failed!",false)
+                    }
+                });
+            });
 
-                    var $headerCartWrapper = $('#header-cart-wrapper');
-                    var $headerCartQuantity = $('#header-cart-quantity');
-                    var $headerCartDropdown = $('#header-cart-dropdown');
-                    var $headerCartQuantity = $headerCartWrapper.find('#header-cart-quantity');
-                    var newCartDropdown = 
-                    $(`
-                    <div class="navbar-cart-product-wrapper">
-                        <!-- cart item-->
-                        ${cart.map((cartItem, index) => {
-                            var item = cartItem.item;
-                            return `
-                                <div class="navbar-cart-product">
-                                    <div class="d-flex align-items-center">
-                                        <a href="/mike/collection/shop/product-detail/${item.id.productId}"><img
-                                            class="img-fluid navbar-cart-product-image"
-                                            src="/images/product/${item.urlAvatar}"
-                                            alt="...">
+            function showAlert(message, isSuccess) {
+                Swal.fire({
+                    title: message,
+                    icon: isSuccess ? 'success' : 'error',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+
+                const progressBar = $('.swal2-popup .swal2-timer-progress-bar').eq(0);
+                if (!isSuccess) {
+                    progressBar.css('background-color', '#ff3e1d');
+                } else {
+                    progressBar.css('background-color', '#71dd37');
+                }
+            }
+
+            function updateCart(data){
+                var cart = data.cart;
+                var totalAmount = data.totalAmount;
+                var totalQuantity = data.totalQuantity;
+
+                var $headerCartWrapper = $('#header-cart-wrapper');
+                var $headerCartQuantity = $('#header-cart-quantity');
+                var $headerCartDropdown = $('#header-cart-dropdown');
+                var $headerCartQuantity = $headerCartWrapper.find('#header-cart-quantity');
+                var newCartDropdown =
+                $(`
+                <div class="navbar-cart-product-wrapper">
+                    <!-- cart item-->
+                    ${cart.map((cartItem, index) => {
+                        var item = cartItem.item;
+                        return `
+                            <div class="navbar-cart-product">
+                                <div class="d-flex align-items-center">
+                                    <a href="/mike/collection/shop/product-detail/${item.id.productId}"><img
+                                        class="img-fluid navbar-cart-product-image"
+                                        src="/images/product/${item.avatar}"
+                                        alt="...">
+                                    </a>
+                                    <div class="w-100">
+                                        <a class="navbar-cart-product-close" href="#">
+                                            <i class="fa fa-times"> </i>
                                         </a>
-                                        <div class="w-100">
-                                            <a class="navbar-cart-product-close" href="#">
-                                                <i class="fa fa-times"> </i>
+                                        <div class="ps-3">
+                                            <a class="navbar-cart-product-link"
+                                                href="/mike/collection/shop/product-detail/${item.id.productId}">${item.name}
                                             </a>
-                                            <div class="ps-3">
-                                                <a class="navbar-cart-product-link" 
-                                                    href="/mike/collection/shop/product-detail/${item.id.productId}">${item.name}
-                                                </a>
-                                                <small class="d-block text-muted">Color: ${item.itemDetail.color.name} </small>
-                                                <small class="d-block text-muted">Size: ${item.itemDetail.size.name} </small>
-                                                <small class="d-block text-muted">Quantity: ${cartItem.quantity} </small>
-                                                <small class="d-block text-muted">$${cartItem.price} </small>
-                                            </div>
+                                            <small class="d-block text-muted">Color: ${item.itemDetail.color.name} </small>
+                                            <small class="d-block text-muted">Size: ${item.itemDetail.size.name} </small>
+                                            <small class="d-block text-muted">Quantity: ${cartItem.quantity} </small>
+                                            <small class="d-block text-muted">${cartItem.price.toFixed(2)} </small>
                                         </div>
                                     </div>
                                 </div>
-                                `;
-                        }).join('')}
-                        <!--<div class="navbar-cart-product">
-                            <div class="d-flex align-items-center">
-                                <a href="/mike/collection/shop/product-detail/"><img
-                                    class="img-fluid navbar-cart-product-image"
-                                    src="/web/assets/img/product/product-square-ian-dooley-347968-unsplash.jpg"
-                                    alt="...">
-                                </a>
-                                <div class="w-100">
-                                    <a class="navbar-cart-product-close" href="#">
-                                        <i class="fa fa-times"> </i>
-                                    </a>
-                                    <div class="ps-3">
-                                        <a class="navbar-cart-product-link" href="detail.html">Skull Tee</a>
-                                        <small class="d-block text-muted">Quantity: 1 </small>
-                                        <strong class="d-block text-sm">$75.00 </strong>
-                                    </div>
-                                </div>
                             </div>
-                        </div>-->
-                    </div>
-                    <!-- total price-->
-                    <div class="navbar-cart-total">
-                        <span class="text-uppercase text-muted">Total</span>
-                        <strong class="text-uppercase">${totalAmount}</strong>
-                    </div>
-                    <!-- buttons-->
-                    <div class="d-flex justify-content-between">
-                        <a class="btn btn-link text-dark me-3" href="cart.html">View Cart
-                            <i class="fa-arrow-right fa"></i>
-                        </a>
-                        <a class="btn btn-outline-dark" href="checkout1.html">Checkout</a>
-                    </div>
-                    `);
-                    //if(data.cart.)
-                    $headerCartDropdown.empty();
-                    $headerCartDropdown.append(newCartDropdown);
-                    $headerCartQuantity.text(totalQuantity);
-                    $('#header-cart-quantity-mobile').text(totalQuantity);
-                    $headerCartDropdown.addClass('show');
-                  },
-                  error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
-                    console.log(status);
-                    console.log(error);
-                  }
-                });
-            });              
+                            `;
+                    }).join('')}
+                </div>
+                <!-- total price-->
+                <div class="navbar-cart-total">
+                    <span class="text-uppercase text-muted">Total</span>
+                    <strong class="text-uppercase">${totalAmount.toFixed(2)}</strong>
+                </div>
+                <!-- buttons-->
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-link text-dark me-3" href="/mike/cart/detail">View Cart
+                        <i class="fa-arrow-right fa"></i>
+                    </a>
+                    <a class="btn btn-outline-dark" href="/mike/cart/checkout">Checkout</a>
+                </div>
+                `);
+
+                $headerCartDropdown.empty();
+                $headerCartDropdown.append(newCartDropdown);
+                $headerCartQuantity.text(totalQuantity);
+                $('#header-cart-quantity-mobile').text(totalQuantity);
+                $headerCartDropdown.addClass('show');
+            }
         });
     </script>
 
@@ -902,36 +943,151 @@
                         dataType: "JSON",
                         success: function(data) {
                             var productDetail = data.productDetail;
+                            var product = data.product;
                             var $inputSizeProduct = $('.input-size-product');
                             $('.input-size-product:checked').closest('label').removeClass('active');
                             $('.input-size-product:checked').prop('checked', false);
-                            var unique = new Set();
                             var unique1 = new Set();
-                            var newArray = [];
 
-                            $inputSizeProduct.each(function(){
-                                $(this).closest('label.detail-option-btn-label').removeClass('soldout')
-                                unique.add($(this).val().trim());
-                            });
                             productDetail.map((detail, index) => {
-                                if (!unique1.has(detail.size.id) && detail.quantity > 0) {
-                                    unique1.add(detail.size.id); // 
+                                if (!unique1.has(detail.size.id) && detail.quantity > 0 && detail.productDetailStatus === "ACTIVE") {
+                                    unique1.add(detail.size.id);
                                 }
                             });
 
-                            unique.forEach(element => {
-                                const numericElement = parseInt(element);
-                                if (!unique1.has(numericElement)) {
-                                    newArray.push(element);
-                                }
-                            });
 
-                            $inputSizeProduct.each(function(){
-                                if(newArray.includes($(this).val().trim())){
+                            $inputSizeProduct.each(function () {
+                                const id = parseInt($(this).val().trim());
+                                if (unique1.size > 0 && unique1.has(id)) {
+                                    $(this).closest('label.detail-option-btn-label').removeClass('soldout');
+                                }else{
                                     $(this).closest('label.detail-option-btn-label').addClass('soldout');
                                 }
                             });
-                            
+
+                            $('#quantity-supply').text('');
+
+                            var $carouselWrapper = $('.detail-carousel').eq(0);
+                            var $carouselChild = 
+                                $(`
+                                    ${product.bestSellerStatus === 'ACTIVE' ? '<div class="ribbon ribbon-success">Best seller</div>' : ''}
+                                    ${product.hotStatus === 'ACTIVE' ? '<div class="ribbon ribbon-warning">Hot</div>' : ''}
+                                    <div class="owl-carousel detail-slider owl-theme owl-dots-modern" data-slider-id="1">
+                                        ${
+                                            (productDetail?.[0]?.images || []).length === 0
+                                            ? `
+                                                <div class="item">
+                                                    <a class="glightbox product-image" href="/images/product/${product.avatar}"
+                                                        data-title="Modern Jacket 1 - Caption text" data-gallery="product-gallery">
+                                                        <img class="img-fluid"
+                                                            src="/images/product/${product.avatar}"
+                                                            alt="Modern Jacket 1">
+                                                    </a>
+                                                </div>
+                                            `
+                                            : (productDetail?.[0]?.images || []).map((image, index) => {
+                                                if (!unique1.has(image)) {
+                                                    unique1.add(image);
+                                                    return `
+                                                        <div class="item">
+                                                            <a class="glightbox product-image" href="/images/product/${image}"
+                                                            data-title="Modern Jacket 2 - Caption text" data-gallery="product-gallery">
+                                                                <img class="img-fluid"
+                                                                    src="/images/product/${image}"
+                                                                    alt="Modern Jacket 2">
+                                                            </a>
+                                                        </div>
+                                                    `;
+                                                }
+                                                return '';
+                                            }).join('')
+                                        }
+                                    </div>
+                                `);
+                            $carouselWrapper.empty().append($carouselChild);
+
+                            var $owlThumbs = $('.owl-thumbs').eq(0);
+                            var $owlThumbChild = 
+                                $(`
+                                    ${
+                                        (productDetail?.[0]?.images || []).length === 0
+                                        ? `
+                                            <button class="owl-thumb-item detail-thumb-item mb-3">
+                                                <img class="img-fluid"
+                                                src="/images/product/${product.avatar}"
+                                                alt="Modern Jacket 0">
+                                            </button>
+                                        `
+                                        : (productDetail?.[0]?.images || []).map((image, index) => {
+                                            return `
+                                                <button class="owl-thumb-item detail-thumb-item mb-3">
+                                                    <img class="img-fluid"
+                                                    src="/images/product/${image}"
+                                                    alt="Modern Jacket 1">
+                                                </button>
+                                            `;
+                                        }).join('')
+                                    }
+                                `);
+
+                            $owlThumbs.empty().append($owlThumbChild);
+
+                            var $owlCarousel = $('.owl-carousel');
+                            $owlCarousel.owlCarousel({
+                                loop: true,
+                                dots: false,
+                                nav: false,
+                                responsive: {
+                                    0: {
+                                        items: 1
+                                    },
+                                },
+                                thumbs: true,
+                                thumbImage: false,
+                                thumbsPrerendered: true,
+                                thumbContainerClass: 'owl-thumbs',
+                                thumbItemClass: 'owl-thumb-item'
+                            });
+
+                            var lightbox = GLightbox({
+                                selector: '.glightbox.product-image',
+                            });
+        
+                            var lightboxSize = GLightbox({
+                                selector: '.glightbox.table-size-image',
+                                touchNavigation: false,
+                                loop: false,
+                                autoplay: false,
+                                closeButton: true,
+                                zoomable: true,
+                            });
+
+                        },
+                        error: function(jqXHR, textStatus, errorTh){
+
+                        }
+                    });
+                }
+            });
+
+            $('.product-details').on('change', '.input-size-product', function (){
+                if ($(this).prop('checked')) {
+                    var href =  window.location.href;
+                    var productId = href.substring(href.lastIndexOf("/") + 1);
+                    var colorId = $('.input-color-product:checked').val();
+                    var sizeId = $(this).val();
+                    var url = "/mike/api/product/product-size-color-single?productId=" + productId + "&colorId=" + colorId + "&sizeId=" + sizeId;
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function(data) {
+                            var productDetail = data.productDetail;
+                            if(productDetail.length === 1){
+                                var quantity = productDetail[0].quantity;
+                                var txt = "Quantity can be supplied: " + quantity;
+                                $('#quantity-supply').text(txt);
+                            }
                         },
                         error: function(jqXHR, textStatus, errorTh){
 

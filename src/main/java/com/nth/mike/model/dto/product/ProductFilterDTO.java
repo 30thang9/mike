@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductFilterDTO {
     private List<ProductFullDetailDTO> listProduct;
-    private Integer pageCount;
-    private Integer pageNumber;
+    private Integer totalPage;
+    private Integer currentPage;
+    private Integer totalProduct;
+
 }

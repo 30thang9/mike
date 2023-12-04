@@ -1,8 +1,6 @@
 package com.nth.mike.service;
 
-import com.nth.mike.entity.Account;
-import com.nth.mike.entity.AccountRole;
-import com.nth.mike.entity.Role;
+import com.nth.mike.entity.*;
 import com.nth.mike.model.dto.user.UserDTO;
 import com.nth.mike.model.dto.user.UserLoginDTO;
 import com.nth.mike.model.other.AuthenProvider;
@@ -18,17 +16,20 @@ public interface UserService {
 
     Role saveRole(Role role);
 
-    AccountRole addRoleToUser(String username, String roleName);
+    AccountRole addRoleToUser(String username, RoleName roleName);
 
     Account findAccountByUserName(String username);
 
     Account findAccountById(Long id);
 
-    List<Account> findAllAccounts();
+    List<Account> findAllAccount();
+
+    List<Account> findAccountByRole(Role role);
 
     List<Role> findRoleByAccount(Account account);
 
-    List<UserDTO> findAllUsers();
+    Role findRoleByName(RoleName roleName);
+    List<UserDTO> findAllUser();
 
     UserDTO findUserByAccount(Account account);
 

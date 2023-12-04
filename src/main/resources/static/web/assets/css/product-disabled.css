@@ -37,3 +37,7 @@ label.detail-option-btn-label.soldout:before {
     background-size: contain;
     filter: invert(1);
 }
+
+.bg-secondary-overlay {
+    background-color: rgba(108, 117, 125, 0.7);
+}

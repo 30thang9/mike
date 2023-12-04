@@ -1,40 +1,53 @@
-<div class="modal fade" id="deleteListImages" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
-        <div class="modal-content p-3 p-md-5">
-            <div class="modal-body">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="text-center mb-4">
-                    <h3 class="address-title">Delete Images</h3>
-                    <p class="address-subtitle">Delete Images</p>
-                </div>
-                <div id="message-valid-deleteImage"></div>
-                <form id="deleteListImagesForm" class="needs-validation row g-3" novalidate enctype="multipart/form-data"
-                      th:action="@{/mike/api/product/product-image/delete/} + ${products.id}" method="delete">
-                    <div class="col-12 wrapper-dropzone-valid-custom">
-                        <label class="form-label" for="bs-validation-deleteList-productImage">Delete Images</label>
-                        <div class="dropzone needsclick dropzone-multiple dropzone-delete-list_product_image"
-                             th:data-product-id = "${products.id}" data-size-image = "">
-                            <div class="dz-message needsclick">
-                                Drop files here or click to upload
-                                <span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
-                            </div>
-                            <div class="fallback">
-                                <input class="form-control" id="bs-validation-deleteList-productImage" name="file" type="file" multiple required/>
-                            </div>
-                        </div>
+<script>
+    $(document).ready(function() {
+        $('.product-model-body').on('change', '.input-color-modal', function (){
+            if ($(this).prop('checked')) {
+                var href =  window.location.href;
+                var productId = href.substring(href.lastIndexOf("/") + 1);
+                const colorId = $(this).val();
+                var url = "/mike/api/product/product-color-single?productId=" + productId + "&colorId=" + colorId;
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function(data) {
+                        var productDetail = data.productDetail;
+                        var $inputSizeProduct = $('.input-size-modal');
+                        $('.input-size-modal:checked').closest('label').removeClass('active');
+                        $('.input-size-modal:checked').prop('checked', false);
+                        var unique = new Set();
+                        var unique1 = new Set();
+                        var newArray = [];
 
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please select a file to upload images.</div>
-                    </div>
+                        $inputSizeProduct.each(function(){
+                            $(this).closest('label.detail-option-btn-label').removeClass('soldout')
+                            unique.add($(this).val().trim());
+                        });
+                        productDetail.map((detail, index) => {
+                            if (!unique1.has(detail.size.id) && detail.quantity > 0) {
+                                unique1.add(detail.size.id); //
+                            }
+                        });
 
-                    <div class="col-12 text-center">
-                        <button type="button" id="reset-delete-image" class="btn btn-label-secondary me-sm-3 me-1 mb-3">Reset Image</button>
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1 mb-3"> Delete </button>
-                        <button type="reset" class="btn btn-label-secondary mb-3" data-bs-dismiss="modal"
-                                aria-label="Close"> Cancel </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                        unique.forEach(element => {
+                            const numericElement = parseInt(element);
+                            if (!unique1.has(numericElement)) {
+                                newArray.push(element);
+                            }
+                        });
+
+                        $inputSizeProduct.each(function(){
+                            if(newArray.includes($(this).val().trim())){
+                                $(this).closest('label.detail-option-btn-label').addClass('soldout');
+                            }
+                        });
+
+                    },
+                    error: function(jqXHR, textStatus, errorTh){
+
+                    }
+                });
+            }
+        });
+    });
+</script>

@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .loginPage("/mike/auth/login")
-                .defaultSuccessUrl("/mike/home") // Điều hướng đến trang "/dashboard" sau khi đăng nhập thành công
+                .defaultSuccessUrl("/mike/home")
                 .and()
                 .oauth2Login()
                 .loginPage("/mike/auth/login")

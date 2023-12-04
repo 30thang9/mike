@@ -20,11 +20,9 @@ public class ProductFilterRequestMapper {
             SizeService sizeService,
             ObjectCategoryService objectCategoryService,
             ProductCategoryService productCategoryService) {
-        // filter=(;c=2.1;s=2;oc=2;pc=4;mip=450000;map=600000;sbi=asc;sbn=asc;sbp=asc;)
         ProductFilterRequest filter = null;
 
-        if (requestFilter != null && !requestFilter.equals("")
-                && requestFilter.startsWith("(;") && requestFilter.endsWith(";)")) {
+        if (isValidRequestFilter(requestFilter)) {
             filter = new ProductFilterRequest();
             requestFilter = requestFilter.replace(" ", "")
                     .replace("(", "")
@@ -32,74 +30,22 @@ public class ProductFilterRequestMapper {
 
             String[] fStrings = requestFilter.split(";");
             for (String fStr : fStrings) {
-                if (fStr.startsWith("c=")) {
-                    if (fStr.length() > 2) {
-                        String colorValue = fStr.substring(2);
-                        List<String> list = Arrays.stream(colorValue.split("\\.")).toList();
-                        List<Color> colorList = new ArrayList<>();
-                        for (String s : list) {
-                            colorList.add(colorService.findById(Long.parseLong(s)));
-                        }
-                        filter.setColorList(colorList);
-                    }
-                } else if (fStr.startsWith("s=")) {
-                    if (fStr.length() > 2) {
-                        String sizeValue = fStr.substring(2);
-                        List<String> list = Arrays.stream(sizeValue.split("\\.")).toList();
-                        List<Size> sizeList = new ArrayList<>();
-                        for (String s : list) {
-                            sizeList.add(sizeService.findById(Long.parseLong(s)));
-                        }
-                        filter.setSizeList(sizeList);
-                    }
-                } else if (fStr.startsWith("oc=")) {
-                    if (fStr.length() > 3) {
-                        String objectCategoryValue = fStr.substring(3);
-                        filter.setObjectCategory(objectCategoryService.findById(Long.parseLong(objectCategoryValue)));
-                    }
+                String[] keyValue = fStr.split("=");
+                if (keyValue.length == 2) {
+                    String key = keyValue[0];
+                    String value = keyValue[1];
 
-                } else if (fStr.startsWith("pc=")) {
-                    if (fStr.length() > 3) {
-                        String productCategoryValue = fStr.substring(3);
-                        filter.setProductCategory(
-                                productCategoryService.findById(Long.parseLong(productCategoryValue)));
-                    }
-                } else if (fStr.startsWith("mip=")) {
-                    if (fStr.length() > 4) {
-                        String minExportPriceValue = fStr.substring(4);
-                        filter.setMinPrice(Double.parseDouble(minExportPriceValue));
-                    }
-                } else if (fStr.startsWith("map=")) {
-                    if (fStr.length() > 4) {
-                        String maxExportPriceValue = fStr.substring(4);
-                        filter.setMaxPrice(Double.parseDouble(maxExportPriceValue));
-                    }
-                } else if (fStr.startsWith("sbi=")) {
-                    if (fStr.length() > 4) {
-                        String sortByIdValue = fStr.substring(4).toUpperCase();
-                        filter.getSort().setSortById(sortByIdValue);
-                    }
-                } else if (fStr.startsWith("sbn=")) {
-                    if (fStr.length() > 4) {
-                        String sortByNameValue = fStr.substring(4).toUpperCase();
-                        filter.getSort().setSortByName(sortByNameValue);
-                    }
-                } else if (fStr.startsWith("sbp=")) {
-                    if (fStr.length() > 4) {
-                        String sortByPriceValue = fStr.substring(4).toUpperCase();
-                        filter.getSort().setSortByPrice(sortByPriceValue);
-                    }
-                } else if (fStr.startsWith("pag=")) {
-                    if (fStr.length() > 4) {
-                        String pagination = fStr.substring(4).toUpperCase();
-                        List<String> list = Arrays.stream(pagination.split("\\.")).toList();
-                        if (list.size() == 2 && list.get(0).matches("-?\\d+") && list.get(1).matches("-?\\d+")) {
-                            filter.getPagination().setLimit(Integer.parseInt(list.get(0)));
-                            filter.getPagination()
-                                    .setPage(Integer.parseInt(list.get(1)) <= 0 ? 1 : Integer.parseInt(list.get(1)));
-                            filter.getPagination().setOffset(
-                                    (filter.getPagination().getPage() - 1) * filter.getPagination().getLimit());
-                        }
+                    switch (key) {
+                        case "c" -> setColors(filter, value, colorService);
+                        case "s" -> setSizes(filter, value, sizeService);
+                        case "oc" -> setObjectCategory(filter, value, objectCategoryService);
+                        case "pc" -> setProductCategory(filter, value, productCategoryService);
+                        case "mip" -> setMinExportPrice(filter, value);
+                        case "map" -> setMaxExportPrice(filter, value);
+                        case "sbi" -> setSortById(filter, value);
+                        case "sbn" -> setSortByName(filter, value);
+                        case "sbp" -> setSortByPrice(filter, value);
+                        case "pag" -> setPagination(filter, value);
                     }
                 }
             }
@@ -108,4 +54,115 @@ public class ProductFilterRequestMapper {
         return filter;
     }
 
+    private static boolean isValidRequestFilter(String requestFilter) {
+        return requestFilter != null && requestFilter.startsWith("(;") && requestFilter.endsWith(";)");
+    }
+
+    private static void setColors(ProductFilterRequest filter, String value, ColorService colorService) {
+        if (isValidString(value)) {
+            String[] list = value.split("\\.");
+            List<Color> colorList = new ArrayList<>();
+            for (String s : list) {
+                colorList.add(colorService.findById(parseId(s)));
+            }
+            filter.setColorList(colorList);
+        }
+    }
+
+    private static void setSizes(ProductFilterRequest filter, String value, SizeService sizeService) {
+        if (isValidString(value)) {
+            String[] list = value.split("\\.");
+            List<Size> sizeList = new ArrayList<>();
+            for (String s : list) {
+                sizeList.add(sizeService.findById(parseId(s)));
+            }
+            filter.setSizeList(sizeList);
+        }
+    }
+
+    private static void setObjectCategory(ProductFilterRequest filter, String value, ObjectCategoryService objectCategoryService) {
+        if (isValidId(value)) {
+            filter.setObjectCategory(objectCategoryService.findById(parseId(value)));
+        }
+    }
+
+    private static void setProductCategory(ProductFilterRequest filter, String value, ProductCategoryService productCategoryService) {
+        if (isValidId(value)) {
+            filter.setProductCategory(productCategoryService.findById(parseId(value)));
+        }
+    }
+
+    private static void setMinExportPrice(ProductFilterRequest filter, String value) {
+        if (isValidDouble(value)) {
+            filter.setMinPrice(Double.parseDouble(value));
+        }
+    }
+
+    private static void setMaxExportPrice(ProductFilterRequest filter, String value) {
+        if (isValidDouble(value)) {
+            filter.setMaxPrice(Double.parseDouble(value));
+        }
+    }
+
+    private static void setSortById(ProductFilterRequest filter, String value) {
+        if (isValidString(value)) {
+            filter.getSort().setSortById(value.toUpperCase());
+        }
+    }
+
+    private static void setSortByName(ProductFilterRequest filter, String value) {
+        if (isValidString(value)) {
+            filter.getSort().setSortByName(value.toUpperCase());
+        }
+    }
+
+    private static void setSortByPrice(ProductFilterRequest filter, String value) {
+        if (isValidString(value)) {
+            filter.getSort().setSortByPrice(value.toUpperCase());
+        }
+    }
+
+    private static void setPagination(ProductFilterRequest filter, String value) {
+        if (isValidPagination(value)) {
+            List<String> list = Arrays.asList(value.split("\\."));
+            int limit = parsePositiveInt(list.get(0));
+            int page = parsePositiveInt(list.get(1)) > 0 ? parsePositiveInt(list.get(1)) : 1;
+
+            filter.getPagination().setLimit(limit);
+            filter.getPagination().setPage(page);
+            filter.getPagination().setOffset((page - 1) * limit);
+        }
+    }
+
+    private static boolean isValidString(String value) {
+        return value != null && !value.isEmpty();
+    }
+
+    private static boolean isValidId(String value) {
+        return isValidString(value) && value.matches("-?\\d+");
+    }
+
+    private static boolean isValidDouble(String value) {
+        return isValidString(value) && value.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    private static boolean isValidPagination(String value) {
+        if (isValidString(value)) {
+            List<String> list = Arrays.asList(value.split("\\."));
+            return list.size() == 2 && isValidPositiveInt(list.get(0)) && isValidPositiveInt(list.get(1));
+        }
+        return false;
+    }
+
+    private static int parsePositiveInt(String value) {
+        return Integer.parseInt(value);
+    }
+
+    private static long parseId(String value) {
+        return Long.parseLong(value);
+    }
+
+    private static boolean isValidPositiveInt(String value) {
+        return value.matches("\\d+");
+    }
 }
