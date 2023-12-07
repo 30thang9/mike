@@ -144,53 +144,10 @@
                       </div>                      
 
                     </div>
-                    <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
-                      <div class="dropdown dropstart">
-                        <i class="bx bx-x fs-4 text-muted cursor-pointer" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false" data-bs-auto-close="outside"></i>
-                        <div class="dropdown-menu dropdown-menu-end w-px-250 p-3" >
-                          <div class="alert-icon mt-2 d-flex justify-content-center">
-                            <i class='bx bx-error-circle text-warning' style='font-size:40px;'></i>
-                          </div>
-                          <h5 class="mt-2 mb-3 text-center">Are you sure?</h5>
-                          <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-sm btn-primary mx-1" data-repeater-delete>Remove</button>
-                            <button type="button" class="btn btn-sm btn-label-secondary mx-1">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="">
-                        <button type="button" class="btn btn-sm rounded-pill btn-icon btn-label-primary mb-1 btn-modal-dropzone"
-                                data-bs-toggle="modal" data-bs-target="#modal-repeater-1-1">
-                          <span class="tf-icons bx bx-plus"></span>
-                        </button>
-                        <div class="modal animate__animated animate__fadeInDown modal-dropzone" id="modal-repeater-1-1" tabindex="-1" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">Add Images</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                <div class="dropzone needsclick dropzone-multiple" id="dropzone-basic-1-1">
-                                  <div class="dz-message needsclick my-5">
-                                    <p class="fs-4 note needsclick my-2">Drag and drop your image here</p>
-                                    <small class="text-muted d-block fs-6 my-2">or</small>
-                                    <span class="note needsclick btn bg-label-primary d-inline">Browse image</span>
-                                  </div>
-                                  <div class="fallback d-none">
-                                    <input name="file" type="file" />
-                                  </div>
-                                </div>
-                                <div class="valid-feedback">Looks good!</div>
-                                <div class="invalid-feedback">Please select a file to upload images.</div>
-                              </div>
-                              <div class="modal-footer">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <div class="d-flex flex-column align-items-center justify-content-end border-start p-2">
+                        <a class="fs-4 text-muted" th:href="@{'/mike/product-detail/edit/' + ${productDetail.color.id}}">
+                          <i class='bx bxs-edit'></i>
+                        </a>
                     </div>
                   </div>
               </div>
